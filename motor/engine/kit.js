@@ -199,16 +199,16 @@ window.KIT = (() => {
       A.el('rect', { x: x0 - 14, y: y0 - 14, width: size + 28, height: size + 28, rx: 22, fill: '#2a1d12' }, e);
       for (let r = 0; r < 8; r++) for (let f = 0; f < 8; f++) A.el('rect', { x: x0 + f * c, y: y0 + r * c, width: c, height: c, fill: (r + f) % 2 ? dark : light }, e);
       A.pop(e, t);
-      const sq = (file, rank) => [x0 + ('abcdefgh'.indexOf(file)) * c + c / 2, y0 + (8 - rank) * c + c / 2];
+      const sq = (file, rank) => { if (rank == null) { rank = +String(file)[1]; file = String(file)[0]; } return [x0 + ('abcdefgh'.indexOf(file)) * c + c / 2, y0 + (8 - rank) * c + c / 2]; };
       const G = { K: '♚', Q: '♛', R: '♜', B: '♝', N: '♞', P: '♟' };
       return {
         sq,
-        piece(type, white, at, tt = t + 0.3) { const [px, py] = sq(at[0], +at[1]); const p = A.el('g', {}, s); window.gsap.set(p, { x: px, y: py });
+        piece(type, white, at, tt = t + 0.3) { const [px, py] = sq(at); const p = A.el('g', {}, s); window.gsap.set(p, { x: px, y: py });
           A.el('text', { y: c * 0.32, 'font-size': c * 0.86, 'text-anchor': 'middle', fill: white ? '#fff' : '#1b1b1b', stroke: white ? '#1b1b1b' : '#fff', 'stroke-width': 2.5, 'paint-order': 'stroke', 'font-family': 'DejaVu Sans, sans-serif', text: G[type] }, p);
           A.pop(p, tt); return p; },
-        move(p, to, tt) { const [px, py] = sq(to[0], +to[1]);
+        move(p, to, tt) { const [px, py] = sq(to);
           A.tl.to(p, { x: px, y: py - 30, duration: 0.35, ease: 'power2.out' }, A.at(tt)); A.tl.to(p, { y: py, duration: 0.18, ease: 'bounce.out' }, A.at(tt + 0.35)); },
-        highlight(at, tt, col = 'rgba(255,217,59,.55)') { const [px, py] = sq(at[0], +at[1]); const h = A.el('rect', { x: px - c / 2, y: py - c / 2, width: c, height: c, fill: col, opacity: 0 }, s); A.tl.to(h, { opacity: 1, duration: 0.2 }, A.at(tt)); return h; },
+        highlight(at, tt, col = 'rgba(255,217,59,.55)') { const [px, py] = sq(at); const h = A.el('rect', { x: px - c / 2, y: py - c / 2, width: c, height: c, fill: col, opacity: 0 }, s); A.tl.to(h, { opacity: 1, duration: 0.2 }, A.at(tt)); return h; },
       };
     },
   };
