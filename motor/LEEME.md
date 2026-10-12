@@ -77,3 +77,7 @@ Metricool `createScheduledPost` con youtubeData `{type:'short', madeForKids: (pe
 - Piezas grandes de `KIT` (nube, sol, lluvia, suelo, brote, lupa, gráficos) con paleta limitada: 1 color de panel + 1 acento (amarillo marca) + blanco.
 - Tarjetas planas (sin brillo). Mucho aire alrededor del héroe. Tipografía grande y sin adornos.
 - Three.js: no hace falta para este estilo; solo se añadiría para escenas 3D reales.
+
+## Botón final (suscribirse)
+- Español: `SUSCRÍBETE` → `SUSCRITO ✓`. Inglés y chino (los vídeos chinos llevan subtítulos en inglés): `SUBSCRIBE` → `SUBSCRIBED ✓`. NUNCA en chino.
+- Al copiar la escena final de otro guion, cambia SIEMPRE las dos cadenas (`label = A.txt(...)` y `label.textContent = ...`) al idioma del vídeo y compruébalo con `grep -n "label" guion.js` antes de renderizar.
