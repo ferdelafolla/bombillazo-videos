@@ -63,9 +63,11 @@ VIDEO({
         KIT.arrow(A, s, 500, 560, 600, 560, '#161412', 0.6);
         const b = card(A, s, 760, 560, 300, 160, '40', 120); A.pop(b, 0.9); A.breathe(b, 1.4);
         const c = card(A, s, 540, 860, 560, 140, 'VENTAJA', 90); A.pop(c, 2.2); } },
-    { texto: 'Suscríbete: mañana te explico por qué en inglés el cero del tenis se dice "love".', destacar: ['Suscríbete:', 'love".'], emocion: 'feliz', transicion: 'iris',
-      arte(A) { const s = panel(A, 'v8');
-        const b = ball(A, s, 540, 820, 3); A.pop(b.o, 0.1); A.breathe(b.o, 0.8);
-        const h = A.el('path', { d: 'M0,40 C-90,-30 -60,-110 0,-60 C60,-110 90,-30 0,40Z', fill: '#e63b2e' }, s); window.gsap.set(h, { x: 540, y: 470, scale: 1.6 }); A.pop(h, 0.7); } },
+    { texto: 'Suscríbete para más deportes y curiosidades, y en el canal tienes muchas más.', destacar: ['Suscríbete', 'curiosidades,'], emocion: 'feliz', transicion: 'iris',
+      arte(A) { const { el, tl, at, th } = A;
+        A.charTo({ x: 540, y: 660, s: 1.55 }, 0.0, 0.7); A.charTo({ wave: 1 }, 0.6, 0.3);
+        const btn = el('g'); window.gsap.set(btn, { x: 540, y: 1020 }); A.card(-280, -72, 560, 136, A.grad('#ff6b78', '#e8344a'), 68, btn);
+        const label = A.txt('SUSCRÍBETE', 30, 22, 56, '#fff', { parent: btn }); A.pop(btn, 0.7);
+        tl.call(() => { label.textContent = 'SUSCRITO ✓'; }, null, at(1.75)); A.burst(540, 1020, 1.75, [th.accent2, '#fff', th.accent3], 20, 260); } },
   ],
 });

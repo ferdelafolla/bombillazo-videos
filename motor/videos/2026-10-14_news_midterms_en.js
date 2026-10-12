@@ -71,7 +71,7 @@ VIDEO({
         const c = card(A, s, 540, 400, 560, 140, 0, 0, 'FUN FACT', 90); A.pop(c, 0.1);
         const a = card(A, s, 330, 760, 360, 170, 0, 0, '435', 130); A.pop(a, 0.6); A.breathe(a, 1.2);
         const b = card(A, s, 760, 760, 360, 170, 0, 0, '1913', 120); A.pop(b, 1.6); } },
-    { texto: 'Subscribe: tomorrow, why Election Day is always on a Tuesday.', destacar: ['Subscribe:', 'Tuesday.'], emocion: 'feliz', transicion: 'iris',
+    { texto: 'Subscribe for more news, and check out the channel for more explainers like this one.', destacar: ['Subscribe', 'news,'], emocion: 'feliz', transicion: 'iris',
       arte(A) { const { el, tl, at, th } = A;
         const rays = el('g', { opacity: 0.16 }); window.gsap.set(rays, { x: 540, y: 640 });
         for (let i = 0; i < 14; i++) el('path', { d: 'M0,0 L-70,-760 L70,-760 Z', fill: '#fff', transform: `rotate(${i * 25.7})` }, rays);

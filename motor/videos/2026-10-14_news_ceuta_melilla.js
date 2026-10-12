@@ -86,7 +86,7 @@ VIDEO({
         const eu = A.el('g', { html: '<circle r="150" fill="#ffffff"/>' + Array.from({ length: 12 }, (_, i) => { const a = i * Math.PI / 6; return `<circle cx="${(Math.cos(a) * 95).toFixed(1)}" cy="${(Math.sin(a) * 95).toFixed(1)}" r="13" fill="#161412"/>`; }).join('') }, s);
         window.gsap.set(eu, { x: 540, y: 700, scale: 0.85 }); A.pop(eu, 0.5); A.breathe(eu, 1.2);
         const f = card(A, s, 540, 960, 680, 120, 0, 0, 'FRONTERA UE · ÁFRICA', 56); A.pop(f, 1.6); } },
-    { texto: 'Suscríbete: mañana te explico qué pasa en la frontera de Ceuta.', destacar: ['Suscríbete:', 'frontera'], emocion: 'feliz', transicion: 'iris',
+    { texto: 'Suscríbete para más noticias, y en el canal tienes muchas más historias como esta.', destacar: ['Suscríbete', 'noticias,'], emocion: 'feliz', transicion: 'iris',
       arte(A) { const { el, tl, at, th } = A;
         const rays = el('g', { opacity: 0.16 }); window.gsap.set(rays, { x: 540, y: 640 });
         for (let i = 0; i < 14; i++) el('path', { d: 'M0,0 L-70,-760 L70,-760 Z', fill: '#fff', transform: `rotate(${i * 25.7})` }, rays);
