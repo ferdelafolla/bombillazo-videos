@@ -371,7 +371,9 @@
       frames.push(img);
     }
 
-    window.seek = function (t) {
+    window.seek = function (t0) {
+      // POSTERIZE TIME (estilo tinta): la animación avanza a 12 dibujos/s ("a doses" sobre 24 fps)
+      const t = TINTA ? Math.floor(t0 * 12 + 1e-6) / 12 : t0;
       tl.seek(t, false);
       const amp = window.AMP ? (window.AMP[Math.floor(t * FPS)] || 0) : fakeAmp(t, scenes);
       ch.update(t, amp);
@@ -382,8 +384,8 @@
       });
       gctx.putImageData(frames[window.TINTA_PAL ? 0 : Math.floor(t * 24) % 4], 0, 0);
       if (TINTA) {
-        const wt = document.getElementById('wobT'); if (wt) wt.setAttribute('seed', 1 + (Math.floor(t * 8) % 5));
-        const wr = document.getElementById('wobR'); if (wr) wr.setAttribute('seed', 7 + (Math.floor(t * 4) % 3));
+        const wt = document.getElementById('wobT'); if (wt) wt.setAttribute('seed', 1 + (Math.floor(t * 12 + 1e-6) % 4));
+        const wr = document.getElementById('wobR'); if (wr) wr.setAttribute('seed', 7 + (Math.floor(t * 6 + 1e-6) % 3));
       }
       document.getElementById('bar').style.width = `${Math.min(100, (t / total) * 100)}%`;
     };

@@ -50,6 +50,10 @@
     const root = g(`
       <ellipse class="shadow" cx="0" cy="172" rx="80" ry="12" fill="${K}" opacity=".18"/>
       <g class="body">
+        <g class="arm" transform="translate(84,6)">
+          <path d="M0,0 q50,-6 74,-56" stroke="${K}" stroke-width="30" fill="none" stroke-linecap="round"/>
+          <path d="M0,0 q50,-6 74,-56" stroke="${Y}" stroke-width="14" fill="none" stroke-linecap="round"/>
+        </g>
         <g class="torso">
           <rect x="-44" y="54" width="88" height="104" rx="30" fill="${Y}" stroke="${K}" stroke-width="9"/>
           <path d="M-40,84 H40 M-42,108 H42 M-40,132 H40" stroke="${K}" stroke-width="8" stroke-linecap="round"/>
@@ -62,10 +66,6 @@
           </g>
           <path d="M8,-40 L-10,-26 L10,-16" stroke="${K}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
           <path class="mouth" d="M-38,4 Q0,34 38,4" stroke="${R}" stroke-width="9" fill="none" stroke-linecap="round"/>
-        </g>
-        <g class="arm" transform="translate(104,10)">
-          <path d="M0,0 q40,-10 60,-50" stroke="${K}" stroke-width="30" fill="none" stroke-linecap="round"/>
-          <path d="M0,0 q40,-10 60,-50" stroke="${Y}" stroke-width="14" fill="none" stroke-linecap="round"/>
         </g>
       </g>`);
     return makeChar(root, { mouth: 'redsmile', eyeRy: 18 });
