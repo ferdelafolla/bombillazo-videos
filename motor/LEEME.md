@@ -1,17 +1,17 @@
-# Bombillazo — motor de vídeo y flujo diario
+# Chispazo — motor de vídeo y flujo diario
 
-Marca: **Bombillazo** · 3 canales de Shorts verticales (1080x1920, 30–60 s, español):
+Marca: **Chispazo** · 3 canales de Shorts verticales (1080x1920, 30–60 s, español):
 
 | canal (`canal`) | Nombre público | Presentador (`personaje`) | Contenido |
 |---|---|---|---|
-| `aldia` | Bombillazo Hoy | `noti` (robot reportero) | El trend del día de Google Trends España explicado en 1 minuto |
-| `curiosidades` | Bombillazo | `chispa` (bombilla) | Curiosidades y temas virales: el porqué de las cosas |
-| `peques` | Bombillazo Peques | `edu` (gotita azul) | Niños de 3–5 años, temas atemporales, frases muy cortas, contar, colores. YouTube: madeForKids = true |
+| `aldia` | Chispazo Hoy | `noti` (robot reportero) | El trend del día de Google Trends España explicado en 1 minuto |
+| `curiosidades` | Chispazo | `chispa` (bombilla) | Curiosidades y temas virales: el porqué de las cosas |
+| `peques` | Chispazo Peques | `edu` (gotita azul) | Niños de 3–5 años, temas atemporales, frases muy cortas, contar, colores. YouTube: madeForKids = true |
 
 ## Montaje del entorno (si no existe /home/claude/bombillazo)
 ```bash
 mkdir -p /home/claude/bombillazo/{engine,videos,voces,salida,fonts} && cd /home/claude/bombillazo
-# Descargar de Google Drive (carpeta "Bombillazo – motor de vídeo"):
+# Descargar de Google Drive (carpeta "Chispazo – motor de vídeo"):
 #   engine.js, characters.js, template.html -> engine/
 #   render.mjs, music.py, LEEME.md          -> ./
 npm init -y >/dev/null && npm i gsap --silent

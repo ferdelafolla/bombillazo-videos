@@ -1,4 +1,4 @@
-// Motor Bombillazo v2: Shorts verticales con animación 2D y motion graphics.
+// Motor Chispazo v2: Shorts verticales con animación 2D y motion graphics.
 // Cada escena tiene texto (subtítulo + voz) y una función `arte(A)` que dibuja
 // y anima los elementos explicativos con GSAP en tiempo absoluto.
 //

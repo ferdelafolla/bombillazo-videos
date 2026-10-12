@@ -16,6 +16,7 @@ const voice = opt('--voz');
 const noMusic = flag('--sin-musica');
 const preview = flag('--preview'); // solo unos fotogramas sueltos en PNG
 const at = opt('--en'); // tiempos concretos para --preview, p. ej. 1.5,6,10
+const manualCuts = opt('--cortes'); // cortes de escena a mano (s), p. ej. 1.5,3.3,4.9 (n-1 valores)
 const [videoJs, outMp4] = args.map((p) => path.resolve(p));
 
 function probe(p) {
@@ -23,7 +24,7 @@ function probe(p) {
 }
 
 // --- sincronía con la voz: amplitud por fotograma y cortes por silencios
-function voiceAnalysis(p, wordCounts) {
+function voiceAnalysis(p, wordCounts, manual) {
   const nScenes = wordCounts.length;
   const raw = execFileSync('ffmpeg', ['-v', 'error', '-i', p, '-ac', '1', '-ar', '16000', '-f', 's16le', '-'], { maxBuffer: 1 << 28 });
   const s = new Int16Array(raw.buffer, raw.byteOffset, raw.length / 2);
@@ -52,7 +53,7 @@ function voiceAnalysis(p, wordCounts) {
     const c = best ? best.mid : expected;
     cuts.push(c); last = c;
   }
-  const bounds = [0, ...cuts, dur + 0.3];
+  const bounds = [0, ...(manual && manual.length === nScenes - 1 ? manual : cuts), dur + 0.3];
   const timing = [];
   for (let i = 0; i < nScenes; i++) timing.push({ start: bounds[i] ?? dur, dur: Math.max(0.8, (bounds[i + 1] ?? dur) - (bounds[i] ?? dur)) });
   return { amp: A, timing, dur };
@@ -72,7 +73,7 @@ if (voice) {
     const sc = document.createElement('script'); sc.src = src; document.head.appendChild(sc);
     await new Promise((r) => (sc.onload = r)); window.VIDEO = real; return n;
   }, 'file://' + videoJs);
-  const va = voiceAnalysis(voice, nScenes);
+  const va = voiceAnalysis(voice, nScenes, manualCuts ? manualCuts.split(',').map(Number) : null);
   await page.reload();
   await page.evaluate(({ amp, timing }) => { window.AMP = amp; window.TIMING = timing; }, va);
   console.log('Escenas:', va.timing.map((t) => t.dur.toFixed(2)).join(' | '));
