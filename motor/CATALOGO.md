@@ -30,3 +30,10 @@ Huecos conocidos (por construir): mapa con marcador, línea de tiempo, personas/
 - Ambiente automático: toda escena con panel recortado recibe motas, viñeta y barrido de brillo (desactivar con `ambiente: false` en la escena o en VIDEO).
 - `A.breathe(el, x)`: pulso de escala sutil para que el héroe siga vivo (llamar ≥0.7 s después de su A.pop).
 - `A.slide(el, x, 'left'|'right'|'up'|'down')`: entrada con expo.out para títulos/tarjetas.
+
+## Pasada de diseño (Emil Kowalski) 12/10/2026
+- A.pop: escala 0.86→1 + opacidad, `back.out(1.25)` 0.42 s (nada de squash/elastic). No reintroducir rebotes grandes.
+- Subtítulos: palabras con `expo.out` 0.22 s; solo las destacadas rebotan (`back.out(1.6)`); salida `power2.out` 0.16 s. Sombra de texto difusa, píldora con sombra suave.
+- Transición zoom: 0.92→1 con desenfoque 10→0. Nunca `ease-in` en entradas/salidas de UI.
+- Tarjetas (A.card) con brillo interior superior de 2 px.
+- Escalonar grupos 30-80 ms (A.stagger); el elemento héroe respira (A.breathe).

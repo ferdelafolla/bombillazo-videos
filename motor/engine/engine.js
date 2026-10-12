@@ -151,8 +151,8 @@
           tl.fromTo(mid, { y: 900 }, { y: 0, duration: 0.55, ease: 'expo.out' }, s);
           tl.fromTo(blur, { attr: { stdDeviation: '0 40' } }, { attr: { stdDeviation: '0 0' }, duration: 0.35, ease: 'power2.out' }, s);
         } else if (kind === 'zoom') {
-          tl.fromTo(mid, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(1.4)' }, s);
-          tl.fromTo(blur, { attr: { stdDeviation: '14 14' } }, { attr: { stdDeviation: '0 0' }, duration: 0.3 }, s);
+          tl.fromTo(mid, { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'expo.out' }, s);
+          tl.fromTo(blur, { attr: { stdDeviation: '10 10' } }, { attr: { stdDeviation: '0 0' }, duration: 0.35, ease: 'power2.out' }, s);
         } else {
           const clipId = `iris${sc.i}`;
           const cp = el('clipPath', { id: clipId }, defs);
@@ -170,7 +170,7 @@
         if (nk === 'whip') { tl.to(mid, { x: -720, duration: 0.3, ease: 'power3.in' }, e - 0.3); tl.to(blur, { attr: { stdDeviation: '40 0' }, duration: 0.3, ease: 'power3.in' }, e - 0.3); }
         else if (nk === 'whipUp') { tl.to(mid, { y: -900, duration: 0.3, ease: 'power3.in' }, e - 0.3); tl.to(blur, { attr: { stdDeviation: '0 40' }, duration: 0.3, ease: 'power3.in' }, e - 0.3); }
         else if (nk === 'zoom') { tl.to(mid, { scale: 1.5, opacity: 0, duration: 0.35, ease: 'power3.in' }, e - 0.32); }
-        else { tl.to(mid, { scale: 0.92, duration: 0.5, ease: 'power2.in' }, e - 0.5); }
+        else { tl.to(mid, { scale: 0.95, duration: 0.5, ease: 'sine.inOut' }, e - 0.5); }
         tl.set(outer, { autoAlpha: 0 }, e + 0.6);
       }
 
@@ -180,10 +180,9 @@
         at: (x) => s + x, // tiempo relativo dentro de la escena
         // aparición con anticipación + estirado + rebote (squash & stretch)
         pop(target, x = 0, extra = {}) {
-          gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box', scale: 0.55, opacity: 0 });
-          tl.to(target, { scaleX: 0.85, scaleY: 1.18, opacity: 1, duration: 0.18, ease: 'power2.out', ...extra }, s + x);
-          tl.to(target, { scaleX: 1.06, scaleY: 0.94, duration: 0.12, ease: 'power1.inOut' }, s + x + 0.18);
-          tl.to(target, { scaleX: 1, scaleY: 1, duration: 0.35, ease: 'elastic.out(1, 0.5)' }, s + x + 0.3);
+          // entrada sutil: nada aparece de la nada (escala 0.86, no 0), ease-out fuerte y un rebote mínimo
+          gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box', scale: 0.86, opacity: 0 });
+          tl.to(target, { scale: 1, opacity: 1, duration: 0.42, ease: 'back.out(1.25)', ...extra }, s + x);
         },
         // entra desplazándose desde un lado con arco y asentado
         enter(target, x = 0, from = 'down', dist = 260) {
@@ -285,6 +284,8 @@
         card(x, y, w, h, fill, r = 36, parent) {
           const c = el('g', {}, parent || g);
           el('rect', { x, y, width: w, height: h, rx: r, fill }, c);
+          // brillo interior superior: profundidad sutil sin recargar
+          el('rect', { x: x + 1, y: y + 1, width: w - 2, height: h - 2, rx: Math.max(0, r - 1), fill: 'none', stroke: '#fff', 'stroke-opacity': 0.22, 'stroke-width': 2 }, c);
           return c;
         },
         charTo(props, x = 0, d = 0.6) { tl.to(ch, { ...props, duration: d, ease: 'power3.inOut' }, s + x); },
@@ -372,7 +373,7 @@
     caps.appendChild(box);
     gsap.set(box, { autoAlpha: 0 });
     tl.set(box, { autoAlpha: 1 }, sc.start);
-    tl.to(box, { autoAlpha: 0, y: -20, duration: 0.18, ease: 'power2.in' }, sc.start + sc.dur - 0.18);
+    tl.to(box, { autoAlpha: 0, y: -12, duration: 0.16, ease: 'power2.out' }, sc.start + sc.dur - 0.16);
     const spans = [...box.querySelectorAll('.w')];
     // reparto por sílabas aproximadas: las palabras largas tardan más
     const syl = spans.map((s) => Math.max(1, (s.textContent.match(/[aeiouáéíóúü]+/gi) || []).length));
@@ -382,9 +383,10 @@
     spans.forEach((s, i) => {
       const ts = sc.start + 0.05 + (acc / tot) * speech;
       acc += syl[i];
-      gsap.set(s, { opacity: 0, y: 30, scale: 0.7 });
-      tl.to(s, { opacity: 1, y: 0, scale: 1.12, duration: 0.16, ease: 'power2.out' }, ts);
-      tl.to(s, { scale: 1, duration: 0.25, ease: 'back.out(3)' }, ts + 0.16);
+      // palabras: rápidas y discretas (salen decenas por vídeo); solo las destacadas rebotan un poco
+      const hlw = s.classList.contains('hl');
+      gsap.set(s, { opacity: 0, y: 14, scale: hlw ? 0.9 : 0.98 });
+      tl.to(s, { opacity: 1, y: 0, scale: 1, duration: hlw ? 0.32 : 0.22, ease: hlw ? 'back.out(1.6)' : 'expo.out' }, ts);
     });
   }
 })();
