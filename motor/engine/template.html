@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:'Fredoka';src:url('../fonts/Fredoka-Bold.woff') format('woff');font-weight:700 900}
+@font-face{font-family:'Fredoka';src:url('../fonts/Fredoka-SemiBold.woff') format('woff');font-weight:400 600}
+html,body{margin:0;padding:0;background:#000}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+svg.layer{position:absolute;inset:0;width:1080px;height:1920px}
+#chip{position:absolute;left:60px;top:150px;height:72px;border-radius:36px;display:flex;align-items:center;gap:14px;padding:0 30px 0 22px;font-size:38px;font-weight:900;box-shadow:0 10px 30px rgba(0,0,0,.18);backdrop-filter:blur(6px)}
+#chipname{font-size:28px;font-weight:700;letter-spacing:3px;opacity:.9}
+#caps{position:absolute;left:60px;right:60px;top:1140px;height:300px}
+.cap{position:absolute;inset:0;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;text-align:center;font-weight:900;font-size:78px;line-height:1.16;color:#fff;letter-spacing:-.5px;
+  text-shadow:0 5px 0 rgba(0,0,0,.45),0 0 30px rgba(0,0,0,.45)}
+#stage[data-canal=peques] .cap{color:#28285a;text-shadow:0 5px 0 rgba(255,255,255,.95),0 0 24px rgba(255,255,255,.8);font-size:86px}
+.w{display:inline-block;margin:0 9px;white-space:nowrap;transform-origin:50% 70%}
+.w.hl{padding:0 18px;border-radius:22px;text-shadow:none;box-shadow:0 8px 0 rgba(0,0,0,.25)}
+#track{position:absolute;left:60px;right:60px;top:1772px;height:12px;border-radius:6px;background:rgba(255,255,255,.18)}
+#stage[data-canal=peques] #track{background:rgba(0,0,0,.08)}
+#bar{height:12px;border-radius:6px;width:0;box-shadow:0 0 18px currentColor}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 85% 70% at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.42) 100%)}
+#stage[data-canal=peques] #vig{background:radial-gradient(ellipse 85% 70% at 50% 45%,rgba(0,0,0,0) 65%,rgba(40,40,90,.12) 100%)}
+#grain{position:absolute;inset:0;width:1080px;height:1920px;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+</style>
+<script src="../node_modules/gsap/dist/gsap.min.js"></script>
+<script>window.FPS = 60;</script>
+<script src="characters.js"></script>
+<script src="engine.js"></script>
+</head><body>
+<div id="stage">
+  <svg class="layer" id="art" viewBox="0 0 1080 1920"></svg>
+  <svg class="layer" id="chars" viewBox="0 0 1080 1920"></svg>
+  <div id="caps"></div>
+  <div id="vig"></div>
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="chip"><svg width="34" height="46" viewBox="-110 -150 220 300"><path d="M-100,-40 a100,100 0 1,1 200,0 c0,50 -40,70 -46,110 h-108 c-6,-40 -46,-60 -46,-110z" fill="#ffd60a"/><path d="M-70,-90 a70,70 0 0,1 50,-40" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" opacity=".7"/><rect x="-56" y="76" width="112" height="56" rx="14" fill="#9aa0b5"/></svg><span id="brand">Bombillazo</span><span id="chipname"></span></div>
+  <div id="track"><div id="bar"></div></div>
+</div>
+</body></html>
