@@ -65,3 +65,9 @@ La URL firmada del audio (caduca en 2 h) NO se puede descargar desde el contened
 
 ## Publicación
 Metricool `createScheduledPost` con youtubeData `{type:'short', madeForKids: (peques), isAiGeneratedContent:false, category:'EDUCATION'}` + TikTok + Instagram Reel. La media debe ser una URL pública del MP4.
+
+## Mejora progresiva de animaciones (regla)
+- `A.bgFx(s)` (dentro del `panel()` de cada escena, tras `A.pop(f, 0)`) añade haces de luz, motas flotantes, viñeta y barrido de brillo: úsalo en TODAS las escenas nuevas.
+- Objetos héroe GRANDES: el elemento principal de cada escena debe ocupar al menos un tercio del panel (los props de 30-60 px se pierden). Fondo con 2-3 capas de profundidad (cielo, colinas, suelo) que se muevan a distinta velocidad.
+- Cada escena: 1 elemento héroe + 2-3 secundarios animados con ritmo distinto (float, pop, draw) y un detalle de énfasis (A.ring/A.burst) al decir la palabra clave.
+- Tras cada vídeo, mirar 4-6 fotogramas (ffmpeg -ss) y apuntar una mejora concreta para el siguiente.

@@ -55,6 +55,7 @@
       <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
       <radialGradient id="spot" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${th.glow}" stop-opacity=".35"/><stop offset="100%" stop-color="${th.glow}" stop-opacity="0"/></radialGradient>
       <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <radialGradient id="vig" cx="50%" cy="50%" r="70%"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
       <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>`;
     // degradado vertical rápido: A.grad('#ff0','#f80') → 'url(#gN)'
     let gid = 0;
@@ -201,6 +202,28 @@
         float(target, amp = 10, period = 2.4, x = 0) {
           const n = Math.max(1, Math.floor((sc.dur + 0.6) / period));
           tl.fromTo(target, { y: `-=${amp / 2}` }, { y: `+=${amp}`, duration: period / 2, ease: 'sine.inOut', yoyo: true, repeat: n * 2 - 1 }, s + x);
+        },
+        // ambiente rico para el panel (usar dentro del grupo recortado `s` de la escena):
+        // haces de luz, motas flotantes, viñeta y un barrido de brillo. Da profundidad a fondos planos.
+        bgFx(parent, o = {}) {
+          const { x = 60, y = 290, w = 960, h = 800, motes = 16, shafts = true, vignette = true, sweep = true, color = '#ffffff' } = o;
+          const fx = el('g', { 'pointer-events': 'none' }, parent);
+          if (shafts) for (let i = 0; i < 3; i++) {
+            const sh = el('path', { d: `M${x + 140 + i * 280},${y - 40} l-110,${h + 80} h210z`, fill: color, opacity: 0.07 }, fx);
+            tl.fromTo(sh, { x: -26 }, { x: 26, duration: 2.8 + i * 0.5, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil((sc.dur + 1) / (2.8 + i * 0.5)) }, s + i * 0.2);
+          }
+          const r = rng(7 + sc.i * 31);
+          for (let i = 0; i < motes; i++) {
+            const c = el('circle', { r: 3 + r() * 6, fill: color, opacity: 0 }, fx);
+            const px = x + 30 + r() * (w - 60), py = y + h - 20 - r() * 200;
+            tl.fromTo(c, { x: px, y: py, opacity: 0 }, { y: py - 260 - r() * 240, x: px + (r() - 0.5) * 120, opacity: 0.55, duration: 2.2 + r() * 1.8, ease: 'sine.inOut', yoyo: true, repeat: 1 }, s + r() * 1.2);
+          }
+          if (vignette) el('rect', { x, y, width: w, height: h, fill: 'url(#vig)' }, fx);
+          if (sweep) {
+            const b = el('path', { d: `M${x - 200},${y + h} l260,0 l${h * 0.6},${-h} l-260,0z`, fill: color, opacity: 0.0 }, fx);
+            tl.fromTo(b, { x: 0, opacity: 0.16 }, { x: w + 400, opacity: 0.0, duration: 1.3, ease: 'power2.inOut' }, s + 0.15);
+          }
+          return fx;
         },
         // estallido de partículas
         burst(cx, cy, x = 0, colors = [th.accent, th.accent2, th.accent3, '#fff'], n = 22, radius = 260) {
