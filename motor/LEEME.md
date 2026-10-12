@@ -110,7 +110,10 @@ La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMEN
 - El canal es PLURAL: no toma partido. La política y la actualidad caliente están permitidas, pero contadas de forma neutral: qué pasa, qué dice cada parte, datos verificables. Nada de "cómo apoyar la causa", llamadas a movilizarse ni adjetivos valorativos. Si hay polémica, se cierra con "hay quien… y quien…" o con el dato que importa.
 - Equilibrar: no encadenar varios temas que sesguen hacia un mismo lado; alternar política con ciencia, tecnología, deportes, cultura y curiosidades.
 - Temas INTERNACIONALES cada día (al menos 1 de cada 3 vídeos de noticias: EE. UU., Europa, Latinoamérica, Asia…).
+- DEPORTES y ENTRETENIMIENTO (cine, series, música, famosos, videojuegos) también, todos los días si son tendencia: al menos 1 de deportes y 1 de entretenimiento al día, con datos contrastados (resultados, fichajes, estrenos), nunca cotilleo ni salud.
+- TODOS los vídeos llevan una CURIOSIDAD RELACIONADA CON EL TEMA ("Curiosidad: …" / "Fun fact: …"): un dato sorprendente y verificable que conecte la noticia con algo que se aprende (ej.: Alcaraz cae en Shanghái → por qué en tenis se cuenta 15-30-40; acampada en Sol → el kilómetro cero; Ceuta → única frontera terrestre de la UE en África). Va como escena propia antes del cierre, y el título o la miniatura pueden apoyarse en ella.
 - Fuente principal: GOOGLE TRENDS (España, EE. UU. y, para el vídeo chino, temas globales). Elegir lo que más búsquedas tiene ese día que cumpla las reglas anteriores; las otras fuentes solo para verificar datos.
 
 ## PROMESAS PENDIENTES (cumplir el día indicado y luego borrar la línea)
+- 14/10/2026: vídeo Hoy/Curiosidades "¿Por qué en tenis el cero se dice 'love'?" (prometido en el vídeo de tenis del 13/10).
 - 15/10/2026: vídeo News "¿Qué pasa en la frontera de Ceuta?" (prometido al final del vídeo de Ceuta y Melilla del 14/10). Tono neutral, datos oficiales.
