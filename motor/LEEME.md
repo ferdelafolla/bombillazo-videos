@@ -121,3 +121,6 @@ La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMEN
 Los botones e textos de YouTube Shorts, TikTok e Instagram Reels tapan los bordes. Todo lo importante va dentro de x 60–930, y 240–1450 (lienzo 1080x1920):
 - El motor ya lo respeta: chip arriba a 240 px, píldora de suscripción a la derecha con margen de 160 px, subtítulos en la caja x 290–930 / y 1110–1440 (la letra se reduce sola si no cabe), Chispa abajo a la izquierda (x 165, y 1290, escala 0.6) y barra de progreso a y 1448.
 - En los guiones: nada de arte por encima de y 300 ni por debajo de y 1100 si choca con los subtítulos; nada clave a la derecha de x 930 (botones de like/comentar/compartir). Comprueba con --preview dibujando las guías.
+
+## CHISPAZO PEQUES: FUERA (decisión del usuario, 12/10/2026)
+La serie Peques no funciona: NO se producen ni se programan más vídeos de Peques (ni en español ni en inglés). Los huecos se rellenan con Hoy, News, Curiosidades o Chess.
