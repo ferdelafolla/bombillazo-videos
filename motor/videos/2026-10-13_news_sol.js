@@ -50,7 +50,7 @@ VIDEO({
         const b = card(A, s, 540, 800, 700, 130, 0, 0, 'RENOVACIÓN AUTOMÁTICA', 60); A.pop(b, 1.4);
         const k = A.el('g', { html: '<circle r="50" fill="#f7d94c"/><circle r="16" fill="#161412"/><path d="M50,0 H190 M150,0 V40 M180,0 V30" stroke="#161412" stroke-width="16" stroke-linecap="round"/>' }, s); window.gsap.set(k, { x: 420, y: 1010 }); A.pop(k, 2.0); } },
     { texto: 'Se organiza en asambleas abiertas, y el Sindicato de Inquilinas está entre los grupos que la impulsan.', destacar: ['asambleas', 'Inquilinas'], emocion: 'feliz',
-      arte(A) { const s = panel(A, 'v5'); KIT.person(A, s, 260, 1080, 0.9, { shirt: '#e63b2e', style: 'long', arm: 'point', t: 0.1 }); KIT.person(A, s, 540, 1100, 1.0, { shirt: '#f7d94c', style: 'short', t: 0.25 }); KIT.person(A, s, 820, 1080, 0.9, { shirt: '#f7d94c', style: 'bun', arm: 'wave', t: 0.4 });
+      arte(A) { const s = panel(A, 'v5'); KIT.person(A, s, 230, 1080, 0.9, { shirt: '#e63b2e', style: 'long', arm: 'point', t: 0.1 }); KIT.person(A, s, 490, 1100, 1.0, { shirt: '#f7d94c', style: 'short', t: 0.25 }); KIT.person(A, s, 750, 1080, 0.9, { shirt: '#f7d94c', style: 'bun', arm: 'wave', t: 0.4 });
         const c = card(A, s, 540, 420, 520, 140, 0, 0, 'ASAMBLEAS', 90); A.pop(c, 0.8); } },
     { texto: 'Ahora preparan una huelga general por la vivienda, todavía sin fecha.', destacar: ['huelga', 'fecha.'], emocion: 'pensar',
       arte(A) { const s = panel(A, 'v6'); const cal = A.el('g', { html: '<rect x="-170" y="-170" width="340" height="340" rx="20" fill="#f7d94c"/><rect x="-170" y="-170" width="340" height="80" rx="20" fill="#e63b2e"/><path d="M-100,-200 V-140 M100,-200 V-140" stroke="#161412" stroke-width="14" stroke-linecap="round"/>' }, s);
@@ -61,7 +61,7 @@ VIDEO({
         const c = card(A, s, 540, 400, 620, 140, 0, 0, 'CURIOSIDAD', 90); A.pop(c, 0.1);
         const pl = A.el('g', { html: '<rect x="-230" y="-110" width="460" height="220" rx="24" fill="#ffffff"/><path d="M-170,0 H170 M0,-80 V80" stroke="#161412" stroke-width="10" stroke-linecap="round"/>' }, s); window.gsap.set(pl, { x: 540, y: 760 }); A.pop(pl, 0.5);
         const k = card(A, s, 540, 760, 360, 120, 0, 0, 'KM 0', 90); A.pop(k, 0.9); A.breathe(k, 1.4);
-        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([dx, dy], i) => KIT.arrow(A, s, 540 + dx * 200, 760 + dy * 150, 540 + dx * 400, 760 + dy * 300, '#161412', 2.0 + i * 0.2)); } },
+        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([dx, dy], i) => KIT.arrow(A, s, 540 + dx * 200, 760 + dy * 150, 540 + dx * 330, 760 + dy * 290, '#161412', 2.0 + i * 0.2)); } },
     { texto: 'Hay quien la apoya y quien la critica.', destacar: ['apoya', 'critica.'], emocion: 'pensar',
       arte(A) { const s = panel(A, 'v7');
         const a = card(A, s, 300, 440, 400, 140, 0, 0, 'A FAVOR', 70); A.pop(a, 0.2);

@@ -125,7 +125,7 @@
     // ---------- presentador
     const ch = CHARS[spec.personaje]();
     charLayer.appendChild(ch.el);
-    Object.assign(ch, { x: 220, y: 1590, s: 0.82 });
+    Object.assign(ch, { x: 165, y: 1290, s: 0.6 }); // zona segura de redes
 
     // ---------- tiempos
     const wps = spec.canal === 'peques' ? 1.8 : 2.6;
@@ -314,7 +314,7 @@
       sc.arte && sc.arte(A);
       // ambiente automático sobre el panel estándar (motas, viñeta y barrido de brillo de entrada):
       // solo si la escena usa un panel recortado y no lo desactiva (spec.ambiente === false o sc.ambiente === false)
-      if (TINTA) inkify(g, PAL);
+      if (TINTA) inkify(g, PAL, spec.colores === true);
       if (!TINTA && spec.ambiente !== false && sc.ambiente !== false && !g.querySelector('[data-amb]') && g.querySelector('clipPath')) {
         const cid = `amb${sc.i}`;
         const cp = el('clipPath', { id: cid }, defs); el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 50 }, cp);
@@ -342,7 +342,7 @@
     if (spec.canal !== 'peques' && spec.suscripcion !== false) {
       const L = lang === 'en' ? ['SUBSCRIBE', 'SUBSCRIBED ✓'] : ['SUSCRÍBETE', 'SUSCRITO ✓'];
       const pill = document.createElement('div');
-      pill.style.cssText = 'position:absolute;right:60px;top:150px;height:72px;border-radius:36px;background:#ff0033;color:#fff;display:flex;align-items:center;gap:12px;padding:0 30px 0 22px;font-size:32px;font-weight:900;letter-spacing:.5px;box-shadow:0 10px 30px rgba(0,0,0,.3);font-family:' + th.font;
+      pill.style.cssText = 'position:absolute;right:160px;top:240px;height:72px;border-radius:36px;background:#ff0033;color:#fff;display:flex;align-items:center;gap:12px;padding:0 30px 0 22px;font-size:32px;font-weight:900;letter-spacing:.5px;box-shadow:0 10px 30px rgba(0,0,0,.3);font-family:' + th.font;
       pill.innerHTML = '<svg width="36" height="36" viewBox="-20 -22 40 44" class="bell"><path d="M-12,8 V-4 a12,12 0 0,1 24,0 V8 l4,5 h-32z" fill="#fff"/><circle cy="16" r="4" fill="#fff"/></svg><span>' + L[0] + '</span>';
       stage.appendChild(pill);
       const label = pill.querySelector('span'), bell = pill.querySelector('.bell');
@@ -411,7 +411,7 @@
   }
   const lum = (c) => (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
   const isRed = (c) => c[0] > 170 && c[1] < 120 && c[2] < 130;
-  function inkify(root, P) {
+  function inkify(root, P, keepColors) {
     const skip = 'clipPath,defs,mask,filter,linearGradient,radialGradient';
     const shapes = [...root.querySelectorAll('path,rect,circle,ellipse,polygon,polyline,line')].filter((e) => !e.closest(skip));
     const effOpacity = (e) => { let o = 1; for (let p = e; p && p !== root.parentNode; p = p.parentNode) { const a = p.getAttribute && p.getAttribute('opacity'); if (a != null) o *= parseFloat(a); } return o; };
@@ -431,7 +431,8 @@
       if (small) { e.setAttribute('fill', isRed(fc) ? P.RED : P.INK); e.setAttribute('stroke', 'none'); continue; }
       const intended = (e.getAttribute('fill') || '').toLowerCase() === P.INK;
       if (lum(fc) < 0.28 && (intended || r.width * r.height < 40000)) { e.setAttribute('fill', P.INK); if (sc) e.setAttribute('stroke', P.INK); continue; }
-      e.setAttribute('fill', isRed(fc) ? P.RED : P.Y);
+      // colores: true → se conservan los colores del dibujo (p. ej. un arcoíris) pero con el contorno negro del estilo
+      e.setAttribute('fill', keepColors && lum(fc) < 0.9 ? e.getAttribute('fill') : (isRed(fc) ? P.RED : P.Y));
       e.setAttribute('stroke', P.INK);
       if (!sc) { e.setAttribute('stroke-width', 7); e.setAttribute('vector-effect', 'non-scaling-stroke'); }
       else { const w = parseFloat(e.getAttribute('stroke-width') || 1); if (w < 6) e.setAttribute('stroke-width', 6); }
@@ -482,6 +483,9 @@
       box.appendChild(document.createTextNode(' '));
     });
     caps.appendChild(box);
+    // que el subtítulo quepa en su caja (zona segura): reduce la letra si hace falta
+    { let fs = parseFloat(getComputedStyle(box).fontSize) || 62, n = 0;
+      while (box.scrollHeight > caps.clientHeight + 2 && fs > 36 && n++ < 20) { fs -= 3; box.style.fontSize = fs + 'px'; } }
     gsap.set(box, { autoAlpha: 0 });
     tl.set(box, { autoAlpha: 1 }, sc.start);
     tl.to(box, { autoAlpha: 0, y: -12, duration: 0.16, ease: 'power2.out' }, sc.start + sc.dur - 0.16);
