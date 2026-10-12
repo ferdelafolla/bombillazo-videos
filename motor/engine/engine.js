@@ -119,13 +119,16 @@
     }
 
     // cámara: todas las escenas viven aquí
-    const cam = el('g', TINTA ? { filter: 'url(#wob)' } : {}, art);
+    // zona segura de redes: el arte (pensado para x 60-1020, y 290-1100) se encoge a x 60-930, y 285-1015
+    const safe = el('g', { transform: 'translate(60 240) scale(0.906) translate(-60 -240)' }, art);
+    const cam = el('g', TINTA ? { filter: 'url(#wob)' } : {}, safe);
     if (TINTA) charLayer.setAttribute('style', 'filter:url(#wob)');
+    const charSafe = document.createElementNS('http://www.w3.org/2000/svg', 'g'); charSafe.setAttribute('transform', 'translate(60 240) scale(0.906) translate(-60 -240)'); charLayer.appendChild(charSafe); // misma zona segura que el arte
 
     // ---------- presentador
     const ch = CHARS[spec.personaje]();
-    charLayer.appendChild(ch.el);
-    Object.assign(ch, { x: 165, y: 1290, s: 0.6 }); // zona segura de redes
+    charSafe.appendChild(ch.el);
+    Object.assign(ch, { x: 176, y: 1399, s: 0.66 }); // queda en x 165, y 1290 tras la zona segura
 
     // ---------- tiempos
     const wps = spec.canal === 'peques' ? 1.8 : 2.6;
@@ -422,7 +425,7 @@
       if (op < 0.5 || (fc && lum(fc) > 0.9 && effOpacity(e) < 1)) { e.setAttribute('display', 'none'); continue; }
       const r = e.getBoundingClientRect(); const small = r.width > 0 && r.width < 26 && r.height < 26;
       // sin marcos de panel: en este estilo los dibujos flotan sobre el amarillo
-      if (e.tagName === 'rect' && r.width > 850 && r.height > 650) { e.setAttribute('display', 'none'); continue; }
+      if (e.tagName === 'rect' && r.width > 770 && r.height > 585) { e.setAttribute('display', 'none'); continue; }
       e.setAttribute('stroke-linejoin', 'round'); e.setAttribute('stroke-linecap', 'round');
       if (!fc) { // solo trazo
         if (sc) { e.setAttribute('stroke', isRed(sc) ? P.RED : P.INK); const w = parseFloat(e.getAttribute('stroke-width') || 1); if (w < 5) e.setAttribute('stroke-width', 5); }

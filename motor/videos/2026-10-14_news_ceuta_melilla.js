@@ -60,7 +60,7 @@ VIDEO({
   escenas: [
     { texto: '¿Por qué Ceuta y Melilla son España, si están en África?', destacar: ['Ceuta', 'Melilla', 'África?'], emocion: 'sorpresa',
       arte(A) { const s = panel(A, 'c1'); mapa(A, s, 0.1); pin(A, s, 430, 830, 1.0, 'CEUTA'); pin(A, s, 700, 860, 1.3, 'MELILLA'); } },
-    { texto: 'Esta semana, el rey ha visitado Ceuta, y la reina, Melilla.', destacar: ['rey', 'reina,'], emocion: 'feliz',
+    { texto: 'Esta semana, el rey visita Ceuta, y la reina, Melilla.', destacar: ['rey', 'reina,'], emocion: 'feliz',
       arte(A) { const s = panel(A, 'c2'); crown(A, s, 540, 480, 1.1, 0.1);
         const a = card(A, s, 330, 860, 360, 120, 0, 0, 'CEUTA 13', 64); A.pop(a, 0.6); const b = card(A, s, 760, 860, 380, 120, 0, 0, 'MELILLA 14', 64); A.pop(b, 0.9); A.breathe(a, 1.4); } },
     { texto: 'Melilla es española desde 1497.', destacar: ['1497.'], emocion: 'pensar',
