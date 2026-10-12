@@ -214,6 +214,17 @@
           const n = Math.max(1, Math.floor((sc.dur + 0.6) / period));
           tl.fromTo(target, { y: `-=${amp / 2}` }, { y: `+=${amp}`, duration: period / 2, ease: 'sine.inOut', yoyo: true, repeat: n * 2 - 1 }, s + x);
         },
+        // "respiración": tras aparecer, el elemento sigue vivo con un pulso de escala muy sutil
+        breathe(target, x = 0.6, amp = 0.03, period = 1.8) {
+          gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box' });
+          const n = Math.max(1, Math.ceil((sc.dur - x) / period));
+          tl.to(target, { scale: 1 + amp, duration: period / 2, ease: 'sine.inOut', yoyo: true, repeat: n * 2 - 1 }, s + x);
+        },
+        // entrada desde un lado con desenfoque de movimiento ligero (para títulos y tarjetas)
+        slide(target, x = 0, from = 'left', dist = 320) {
+          const dx = from === 'left' ? -dist : from === 'right' ? dist : 0, dy = from === 'up' ? -dist : from === 'down' ? dist : 0;
+          tl.fromTo(target, { x: `+=${dx}`, y: `+=${dy}`, opacity: 0 }, { x: `-=${dx}`, y: `-=${dy}`, opacity: 1, duration: 0.5, ease: 'expo.out' }, s + x);
+        },
         // ambiente rico para el panel (usar dentro del grupo recortado `s` de la escena):
         // haces de luz, motas flotantes, viñeta y un barrido de brillo. Da profundidad a fondos planos.
         bgFx(parent, o = {}) {
@@ -283,6 +294,14 @@
       tl.fromTo(ch, { hop: 0 }, { hop: 1, duration: 0.55, ease: 'none', immediateRender: false }, s + 0.05);
       tl.set(ch, { mood: sc.emocion || (sc.i === 0 ? 'sorpresa' : 'feliz') }, s);
       sc.arte && sc.arte(A);
+      // ambiente automático sobre el panel estándar (motas, viñeta y barrido de brillo de entrada):
+      // solo si la escena usa un panel recortado y no lo desactiva (spec.ambiente === false o sc.ambiente === false)
+      if (spec.ambiente !== false && sc.ambiente !== false && !g.querySelector('[data-amb]') && g.querySelector('clipPath')) {
+        const cid = `amb${sc.i}`;
+        const cp = el('clipPath', { id: cid }, defs); el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 50 }, cp);
+        const amb = el('g', { 'clip-path': `url(#${cid})`, 'pointer-events': 'none', 'data-amb': 1 }, g);
+        A.bgFx(amb, { motes: th === THEMES.peques ? 5 : 9, vignette: th !== THEMES.peques, sweep: true, color: '#ffffff' });
+      }
       buildCaption(sc, th, tl, caps);
     });
 
