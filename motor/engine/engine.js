@@ -13,6 +13,8 @@
   const THEMES = {
     aldia: { name: 'HOY', bg: ['#0a0e20', '#1c1240', '#2a0f3a'], glow: '#5b6cff', text: '#fff', accent: '#ff4d5e', accent2: '#ffc43d', accent3: '#00e5c8', ink: '#141a3a', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
     curiosidades: { name: 'CURIOSIDADES', bg: ['#26105c', '#1a2a8a', '#0c3c78'], glow: '#ffd60a', text: '#fff', accent: '#ffd60a', accent2: '#00e5c8', accent3: '#ff6bd6', ink: '#1a0f3c', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
+    news: { name: 'NEWS', bg: ['#1a0a12', '#3a0f26', '#5a1030'], glow: '#ff4d6a', text: '#fff', accent: '#ff3b5c', accent2: '#ffd43d', accent3: '#4fd1ff', ink: '#2a0a18', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
+    chess: { name: 'CHESS', bg: ['#0b1f17', '#12382a', '#1f4a2f'], glow: '#ffd43d', text: '#fff', accent: '#ffd43d', accent2: '#7be0a0', accent3: '#ffffff', ink: '#0b1f17', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
     peques: { name: 'PEQUES', bg: ['#a9dcff', '#e3f4ff', '#fff1c9'], glow: '#ffffff', text: '#28285a', accent: '#ff7043', accent2: '#66bb6a', accent3: '#42a5f5', ink: '#28285a', font: "'Fredoka', sans-serif", chip: 'rgba(255,255,255,.92)', pattern: 'none', particles: 'bubbles' },
   };
   const KIDS = ['#ff7043', '#66bb6a', '#42a5f5', '#ffca28', '#ab47bc'];

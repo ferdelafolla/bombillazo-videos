@@ -1,7 +1,7 @@
 // Miniatura 1080x1920: la pregunta del vídeo + Chispa. Uso: node miniatura.mjs "¿Pregunta?" tema salida.png
 import { chromium } from '/opt/npm-tools/node_modules/playwright/index.mjs';
 const [q, tema, out] = process.argv.slice(2);
-const T = { aldia: ['#0e1236', '#3a2fa0', '#ff4d6a', 'HOY'], curiosidades: ['#2a1a6e', '#8a5be8', '#ffd93b', 'CURIOSIDADES'], peques: ['#4fc3ff', '#d6f4ff', '#ff7a2b', 'PEQUES'] }[tema];
+const T = { aldia: ['#0e1236', '#3a2fa0', '#ff4d6a', 'HOY'], curiosidades: ['#2a1a6e', '#8a5be8', '#ffd93b', 'CURIOSIDADES'], peques: ['#4fc3ff', '#d6f4ff', '#ff7a2b', 'PEQUES'], news: ['#2a0a18', '#a01040', '#ffd43d', 'NEWS'], chess: ['#0b1f17', '#2f7a4a', '#ffd43d', 'CHESS'] }[tema];
 const dark = tema !== 'peques';
 const html = `<body style="margin:0;width:1080px;height:1920px;background:linear-gradient(160deg,${T[0]},${T[1]});font-family:'Fredoka',Arial Black,sans-serif;position:relative;overflow:hidden">
 <style>@font-face{font-family:Fredoka;src:url(file:///home/claude/bombillazo/fonts/Fredoka-SemiBold.woff)}</style>
