@@ -68,7 +68,8 @@ window.KIT = (() => {
     // o: { shirt, skin, hair, style: 'short'|'long'|'bun'|'bald', arm: 'wave'|'point'|null, t: inicio }
     person(A, s, x, y, k = 1, o = {}) {
       const { shirt = '#4a7ad8', skin = '#f3c7a4', hair = '#2b2240', style = 'short', arm = null, t = 0 } = o;
-      const e = A.el('g', {}, s); window.gsap.set(e, { x, y, scale: k });
+      // E = posición/escala (y la aparición); e = contenido que se balancea desde los pies (origen local 0,0)
+      const E = A.el('g', {}, s); window.gsap.set(E, { x, y, scale: k }); const e = A.el('g', {}, E);
       const hairs = {
         short: `<path d="M-80,-238 C-86,-312 -30,-332 8,-324 C60,-320 88,-290 80,-236 C66,-268 30,-282 -10,-280 C-42,-278 -66,-264 -80,-238Z" fill="${hair}"/>`,
         long: `<path d="M-84,-236 C-90,-316 -30,-334 8,-326 C62,-322 92,-290 84,-234 L88,-150 C70,-140 62,-170 66,-226 C40,-270 -40,-276 -66,-226 C-62,-170 -70,-140 -88,-150Z" fill="${hair}"/>`,
@@ -94,9 +95,9 @@ window.KIT = (() => {
         A.tl.fromTo(armEl, { rotation: -10, svgOrigin: '84 -104' }, { rotation: 10, svgOrigin: '84 -104', duration: arm === 'wave' ? 0.28 : 0.6, ease: 'sine.inOut', yoyo: true, repeat: arm === 'wave' ? n : Math.ceil(n / 2) }, A.at(t + 0.4));
       }
       // balanceo suave desde los pies
-      A.tl.fromTo(e, { rotation: -1.6, svgOrigin: `${x} ${y}` }, { rotation: 1.6, svgOrigin: `${x} ${y}`, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil(A.dur / 1.6) }, A.at(t));
-      A.pop(e, t);
-      return e;
+      A.tl.fromTo(e, { rotation: -1.6, svgOrigin: '0 0' }, { rotation: 1.6, svgOrigin: '0 0', duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: Math.ceil(A.dur / 1.6) }, A.at(t));
+      A.pop(E, t);
+      return E;
     },
     // bocadillo de diálogo con cola; texto corto o emoji
     speech(A, s, x, y, text, o = {}) {
