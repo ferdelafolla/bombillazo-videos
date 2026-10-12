@@ -65,7 +65,12 @@
       <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <radialGradient id="vig" cx="50%" cy="50%" r="70%"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
       <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
-      <filter id="wob" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence id="wobT" type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="1" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter>`;
+      <filter id="wob" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence id="wobT" type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="1" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G" result="w"/>
+        <feTurbulence id="wobR" type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="2" result="r"/>
+        <feDisplacementMap in="w" in2="r" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>`;
     // degradado vertical rápido: A.grad('#ff0','#f80') → 'url(#gN)'
     let gid = 0;
     function grad(c1, c2, dir = 'v') {
@@ -375,8 +380,11 @@
         const x = p.x + Math.sin(t * 0.6 + p.ph) * 30 * p.depth;
         p.node.setAttribute('cx', x); p.node.setAttribute('cy', y);
       });
-      gctx.putImageData(frames[Math.floor(t * 24) % 4], 0, 0);
-      if (TINTA) { const wt = document.getElementById('wobT'); if (wt) wt.setAttribute('seed', 1 + (Math.floor(t * 8) % 5)); }
+      gctx.putImageData(frames[window.TINTA_PAL ? 0 : Math.floor(t * 24) % 4], 0, 0);
+      if (TINTA) {
+        const wt = document.getElementById('wobT'); if (wt) wt.setAttribute('seed', 1 + (Math.floor(t * 8) % 5));
+        const wr = document.getElementById('wobR'); if (wr) wr.setAttribute('seed', 7 + (Math.floor(t * 4) % 3));
+      }
       document.getElementById('bar').style.width = `${Math.min(100, (t / total) * 100)}%`;
     };
     window.seek(0);

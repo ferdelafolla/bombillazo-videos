@@ -17,7 +17,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:Vemoly;src:url(file://${HERE}/fonts/VemolyChispazo.ttf)}
 body{margin:0;width:1080px;height:1920px;background:${Y};font-family:Vemoly,sans-serif;position:relative;overflow:hidden;color:${K}}
 </style></head><body>
-<svg width="0" height="0" style="position:absolute"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<svg width="0" height="0" style="position:absolute"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G" result="w"/><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="2" result="r"/><feDisplacementMap in="w" in2="r" scale="3.2" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
 <div style="position:absolute;left:70px;top:110px;background:${K};border-radius:60px;padding:18px 40px;font-size:54px;color:${Y}">Chispazo <span style="font-size:40px;letter-spacing:4px">${SERIE}</span></div>
 <div style="position:absolute;left:60px;right:60px;top:380px;text-align:center;font-size:${size}px;line-height:1.08">${qHtml}</div>
 <svg style="position:absolute;left:250px;top:1080px;filter:url(#wob)" width="580" height="700" viewBox="-150 -180 300 360">
