@@ -11,11 +11,11 @@
   const W = 1080, H = 1920;
   const FPS = window.FPS || 60;
   const THEMES = {
-    aldia: { name: 'HOY', bg: ['#0b0e1c', '#141a36', '#1a1432'], glow: '#5b6cff', text: '#fff', accent: '#ff4d5e', accent2: '#ffc43d', accent3: '#00e5c8', ink: '#141a3a', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
-    curiosidades: { name: 'CURIOSIDADES', bg: ['#12112b', '#181d45', '#0f2a46'], glow: '#ffd60a', text: '#fff', accent: '#ffd60a', accent2: '#00e5c8', accent3: '#ff6bd6', ink: '#1a0f3c', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
-    news: { name: 'NEWS', bg: ['#120a10', '#26101c', '#3a1024'], glow: '#ff4d6a', text: '#fff', accent: '#ff3b5c', accent2: '#ffd43d', accent3: '#4fd1ff', ink: '#2a0a18', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
-    chess: { name: 'CHESS', bg: ['#0b1f17', '#12382a', '#1f4a2f'], glow: '#ffd43d', text: '#fff', accent: '#ffd43d', accent2: '#7be0a0', accent3: '#ffffff', ink: '#0b1f17', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
-    peques: { name: 'PEQUES', bg: ['#a9dcff', '#e3f4ff', '#fff1c9'], glow: '#ffffff', text: '#28285a', accent: '#ff7043', accent2: '#66bb6a', accent3: '#42a5f5', ink: '#28285a', font: "'Fredoka', sans-serif", chip: 'rgba(255,255,255,.92)', pattern: 'none', particles: 'bubbles' },
+    aldia: { panel: ['#1b2240', '#121730'], cardFill: '#ff4d5e', cardInk: '#ffffff',  name: 'HOY', bg: ['#0b0e1c', '#141a36', '#1a1432'], glow: '#5b6cff', text: '#fff', accent: '#ff4d5e', accent2: '#ffc43d', accent3: '#00e5c8', ink: '#141a3a', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
+    curiosidades: { panel: ['#1a2142', '#10162e'], cardFill: '#ffd60a', cardInk: '#1a0f3c',  name: 'CURIOSIDADES', bg: ['#12112b', '#181d45', '#0f2a46'], glow: '#ffd60a', text: '#fff', accent: '#ffd60a', accent2: '#00e5c8', accent3: '#ff6bd6', ink: '#1a0f3c', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
+    news: { panel: ['#2a1c23', '#1a1216'], cardFill: '#ff3b5c', cardInk: '#ffffff',  name: 'NEWS', bg: ['#120a10', '#26101c', '#3a1024'], glow: '#ff4d6a', text: '#fff', accent: '#ff3b5c', accent2: '#ffd43d', accent3: '#4fd1ff', ink: '#2a0a18', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
+    chess: { panel: ['#163a2a', '#0e261b'], cardFill: '#ffd43d', cardInk: '#0b1f17',  name: 'CHESS', bg: ['#0b1f17', '#12382a', '#1f4a2f'], glow: '#ffd43d', text: '#fff', accent: '#ffd43d', accent2: '#7be0a0', accent3: '#ffffff', ink: '#0b1f17', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
+    peques: { panel: ['#ffffff', '#f3f8ff'], cardFill: '#ff7043', cardInk: '#ffffff',  name: 'PEQUES', bg: ['#a9dcff', '#e3f4ff', '#fff1c9'], glow: '#ffffff', text: '#28285a', accent: '#ff7043', accent2: '#66bb6a', accent3: '#42a5f5', ink: '#28285a', font: "'Fredoka', sans-serif", chip: 'rgba(255,255,255,.92)', pattern: 'none', particles: 'bubbles' },
   };
   const KIDS = ['#ff7043', '#66bb6a', '#42a5f5', '#ffca28', '#ab47bc'];
   const COLOR_WORDS = { roj: '#e53935', amarill: '#ffd500', naranj: '#ff8c00', verde: '#43a047', azul: '#1e88e5', morad: '#8e24aa', rosa: '#f06292', marron: '#795548' };
@@ -36,12 +36,20 @@
   }
 
   window.VIDEO = function (spec) {
-    const th = THEMES[spec.canal];
+    // ESTILO TINTA (por defecto): dibujo de línea negra temblorosa sobre amarillo plano, rojo como único acento.
+    // spec.estilo = 'clasico' vuelve al estilo anterior.
+    const TINTA = spec.estilo !== 'clasico';
+    const PAL = { Y: '#f7d94c', Y2: '#f3cf3d', INK: '#161412', RED: '#e63b2e' };
+    const th = TINTA ? Object.assign({}, THEMES[spec.canal], { bg: [PAL.Y, PAL.Y, PAL.Y2], glow: PAL.Y, text: PAL.INK, accent: PAL.RED, accent2: PAL.INK, accent3: PAL.RED, ink: PAL.INK,
+      chip: PAL.INK, font: "'Vemoly', 'Inter Display', Inter, sans-serif", pattern: 'tinta', particles: 'none', panel: [PAL.Y, PAL.Y], cardFill: PAL.INK, cardInk: PAL.Y }) : THEMES[spec.canal];
+    const PEQ = spec.canal === 'peques';
     const tl = gsap.timeline({ paused: true });
     const stage = document.getElementById('stage');
     stage.style.background = `linear-gradient(165deg, ${th.bg[0]} 0%, ${th.bg[1]} 55%, ${th.bg[2]} 100%)`;
     stage.style.fontFamily = th.font;
     stage.dataset.canal = spec.canal;
+    if (TINTA) stage.dataset.estilo = 'tinta';
+    window.TINTA_PAL = TINTA ? PAL : null;
     const art = document.getElementById('art');
     const charLayer = document.getElementById('chars');
     const caps = document.getElementById('caps');
@@ -56,7 +64,8 @@
       <radialGradient id="spot" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${th.glow}" stop-opacity=".35"/><stop offset="100%" stop-color="${th.glow}" stop-opacity="0"/></radialGradient>
       <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <radialGradient id="vig" cx="50%" cy="50%" r="70%"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
-      <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>`;
+      <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
+      <filter id="wob" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence id="wobT" type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="1" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter>`;
     // degradado vertical rápido: A.grad('#ff0','#f80') → 'url(#gN)'
     let gid = 0;
     function grad(c1, c2, dir = 'v') {
@@ -72,7 +81,8 @@
     const spotA = el('ellipse', { cx: 300, cy: 500, rx: 700, ry: 700, fill: 'url(#spot)' }, bgl);
     const spotB = el('ellipse', { cx: 900, cy: 1400, rx: 600, ry: 600, fill: 'url(#spot)', opacity: 0.6 }, bgl);
     let pattern;
-    if (th.pattern === 'grid') {
+    if (TINTA) { spotA.setAttribute('opacity', 0); spotB.setAttribute('opacity', 0); pattern = el('g', {}, bgl); }
+    else if (th.pattern === 'grid') {
       pattern = el('g', { opacity: 0.07 }, bgl);
       for (let x = -240; x < W + 240; x += 120) el('line', { x1: x, y1: -240, x2: x, y2: H + 240, stroke: '#fff', 'stroke-width': 2 }, pattern);
       for (let y = -240; y < H + 240; y += 120) el('line', { x1: -240, y1: y, x2: W + 240, y2: y, stroke: '#fff', 'stroke-width': 2 }, pattern);
@@ -95,7 +105,7 @@
     // partículas ambiente (se calculan por fotograma, deterministas)
     const parts = [];
     const pl = el('g', {}, art);
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < (TINTA ? 0 : 28); i++) {
       const p = { x: R() * W, y: R() * H, r: 2 + R() * (th.particles === 'bubbles' ? 18 : 5), sp: 10 + R() * 40, ph: R() * 6.28, depth: 0.3 + R() * 0.7 };
       p.node = th.particles === 'bubbles'
         ? el('circle', { r: p.r, fill: 'none', stroke: '#fff', 'stroke-width': 3, opacity: 0.55 }, pl)
@@ -104,7 +114,8 @@
     }
 
     // cámara: todas las escenas viven aquí
-    const cam = el('g', {}, art);
+    const cam = el('g', TINTA ? { filter: 'url(#wob)' } : {}, art);
+    if (TINTA) charLayer.setAttribute('style', 'filter:url(#wob)');
 
     // ---------- presentador
     const ch = CHARS[spec.personaje]();
@@ -136,42 +147,41 @@
       const blur = el('feGaussianBlur', { stdDeviation: '0 0' }, blurF);
       const outer = el('g', { filter: `url(#mb${sc.i})` }, cam); // desenfoque de movimiento en transiciones
       const mid = el('g', {}, outer); // movimiento de transición
-      const g = el('g', { filter: 'url(#sh)' }, mid); // contenido con sombra suave
+      const g = el('g', TINTA ? {} : { filter: 'url(#sh)' }, mid); // contenido (sombra suave solo en estilo clásico)
       gsap.set(outer, { autoAlpha: 0 });
       gsap.set(mid, { transformOrigin: '540px 680px' });
       const s = sc.start, e = sc.start + sc.dur;
-      const kind = sc.transicion || TRANS[sc.i % TRANS.length];
-      // entrada
+      const kind = sc.transicion === 'iris' ? 'iris' : 'push';
+      // ---- transición insignia (una sola para todo el vídeo; el iris queda para el cierre)
+      // Entrada 0.45 s con desaceleración fuerte (expo.out ≈ MD3 emphasized): sube 160 px, escala 0.96→1,
+      // desenfoque 6→0. Salida 0.28 s (más corta que la entrada) con aceleración suave: sube 120 px, 1→0.94,
+      // se funde y se desenfoca. Pequeño solape = fundido limpio; el desenfoque disimula la doble exposición.
+      const isIris = kind === 'iris';
       tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.02));
       if (sc.i > 0) {
-        if (kind === 'whip') {
-          tl.fromTo(mid, { x: 720 }, { x: 0, duration: 0.5, ease: 'expo.out' }, s);
-          tl.fromTo(blur, { attr: { stdDeviation: '40 0' } }, { attr: { stdDeviation: '0 0' }, duration: 0.35, ease: 'power2.out' }, s);
-        } else if (kind === 'whipUp') {
-          tl.fromTo(mid, { y: 900 }, { y: 0, duration: 0.55, ease: 'expo.out' }, s);
-          tl.fromTo(blur, { attr: { stdDeviation: '0 40' } }, { attr: { stdDeviation: '0 0' }, duration: 0.35, ease: 'power2.out' }, s);
-        } else if (kind === 'zoom') {
-          tl.fromTo(mid, { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'expo.out' }, s);
-          tl.fromTo(blur, { attr: { stdDeviation: '10 10' } }, { attr: { stdDeviation: '0 0' }, duration: 0.35, ease: 'power2.out' }, s);
-        } else {
+        if (isIris) {
           const clipId = `iris${sc.i}`;
           const cp = el('clipPath', { id: clipId }, defs);
           const circ = el('circle', { cx: 540, cy: 680, r: 0 }, cp);
           outer.setAttribute('clip-path', `url(#${clipId})`);
-          tl.fromTo(circ, { attr: { r: 0 } }, { attr: { r: 1400 }, duration: 0.6, ease: 'power3.inOut' }, s - 0.05);
+          tl.fromTo(circ, { attr: { r: 0 } }, { attr: { r: 1400 }, duration: 0.7, ease: 'power3.out' }, s - 0.05);
+        } else {
+          tl.fromTo(mid, { y: 160, scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: 'expo.out' }, s - 0.06);
+          tl.fromTo(blur, { attr: { stdDeviation: '6 6' } }, { attr: { stdDeviation: '0 0' }, duration: 0.3, ease: 'power2.out' }, s - 0.06);
         }
       }
-      // empuje lento de cámara durante la escena (capa ambiente de la escena)
-      tl.fromTo(g, { scale: 1, x: 0 }, { scale: 1.045, x: (sc.i % 2 ? -12 : 12), transformOrigin: '540px 680px', duration: sc.dur + 0.4, ease: 'none' }, s);
-      // salida (acelera)
+      // empuje lento de cámara durante la escena (capa ambiente), con curva suave en vez de lineal
+      tl.fromTo(g, { scale: 1, x: 0 }, { scale: 1.035, x: (sc.i % 2 ? -10 : 10), transformOrigin: '540px 680px', duration: sc.dur + 0.4, ease: 'sine.inOut' }, s);
+      // salida
       const next = scenes[sc.i + 1];
       if (next) {
-        const nk = next.transicion || TRANS[next.i % TRANS.length];
-        if (nk === 'whip') { tl.to(mid, { x: -720, duration: 0.3, ease: 'power3.in' }, e - 0.3); tl.to(blur, { attr: { stdDeviation: '40 0' }, duration: 0.3, ease: 'power3.in' }, e - 0.3); }
-        else if (nk === 'whipUp') { tl.to(mid, { y: -900, duration: 0.3, ease: 'power3.in' }, e - 0.3); tl.to(blur, { attr: { stdDeviation: '0 40' }, duration: 0.3, ease: 'power3.in' }, e - 0.3); }
-        else if (nk === 'zoom') { tl.to(mid, { scale: 1.5, opacity: 0, duration: 0.35, ease: 'power3.in' }, e - 0.32); }
-        else { tl.to(mid, { scale: 0.95, duration: 0.5, ease: 'sine.inOut' }, e - 0.5); }
-        tl.set(outer, { autoAlpha: 0 }, e + 0.6);
+        const nk = next.transicion === 'iris' ? 'iris' : 'push';
+        if (nk === 'iris') { tl.to(mid, { scale: 0.95, opacity: 0.6, duration: 0.5, ease: 'sine.inOut' }, e - 0.4); }
+        else {
+          tl.to(mid, { y: -120, scale: 0.94, opacity: 0, duration: 0.28, ease: 'power2.in' }, e - 0.22);
+          tl.to(blur, { attr: { stdDeviation: '6 6' }, duration: 0.28, ease: 'power2.in' }, e - 0.22);
+        }
+        tl.set(outer, { autoAlpha: 0 }, e + 0.7);
       }
 
       const A = {
@@ -181,6 +191,8 @@
         // aparición con anticipación + estirado + rebote (squash & stretch)
         pop(target, x = 0, extra = {}) {
           // entrada sutil: nada aparece de la nada (escala 0.86, no 0), ease-out fuerte y un rebote mínimo
+          // el panel de la escena ya entra con la transición: no le sumamos otro movimiento
+          if (x < 0.05 && target.querySelector && target.querySelector('clipPath')) { gsap.set(target, { opacity: 1 }); return; }
           gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box', scale: 0.86, opacity: 0 });
           tl.to(target, { scale: 1, opacity: 1, duration: 0.42, ease: 'back.out(1.25)', ...extra }, s + x);
         },
@@ -192,7 +204,7 @@
             { x: `-=${d[0]}`, y: `-=${d[1]}`, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.6)' }, s + x);
         },
         // panel minimalista: color plano, esquinas grandes, trazo fino; devuelve el grupo recortado
-        panel(id, fill = '#1e2a52', stroke = 'rgba(255,255,255,.14)', o = {}) {
+        panel(id, fill = grad(th.panel[0], th.panel[1]), stroke = 'rgba(255,255,255,.10)', o = {}) {
           const { x = 60, y = 290, w = 960, h = 800, r = 48 } = o;
           const f = A.el('g', {}); const cp = A.el('clipPath', { id }, f); A.el('rect', { x, y, width: w, height: h, rx: r }, cp);
           const c = A.el('g', { 'clip-path': `url(#${id})` }, f);
@@ -297,11 +309,12 @@
       sc.arte && sc.arte(A);
       // ambiente automático sobre el panel estándar (motas, viñeta y barrido de brillo de entrada):
       // solo si la escena usa un panel recortado y no lo desactiva (spec.ambiente === false o sc.ambiente === false)
-      if (spec.ambiente !== false && sc.ambiente !== false && !g.querySelector('[data-amb]') && g.querySelector('clipPath')) {
+      if (TINTA) inkify(g, PAL);
+      if (!TINTA && spec.ambiente !== false && sc.ambiente !== false && !g.querySelector('[data-amb]') && g.querySelector('clipPath')) {
         const cid = `amb${sc.i}`;
         const cp = el('clipPath', { id: cid }, defs); el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 50 }, cp);
         const amb = el('g', { 'clip-path': `url(#${cid})`, 'pointer-events': 'none', 'data-amb': 1 }, g);
-        A.bgFx(amb, { motes: th === THEMES.peques ? 5 : 9, vignette: th !== THEMES.peques, sweep: true, color: '#ffffff' });
+        A.bgFx(amb, { motes: PEQ ? 5 : 9, vignette: !PEQ, sweep: true, color: '#ffffff' });
       }
       buildCaption(sc, th, tl, caps);
     });
@@ -335,8 +348,10 @@
       tl.fromTo(bell, { rotation: -16, transformOrigin: '50% 10%' }, { rotation: 16, duration: 0.09, ease: 'sine.inOut', yoyo: true, repeat: 5 }, t1 + 0.4);
       tl.to(pill, { scale: 0.94, duration: 0.1, ease: 'power2.out' }, t1 + 1.5);
       tl.to(pill, { scale: 1, duration: 0.18, ease: 'power2.out' }, t1 + 1.6);
-      tl.call(() => { label.textContent = L[1]; pill.style.background = '#2b2b3a'; }, null, t1 + 1.6);
-      tl.call(() => { label.textContent = L[0]; pill.style.background = '#ff0033'; }, null, t1 - 0.05);
+      if (TINTA) { pill.style.background = PAL.RED; pill.style.border = '5px solid ' + PAL.INK; pill.style.boxShadow = '0 6px 0 ' + PAL.INK; }
+      const ON = TINTA ? PAL.RED : '#ff0033', OFF = TINTA ? PAL.INK : '#2b2b3a';
+      tl.call(() => { label.textContent = L[1]; pill.style.background = OFF; }, null, t1 + 1.6);
+      tl.call(() => { label.textContent = L[0]; pill.style.background = ON; }, null, t1 - 0.05);
       tl.to(pill, { autoAlpha: 0, x: 60, duration: 0.25, ease: 'power2.out' }, t1 + 3.0);
     }
 
@@ -361,10 +376,69 @@
         p.node.setAttribute('cx', x); p.node.setAttribute('cy', y);
       });
       gctx.putImageData(frames[Math.floor(t * 24) % 4], 0, 0);
+      if (TINTA) { const wt = document.getElementById('wobT'); if (wt) wt.setAttribute('seed', 1 + (Math.floor(t * 8) % 5)); }
       document.getElementById('bar').style.width = `${Math.min(100, (t / total) * 100)}%`;
     };
     window.seek(0);
   };
+
+
+  // ---------- INKIFY: convierte cualquier ilustración a estilo "tinta" (línea negra + relleno amarillo + rojo de acento)
+  // Reglas: decoraciones tenues (opacidad < 0.5, brillos blancos) se ocultan; piezas pequeñas → negro macizo;
+  // oscuros → negro; rojos → rojo con contorno; todo lo demás → amarillo con contorno negro. Textos: negro
+  // (o amarillo si están sobre una tarjeta negra). Se aplica tras dibujar cada escena.
+  function parseColor(c) {
+    if (!c) return null; c = c.trim().toLowerCase();
+    if (c === 'none' || c === 'transparent') return null;
+    if (c.startsWith('url(')) {
+      const id = c.slice(5, -1).replace('#', ''); const gr = document.getElementById(id);
+      const st = gr && gr.querySelector('stop'); return st ? parseColor(st.getAttribute('stop-color')) : [200, 200, 200, 1];
+    }
+    if (c === 'white') return [255, 255, 255, 1]; if (c === 'black') return [0, 0, 0, 1];
+    if (c[0] === '#') { let h = c.slice(1); if (h.length === 3) h = h.split('').map((x) => x + x).join(''); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16), 1]; }
+    const m = c.match(/rgba?\(([^)]+)\)/); if (m) { const v = m[1].split(',').map(parseFloat); return [v[0], v[1], v[2], v[3] == null ? 1 : v[3]]; }
+    return [200, 200, 200, 1];
+  }
+  const lum = (c) => (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
+  const isRed = (c) => c[0] > 170 && c[1] < 120 && c[2] < 130;
+  function inkify(root, P) {
+    const skip = 'clipPath,defs,mask,filter,linearGradient,radialGradient';
+    const shapes = [...root.querySelectorAll('path,rect,circle,ellipse,polygon,polyline,line')].filter((e) => !e.closest(skip));
+    const effOpacity = (e) => { let o = 1; for (let p = e; p && p !== root.parentNode; p = p.parentNode) { const a = p.getAttribute && p.getAttribute('opacity'); if (a != null) o *= parseFloat(a); } return o; };
+    for (const e of shapes) {
+      const fc = parseColor(e.getAttribute('fill') == null ? '#000' : e.getAttribute('fill'));
+      const sc = parseColor(e.getAttribute('stroke'));
+      const op = effOpacity(e) * (fc ? fc[3] : 1) * (!fc && sc ? sc[3] : 1);
+      if (op < 0.5 || (fc && lum(fc) > 0.9 && effOpacity(e) < 1)) { e.setAttribute('display', 'none'); continue; }
+      const r = e.getBoundingClientRect(); const small = r.width > 0 && r.width < 26 && r.height < 26;
+      // sin marcos de panel: en este estilo los dibujos flotan sobre el amarillo
+      if (e.tagName === 'rect' && r.width > 850 && r.height > 650) { e.setAttribute('display', 'none'); continue; }
+      e.setAttribute('stroke-linejoin', 'round'); e.setAttribute('stroke-linecap', 'round');
+      if (!fc) { // solo trazo
+        if (sc) { e.setAttribute('stroke', isRed(sc) ? P.RED : P.INK); const w = parseFloat(e.getAttribute('stroke-width') || 1); if (w < 5) e.setAttribute('stroke-width', 5); }
+        continue;
+      }
+      if (small) { e.setAttribute('fill', isRed(fc) ? P.RED : P.INK); e.setAttribute('stroke', 'none'); continue; }
+      const intended = (e.getAttribute('fill') || '').toLowerCase() === P.INK;
+      if (lum(fc) < 0.28 && (intended || r.width * r.height < 40000)) { e.setAttribute('fill', P.INK); if (sc) e.setAttribute('stroke', P.INK); continue; }
+      e.setAttribute('fill', isRed(fc) ? P.RED : P.Y);
+      e.setAttribute('stroke', P.INK);
+      if (!sc) { e.setAttribute('stroke-width', 7); e.setAttribute('vector-effect', 'non-scaling-stroke'); }
+      else { const w = parseFloat(e.getAttribute('stroke-width') || 1); if (w < 6) e.setAttribute('stroke-width', 6); }
+    }
+    for (const t of root.querySelectorAll('text')) {
+      if (t.closest(skip)) continue;
+      const fc = parseColor(t.getAttribute('fill')) || [0, 0, 0, 1];
+      t.removeAttribute('stroke'); t.removeAttribute('paint-order');
+      if (isRed(fc)) { t.setAttribute('fill', P.RED); continue; }
+      // ¿está sobre una tarjeta oscura? (primer relleno del grupo padre)
+      const box = t.parentNode && [...t.parentNode.querySelectorAll('rect,path,circle,ellipse')].find((x) => x.getAttribute('fill') && x.getAttribute('fill') !== 'none');
+      const onDark = box && (box.getAttribute('fill') === P.INK || box.getAttribute('fill') === P.RED);
+      t.setAttribute('fill', onDark ? (box.getAttribute('fill') === P.RED ? '#fff' : P.Y) : P.INK);
+      // si el texto no cabe en su tarjeta (esta tipografía es ancha), se reduce hasta que quepa
+      if (box) { try { const bw = box.getBBox().width, tw = t.getBBox().width; if (bw > 0 && tw > bw - 48) { const fs = parseFloat(t.getAttribute('font-size')); t.setAttribute('font-size', Math.floor(fs * (bw - 48) / tw)); } } catch (err) { /* sin bbox */ } }
+    }
+  }
 
   // boca simulada cuando no hay voz
   function fakeAmp(t, scenes) {
@@ -389,8 +463,9 @@
         s.classList.add('hl');
         const cw = Object.keys(COLOR_WORDS).find((c) => norm(w).startsWith(c));
         let col = cw ? COLOR_WORDS[cw] : th.accent;
-        if (th === THEMES.peques && !cw) col = KIDS[k++ % KIDS.length];
+        if (document.getElementById('stage').dataset.canal === 'peques' && !window.TINTA_PAL && !cw) col = KIDS[k++ % KIDS.length];
         s.style.background = col;
+        if (window.TINTA_PAL) { s.style.background = 'transparent'; s.style.color = window.TINTA_PAL.RED; box.appendChild(s); box.appendChild(document.createTextNode(' ')); return; }
         s.style.color = ['#ffd500', '#ffd60a', '#ffc43d', '#ffca28'].includes(col) ? '#1a1a3a' : '#fff';
       }
       box.appendChild(s);

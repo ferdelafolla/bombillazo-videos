@@ -43,37 +43,32 @@
   }
 
   // ---- Chispa: bombilla curiosa (Bombillazo)
+  // ---- Chispa (estilo tinta): bombilla amarilla redonda, ojos cerrados en arco, nariz "<",
+  // sonrisa roja que se abre al hablar y casquillo a rayas. Contorno negro grueso.
   function chispa() {
+    const Y = '#f5bd22', K = '#161412', R = '#e63b2e';
     const root = g(`
-      <defs>
-        <radialGradient id="cGlass" cx=".38" cy=".3" r=".8"><stop offset="0" stop-color="#fff6b0"/><stop offset=".6" stop-color="#ffe14d"/><stop offset="1" stop-color="#f5b800"/></radialGradient>
-        <linearGradient id="cBase" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8399"/><stop offset=".45" stop-color="#d6dae6"/><stop offset="1" stop-color="#6b7186"/></linearGradient>
-      </defs>
-      <ellipse class="shadow" cx="0" cy="170" rx="90" ry="14" fill="#000" opacity=".3"/>
+      <ellipse class="shadow" cx="0" cy="172" rx="80" ry="12" fill="${K}" opacity=".18"/>
       <g class="body">
-        <circle class="glow" cx="0" cy="-40" r="170" fill="#ffd60a" opacity=".18"/>
-        <g class="head">
-          <path d="M-100,-40 a100,100 0 1,1 200,0 c0,50 -40,70 -46,110 h-108 c-6,-40 -46,-60 -46,-110z" fill="url(#cGlass)"/>
-          <path d="M-70,-90 a70,70 0 0,1 50,-40" stroke="#fff" stroke-width="14" fill="none" stroke-linecap="round" opacity=".8"/>
-          <path d="M-20,40 q20,-40 40,0" stroke="#e08a00" stroke-width="5" fill="none" opacity=".5"/>
-          <g class="brows"><rect class="browL" x="-52" y="-80" width="34" height="8" rx="4" fill="#2b1d5c"/><rect class="browR" x="18" y="-80" width="34" height="8" rx="4" fill="#2b1d5c"/></g>
-          <g class="eyes"><ellipse class="eye" cx="-34" cy="-40" rx="14" ry="18" fill="#2b1d5c"/><ellipse class="eye" cx="34" cy="-40" rx="14" ry="18" fill="#2b1d5c"/></g>
-          <circle cx="-30" cy="-47" r="5" fill="#fff"/><circle cx="38" cy="-47" r="5" fill="#fff"/>
-          <ellipse cx="-62" cy="-6" rx="16" ry="9" fill="#ff8a65" opacity=".6"/><ellipse cx="62" cy="-6" rx="16" ry="9" fill="#ff8a65" opacity=".6"/>
-          <ellipse class="mouth" cx="0" cy="4" rx="16" ry="6" fill="#2b1d5c"/>
-        </g>
         <g class="torso">
-          <rect x="-56" y="70" width="112" height="22" rx="10" fill="url(#cBase)"/>
-          <rect x="-50" y="94" width="100" height="22" rx="10" fill="url(#cBase)"/>
-          <rect x="-40" y="118" width="80" height="22" rx="10" fill="url(#cBase)"/>
-          <path d="M-14,142 h28 l-6,18 h-16z" fill="#4a4f63"/>
+          <rect x="-44" y="54" width="88" height="104" rx="30" fill="${Y}" stroke="${K}" stroke-width="9"/>
+          <path d="M-40,84 H40 M-42,108 H42 M-40,132 H40" stroke="${K}" stroke-width="8" stroke-linecap="round"/>
         </g>
-        <g class="arm" transform="translate(92,10)">
-          <path d="M0,0 q40,-10 60,-50" stroke="#ffd23a" stroke-width="16" fill="none" stroke-linecap="round"/>
-          <circle cx="62" cy="-54" r="15" fill="#ffe14d"/>
+        <g class="head">
+          <circle cx="0" cy="-48" r="118" fill="${Y}" stroke="${K}" stroke-width="9"/>
+          <g class="eyes">
+            <path class="eye" d="M-62,-62 q18,20 36,0" stroke="${K}" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path class="eye" d="M26,-62 q18,20 36,0" stroke="${K}" stroke-width="8" fill="none" stroke-linecap="round"/>
+          </g>
+          <path d="M8,-40 L-10,-26 L10,-16" stroke="${K}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="mouth" d="M-38,4 Q0,34 38,4" stroke="${R}" stroke-width="9" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="arm" transform="translate(104,10)">
+          <path d="M0,0 q40,-10 60,-50" stroke="${K}" stroke-width="30" fill="none" stroke-linecap="round"/>
+          <path d="M0,0 q40,-10 60,-50" stroke="${Y}" stroke-width="14" fill="none" stroke-linecap="round"/>
         </g>
       </g>`);
-    return makeChar(root, { mouth: 'ellipse', eyeRy: 18 });
+    return makeChar(root, { mouth: 'redsmile', eyeRy: 18 });
   }
 
   // ---- Edu: gotita azul (Bombillazo Peques)
@@ -140,6 +135,12 @@
         const open = Math.max(v, sur * 0.45);
         if (opts.mouth === 'rect') { mouth.setAttribute('height', 8 + open * 30); mouth.setAttribute('y', -6 - open * 12); mouth.setAttribute('width', 52 - sur * 18); mouth.setAttribute('x', -26 + sur * 9); }
         else if (opts.mouth === 'ellipse') { mouth.setAttribute('ry', 6 + open * 18); mouth.setAttribute('rx', 16 - sur * 4); }
+        else if (opts.mouth === 'redsmile') {
+          // sonrisa roja: al hablar se abre en media luna rellena
+          const o = open, dy = 30 + o * 34;
+          mouth.setAttribute('d', o > 0.06 ? `M-38,4 Q0,${4 + dy} 38,4 Q0,${4 + o * 8} -38,4Z` : 'M-38,4 Q0,34 38,4');
+          mouth.setAttribute('fill', o > 0.06 ? '#e63b2e' : 'none');
+        }
         else { const w = 26 - sur * 10; mouth.setAttribute('d', `M${-w},62 Q0,${74 + open * 40} ${w},62 Q0,${62 + sur * 14} ${-w},62 Z`); }
         // brazo: saludo / señalar / pensar
         if (arm) arm.setAttribute('transform', `${armBase} rotate(${-this.wave * (20 + Math.sin(t * 12) * 18) - this.point * 40 + th * -70})`);

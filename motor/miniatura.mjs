@@ -1,12 +1,34 @@
-// Miniatura 1080x1920: la pregunta del vídeo + Chispa. Uso: node miniatura.mjs "¿Pregunta?" tema salida.png
+// Miniatura 1080x1920 en estilo TINTA: la pregunta del vídeo + Chispa, amarillo, negro y rojo.
+// Uso: node miniatura.mjs "¿Pregunta?" aldia|news|curiosidades|peques|chess salida.png
 import { chromium } from '/opt/npm-tools/node_modules/playwright/index.mjs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const HERE = path.dirname(fileURLToPath(import.meta.url));
 const [q, tema, out] = process.argv.slice(2);
-const T = { aldia: ['#0e1236', '#3a2fa0', '#ff4d6a', 'HOY'], curiosidades: ['#2a1a6e', '#8a5be8', '#ffd93b', 'CURIOSIDADES'], peques: ['#4fc3ff', '#d6f4ff', '#ff7a2b', 'PEQUES'], news: ['#2a0a18', '#a01040', '#ffd43d', 'NEWS'], chess: ['#0b1f17', '#2f7a4a', '#ffd43d', 'CHESS'] }[tema];
-const dark = tema !== 'peques';
-const html = `<body style="margin:0;width:1080px;height:1920px;background:linear-gradient(160deg,${T[0]},${T[1]});font-family:'Fredoka',Arial Black,sans-serif;position:relative;overflow:hidden">
-<style>@font-face{font-family:Fredoka;src:url(file:///home/claude/bombillazo/fonts/Fredoka-SemiBold.woff)}</style>
-<div style="position:absolute;left:70px;top:110px;background:${dark ? 'rgba(255,255,255,.12)' : '#fff'};border-radius:60px;padding:22px 44px;font-size:56px;color:${T[2]};font-weight:700">💡 Chispazo <span style="color:${dark ? '#fff' : '#2b2f6a'};font-size:40px;letter-spacing:4px">${T[3]}</span></div>
-<div style="position:absolute;left:60px;right:60px;top:380px;text-align:center;font-size:150px;line-height:1.08;color:${dark ? '#fff' : '#1c2250'};text-shadow:0 8px 0 rgba(0,0,0,.25);font-weight:700">${q}</div>
-<svg style="position:absolute;left:260px;top:1150px" width="560" height="640" viewBox="-140 -170 280 320"><ellipse cx="0" cy="140" rx="90" ry="10" fill="rgba(0,0,0,.25)"/><path d="M0,-150 C-110,-150 -135,-30 -85,30 C-60,60 -55,75 -55,95 H55 C55,75 60,60 85,30 C135,-30 110,-150 0,-150z" fill="#ffd93b" stroke="#e0a800" stroke-width="5"/><rect x="-50" y="95" width="100" height="14" rx="6" fill="#aab"/><rect x="-44" y="112" width="88" height="14" rx="6" fill="#99a"/><rect x="-30" y="128" width="60" height="14" rx="6" fill="#889"/><circle cx="-35" cy="-30" r="14" fill="#1c2250"/><circle cx="35" cy="-30" r="14" fill="#1c2250"/><circle cx="-30" cy="-35" r="5" fill="#fff"/><circle cx="40" cy="-35" r="5" fill="#fff"/><path d="M-30,10 Q0,40 30,10" stroke="#1c2250" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="-62" cy="0" r="14" fill="#ff9a7a" opacity=".7"/><circle cx="62" cy="0" r="14" fill="#ff9a7a" opacity=".7"/></svg></body>`;
+const SERIE = { aldia: 'HOY', news: 'NEWS', curiosidades: 'CURIOSIDADES', peques: 'PEQUES', chess: 'CHESS' }[tema] || '';
+const Y = '#f7d94c', K = '#161412', R = '#e63b2e', B = '#f5bd22';
+// la pregunta: la palabra más larga en rojo (acento único)
+const words = q.split(/\s+/);
+const clean = (w) => w.replace(/[^\p{L}]/gu, '');
+const longest = words.reduce((a, w) => (clean(w).length > clean(a).length ? w : a), '');
+const qHtml = words.map((w) => (w === longest ? `<span style="color:${R}">${w}</span>` : w)).join(' ');
+const size = q.length > 34 ? 118 : q.length > 22 ? 134 : 150;
+const html = `<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Vemoly;src:url(file://${HERE}/fonts/VemolyChispazo.ttf)}
+body{margin:0;width:1080px;height:1920px;background:${Y};font-family:Vemoly,sans-serif;position:relative;overflow:hidden;color:${K}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<div style="position:absolute;left:70px;top:110px;background:${K};border-radius:60px;padding:18px 40px;font-size:54px;color:${Y}">Chispazo <span style="font-size:40px;letter-spacing:4px">${SERIE}</span></div>
+<div style="position:absolute;left:60px;right:60px;top:380px;text-align:center;font-size:${size}px;line-height:1.08">${qHtml}</div>
+<svg style="position:absolute;left:250px;top:1080px;filter:url(#wob)" width="580" height="700" viewBox="-150 -180 300 360">
+  <ellipse cx="0" cy="168" rx="80" ry="12" fill="${K}" opacity=".18"/>
+  <rect x="-44" y="54" width="88" height="104" rx="30" fill="${B}" stroke="${K}" stroke-width="9"/>
+  <path d="M-40,84 H40 M-42,108 H42 M-40,132 H40" stroke="${K}" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="0" cy="-48" r="118" fill="${B}" stroke="${K}" stroke-width="9"/>
+  <path d="M-62,-62 q18,20 36,0 M26,-62 q18,20 36,0" stroke="${K}" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M8,-40 L-10,-26 L10,-16" stroke="${K}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M-38,4 Q0,34 38,4" stroke="${R}" stroke-width="9" fill="none" stroke-linecap="round"/>
+</svg>
+</body></html>`;
 const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
-await p.setContent(html); await p.waitForTimeout(400); await p.screenshot({ path: out }); await b.close();
+const tmp = path.join(HERE, '.miniatura_tmp.html'); (await import('node:fs')).writeFileSync(tmp, html); await p.goto('file://' + tmp); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(400); await p.screenshot({ path: out }); await b.close();

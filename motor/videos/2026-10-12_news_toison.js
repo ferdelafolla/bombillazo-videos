@@ -1,13 +1,7 @@
 // Chispazo News — ¿Qué es el Toisón de Oro? (12/10/2026). Tendencia Google Trends ES: "leonor de borbón" (a Leonor se le cayó la insignia en el desfile del 12-O).
 // Fuentes: HOLA (historia del Toisón y de Leonor), Telecinco/Vanitatis (incidente en el desfile).
-function panel(A, id, c1, c2) {
-  const { el } = A; const f = el('g');
-  const cp = el('clipPath', { id }, f); el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 54 }, cp);
-  const s = el('g', { 'clip-path': `url(#${id})` }, f);
-  el('rect', { x: 60, y: 290, width: 960, height: 800, fill: A.grad(c1, c2) }, s);
-  el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 54, fill: 'none', stroke: '#fff', 'stroke-opacity': 0.3, 'stroke-width': 6 }, f);
-  A.pop(f, 0); return s;
-}
+// panel neutro de la serie (paleta fija: un solo acento por serie; los colores c1/c2 se ignoran)
+function panel(A, id) { return A.panel(id); }
 function cloud(A, s, x, y, k, col = '#cfd8f0') {
   const g = A.el('g', { html: `<ellipse rx="150" ry="55" fill="${col}"/><ellipse cx="-90" cy="20" rx="90" ry="45" fill="${col}"/><ellipse cx="95" cy="22" rx="100" ry="42" fill="${col}"/>` }, s);
   window.gsap.set(g, { x, y, scale: k }); return g;
@@ -26,8 +20,9 @@ function bubble(A, s, x, y, r, col = '#7fd4ff') {
   A.el('path', { d: `M${-r * 0.55},${-r * 0.2} A${r * 0.6},${r * 0.6} 0 0 1 ${-r * 0.1},${-r * 0.6}`, stroke: '#fff', 'stroke-width': 8, fill: 'none', 'stroke-linecap': 'round', opacity: 0.8 }, g);
   return g;
 }
-function card(A, s, x, y, w, h, c1, c2, text, size, ink = '#2b2250') {
-  const g = A.el('g', {}, s); window.gsap.set(g, { x, y }); A.card(-w / 2, -h / 2, w, h, A.grad(c1, c2), 44, g); A.txt(text, 0, size * 0.36, size, ink, { parent: g }); return g;
+// tarjeta en el color de acento de la serie (los colores c1/c2/ink se ignoran)
+function card(A, s, x, y, w, h, c1, c2, text, size) {
+  const g = A.el('g', {}, s); window.gsap.set(g, { x, y }); A.card(-w / 2, -h / 2, w, h, A.th.cardFill, 44, g); A.txt(text, 0, size * 0.36, size, A.th.cardInk, { parent: g }); return g;
 }
 
 function fleece(A, s, x, y, k = 1, t = 0) {

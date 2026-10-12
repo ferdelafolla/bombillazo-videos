@@ -90,3 +90,12 @@ La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMEN
 4. Primer comentario (firstCommentText en createScheduledPost de YouTube e Instagram): una pregunta fácil de responder sobre el tema + "Suscríbete: cada día ___ en 30 segundos 💡". Las respuestas a la pregunta suben el vídeo en el algoritmo.
 5. Gancho en los 2 primeros segundos: la pregunta en pantalla y en la voz a la vez; nada de presentaciones.
 6. Título y miniatura prometen la respuesta (pregunta clara); el vídeo la da antes del segundo 20.
+
+## ESTILO TINTA (por defecto desde 12/10/2026; referencia del usuario)
+- Dibujo de línea negra gruesa y temblorosa sobre AMARILLO plano; ROJO solo como acento; nada de degradados, paneles con marco, viñeta, sombras ni brillos.
+- El motor lo aplica solo (`inkify`): cualquier relleno pasa a amarillo con contorno negro, lo oscuro a negro, lo rojo a rojo, lo pequeño a negro macizo; las decoraciones tenues se ocultan. Las líneas "hierven" (feTurbulence cambiando de semilla 8 veces/s).
+- Para dibujar: piensa en contornos y formas simples (personas como tubos redondeados, objetos con 2-3 trazos), no en colores. Usa rojo (#e63b2e) solo para lo que debe destacar.
+- Tarjetas de texto: negras con texto amarillo (A.th.cardFill / A.th.cardInk). El texto se reduce solo si no cabe.
+- Chispa: bombilla amarilla redonda, ojos cerrados en arco, nariz "<", sonrisa roja (se abre al hablar), casquillo a rayas.
+- Tipografía: Vemoly (fonts/VemolyChispazo.ttf, con tildes, ñ, ¿¡ añadidas). Si falta el archivo, cae a Inter.
+- `estilo: 'clasico'` en VIDEO({...}) vuelve al estilo anterior.
