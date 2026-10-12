@@ -104,3 +104,13 @@ La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMEN
 
 ## TEMAS PROHIBIDOS (decisión del usuario, 12/10/2026)
 - NUNCA hablar de enfermedades ni de la salud de personas (ni de famosos ni de nadie): nada de párkinson, cáncer, ictus, diagnósticos, muertes, etc., aunque sean tendencia. Si la tendencia es la enfermedad de alguien, se descarta y se elige otra.
+- Excepción SOLO si el usuario lo pide expresamente (no la tarea automática): vídeo de causa benéfica sin nombrar a personas concretas (p. ej. nunca Pepe Colubi), con fuentes fiables sin ánimo de lucro donde donar (Federación Española de Párkinson esparkinson.es, Michael J. Fox Foundation michaeljfox.org…), `suscripcion:false` y SIN "suscríbete" al final ni en el primer comentario.
+
+## PLURALIDAD Y FUENTES DE TEMAS (decisión del usuario, 12/10/2026)
+- El canal es PLURAL: no toma partido. La política y la actualidad caliente están permitidas, pero contadas de forma neutral: qué pasa, qué dice cada parte, datos verificables. Nada de "cómo apoyar la causa", llamadas a movilizarse ni adjetivos valorativos. Si hay polémica, se cierra con "hay quien… y quien…" o con el dato que importa.
+- Equilibrar: no encadenar varios temas que sesguen hacia un mismo lado; alternar política con ciencia, tecnología, deportes, cultura y curiosidades.
+- Temas INTERNACIONALES cada día (al menos 1 de cada 3 vídeos de noticias: EE. UU., Europa, Latinoamérica, Asia…).
+- Fuente principal: GOOGLE TRENDS (España, EE. UU. y, para el vídeo chino, temas globales). Elegir lo que más búsquedas tiene ese día que cumpla las reglas anteriores; las otras fuentes solo para verificar datos.
+
+## PROMESAS PENDIENTES (cumplir el día indicado y luego borrar la línea)
+- 15/10/2026: vídeo News "¿Qué pasa en la frontera de Ceuta?" (prometido al final del vídeo de Ceuta y Melilla del 14/10). Tono neutral, datos oficiales.
