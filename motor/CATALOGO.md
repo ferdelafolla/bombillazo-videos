@@ -21,7 +21,7 @@ Huecos conocidos (por construir): mapa con marcador, línea de tiempo, personas/
 | KIT.coin(A,s,x,y,k,sym,t) / KIT.coinRain(A,s,n,tx,ty,t,sym) | dinero, inversión, precios | moneda que gira / lluvia de monedas hacia un destino |
 | KIT.server(A,s,x,y,k,t) | centros de datos, internet, nube | LEDs que parpadean |
 | KIT.chip(A,s,x,y,k,label,t) | IA, chips, tecnología | pulso de energía |
-| KIT.neuron(A,s,x,y,k,{col,t,fade}) | cerebro, nervios, párkinson, aprendizaje | señal que viaja por el axón; fade la apaga |
+| KIT.neuron(A,s,x,y,k,{col,t,fade}) | cerebro, nervios, aprendizaje (NUNCA enfermedades) | señal que viaja por el axón; fade la apaga |
 | KIT.arrow(A,s,x1,y1,x2,y2,col,t) | causa→efecto, señalar | se dibuja en curva |
 | KIT.timeline(A,s,items,y,hi,t) | historia, fechas | línea que se dibuja, destaca un hito |
 | KIT.board(A,s,cx,cy,size) → {sq,piece,move,highlight} | ajedrez (Chispazo Chess) | piezas Unicode; move con salto y rebote |

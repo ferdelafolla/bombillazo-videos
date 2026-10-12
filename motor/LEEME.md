@@ -101,3 +101,6 @@ La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMEN
 - Trazo vivo: bordes ásperos (roughen edges) + temblor sutil (wiggle); vídeo a 24 fps con la animación posterizada a 12 dibujos/s ("a doses").
 - El brazo de Chispa va detrás del cuerpo.
 - `estilo: 'clasico'` en VIDEO({...}) vuelve al estilo anterior.
+
+## TEMAS PROHIBIDOS (decisión del usuario, 12/10/2026)
+- NUNCA hablar de enfermedades ni de la salud de personas (ni de famosos ni de nadie): nada de párkinson, cáncer, ictus, diagnósticos, muertes, etc., aunque sean tendencia. Si la tendencia es la enfermedad de alguien, se descarta y se elige otra.
