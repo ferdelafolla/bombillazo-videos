@@ -23,7 +23,7 @@ VIDEO({
   canal: 'peques', personaje: 'chispa',
   titulo: '¿Por qué se caen las hojas?',
   escenas: [
-    { texto: '¡Hola! Soy Edu.', destacar: ['Edu.'], emocion: 'feliz',
+    { texto: '¡Hola! Soy Chispa.', destacar: ['Chispa.'], emocion: 'feliz',
       arte(A) { const { el, tl, at } = A; const s = panel(A, 'p1', '#59c9ff', '#c9f1ff');
         const sun = el('g', {}, s); window.gsap.set(sun, { x: 800, y: 480 }); el('circle', { r: 90, fill: '#ffd93b' }, sun); A.pop(sun, 0.1);
         tl.to(sun, { rotation: 20, duration: A.dur, ease: 'none', svgOrigin: '800 480' }, at(0));

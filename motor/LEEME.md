@@ -56,11 +56,11 @@ Reglas de diseño:
 - No dibujar personajes, logos ni marcas de terceros; banderas y lugares reales sí, estilizados.
 
 ## Voz (ElevenLabs, castellano de España)
-Conector ElevenLabs (`creative_generate_speech` dentro de un flow; crear el flow una vez y reutilizarlo). Voces: Hoy → Juanjo; Curiosidades → Lucía `s4NXWwstm4IwAI2dMQ6M`; Peques → Mirna `44CDRSYv1p2yot64kGmO` (modelo eleven_v4). Texto de la voz = frases del guion separadas por una línea en blanco (una por escena); años y cifras en letra; no decir el nombre de la mascota.
+Conector ElevenLabs (`creative_generate_speech` dentro de un flow; crear el flow una vez y reutilizarlo). Voces: Hoy → Juanjo; Curiosidades → Lucía `s4NXWwstm4IwAI2dMQ6M`; Peques → Mirna `44CDRSYv1p2yot64kGmO` (modelo eleven_v4). Texto de la voz = frases del guion separadas por una línea en blanco (una por escena); años y cifras en letra; la mascota se llama CHISPA (nunca Edu ni Noti): si se presenta en la locución, "¡Hola! Soy Chispa" (Peques lo hace siempre).
 La URL firmada del audio (caduca en 2 h) NO se puede descargar desde el contenedor. Relevo: crear `descargas/<id>.url` (una línea con la URL) en el repo público ferdelafolla/bombillazo-videos y hacer push; la Action `descargar.yml` guarda `voces/<id>.mp3` en el repo; hacer `git pull` y usarlo con `--voz`.
 
 ## Reglas de marca
-- La mascota es SIEMPRE la bombilla: `personaje: 'chispa'` en los tres canales.
+- La mascota es SIEMPRE la bombilla y se llama CHISPA: `personaje: 'chispa'` en los tres canales, y en cualquier locución o subtítulo se llama Chispa.
 - La miniatura SIEMPRE lleva la pregunta que resuelve el vídeo: `node miniatura.mjs "¿Pregunta?" aldia|curiosidades|peques miniaturas/<id>.png` (convertir a .jpg, subir al repo y pasar como `videoThumbnailUrl`).
 
 ## Publicación
