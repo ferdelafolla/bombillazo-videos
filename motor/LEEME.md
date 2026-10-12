@@ -81,3 +81,12 @@ Metricool `createScheduledPost` con youtubeData `{type:'short', madeForKids: (pe
 ## Botón final (suscribirse)
 - Español: `SUSCRÍBETE` → `SUSCRITO ✓`. Inglés y chino (los vídeos chinos llevan subtítulos en inglés): `SUBSCRIBE` → `SUBSCRIBED ✓`. NUNCA en chino.
 - Al copiar la escena final de otro guion, cambia SIEMPRE las dos cadenas (`label = A.txt(...)` y `label.textContent = ...`) al idioma del vídeo y compruébalo con `grep -n "label" guion.js` antes de renderizar.
+
+## SUSCRIPCIONES (obligatorio en todo vídeo menos Peques)
+La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMENTO.
+1. Recordatorio a mitad de vídeo: el motor lo pone solo (píldora roja con campana arriba a la derecha hacia el 40-50 % del vídeo, se pulsa y queda en "suscrito"). Idioma automático por el título; fuerza con `lang: 'en'` en VIDEO({...}) para vídeos en inglés o chino. Desactivar solo con `suscripcion: false`.
+2. Última frase = promesa concreta, no genérica: "Suscríbete: mañana te explico por qué ___" / "Subscribe: tomorrow, why ___". Elige ese tema de mañana entre las tendencias que ya tienes y apúntalo en OPORTUNIDADES.md para cumplirlo.
+3. Bucle abierto para los temas fuertes: si el tema da para más, hazlo en dos partes ("Parte 1" en el título; la parte 2 al día siguiente) y dilo en la última frase.
+4. Primer comentario (firstCommentText en createScheduledPost de YouTube e Instagram): una pregunta fácil de responder sobre el tema + "Suscríbete: cada día ___ en 30 segundos 💡". Las respuestas a la pregunta suben el vídeo en el algoritmo.
+5. Gancho en los 2 primeros segundos: la pregunta en pantalla y en la voz a la vez; nada de presentaciones.
+6. Título y miniatura prometen la respuesta (pregunta clara); el vídeo la da antes del segundo 20.

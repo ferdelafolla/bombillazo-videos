@@ -314,6 +314,32 @@
     document.getElementById('bar').style.background = th.accent;
     tl.fromTo('#chip', { x: -420 }, { x: 0, duration: 0.7, ease: 'back.out(1.5)' }, 0.15);
 
+    // ---------- idioma (es por defecto; en si el título no es español) y etiqueta de serie traducida
+    const lang = spec.lang || (/^[¿¡]|[áéíóúñ]/i.test(spec.titulo || '') ? 'es' : 'en');
+    if (lang === 'en') document.getElementById('chipname').textContent = { CURIOSIDADES: 'FUN FACTS', HOY: 'TODAY', PEQUES: 'KIDS' }[th.name] || th.name;
+
+    // ---------- recordatorio de suscripción a mitad de vídeo (la mayoría no llega al final).
+    // Píldora roja con campana arriba a la derecha: entra (expo.out), la campana suena, se "pulsa"
+    // (escala 0.94, 100 ms), cambia a "suscrito" y sale más rápido de lo que entró.
+    if (spec.canal !== 'peques' && spec.suscripcion !== false) {
+      const L = lang === 'en' ? ['SUBSCRIBE', 'SUBSCRIBED ✓'] : ['SUSCRÍBETE', 'SUSCRITO ✓'];
+      const pill = document.createElement('div');
+      pill.style.cssText = 'position:absolute;right:60px;top:150px;height:72px;border-radius:36px;background:#ff0033;color:#fff;display:flex;align-items:center;gap:12px;padding:0 30px 0 22px;font-size:32px;font-weight:900;letter-spacing:.5px;box-shadow:0 10px 30px rgba(0,0,0,.3);font-family:' + th.font;
+      pill.innerHTML = '<svg width="36" height="36" viewBox="-20 -22 40 44" class="bell"><path d="M-12,8 V-4 a12,12 0 0,1 24,0 V8 l4,5 h-32z" fill="#fff"/><circle cy="16" r="4" fill="#fff"/></svg><span>' + L[0] + '</span>';
+      stage.appendChild(pill);
+      const label = pill.querySelector('span'), bell = pill.querySelector('.bell');
+      const mid = scenes.find((x) => x.start >= total * 0.4 && x.i < scenes.length - 1) || scenes[Math.min(2, scenes.length - 1)];
+      const t1 = Math.max(4, mid.start + 0.6);
+      gsap.set(pill, { autoAlpha: 0, x: 280 });
+      tl.to(pill, { autoAlpha: 1, x: 0, duration: 0.45, ease: 'expo.out' }, t1);
+      tl.fromTo(bell, { rotation: -16, transformOrigin: '50% 10%' }, { rotation: 16, duration: 0.09, ease: 'sine.inOut', yoyo: true, repeat: 5 }, t1 + 0.4);
+      tl.to(pill, { scale: 0.94, duration: 0.1, ease: 'power2.out' }, t1 + 1.5);
+      tl.to(pill, { scale: 1, duration: 0.18, ease: 'power2.out' }, t1 + 1.6);
+      tl.call(() => { label.textContent = L[1]; pill.style.background = '#2b2b3a'; }, null, t1 + 1.6);
+      tl.call(() => { label.textContent = L[0]; pill.style.background = '#ff0033'; }, null, t1 - 0.05);
+      tl.to(pill, { autoAlpha: 0, x: 60, duration: 0.25, ease: 'power2.out' }, t1 + 3.0);
+    }
+
     // grano de película precalculado
     const grain = document.getElementById('grain');
     const gctx = grain.getContext('2d');
