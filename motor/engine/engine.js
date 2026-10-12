@@ -11,9 +11,9 @@
   const W = 1080, H = 1920;
   const FPS = window.FPS || 60;
   const THEMES = {
-    aldia: { name: 'HOY', bg: ['#0a0e20', '#1c1240', '#2a0f3a'], glow: '#5b6cff', text: '#fff', accent: '#ff4d5e', accent2: '#ffc43d', accent3: '#00e5c8', ink: '#141a3a', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
-    curiosidades: { name: 'CURIOSIDADES', bg: ['#26105c', '#1a2a8a', '#0c3c78'], glow: '#ffd60a', text: '#fff', accent: '#ffd60a', accent2: '#00e5c8', accent3: '#ff6bd6', ink: '#1a0f3c', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
-    news: { name: 'NEWS', bg: ['#1a0a12', '#3a0f26', '#5a1030'], glow: '#ff4d6a', text: '#fff', accent: '#ff3b5c', accent2: '#ffd43d', accent3: '#4fd1ff', ink: '#2a0a18', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
+    aldia: { name: 'HOY', bg: ['#0b0e1c', '#141a36', '#1a1432'], glow: '#5b6cff', text: '#fff', accent: '#ff4d5e', accent2: '#ffc43d', accent3: '#00e5c8', ink: '#141a3a', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
+    curiosidades: { name: 'CURIOSIDADES', bg: ['#12112b', '#181d45', '#0f2a46'], glow: '#ffd60a', text: '#fff', accent: '#ffd60a', accent2: '#00e5c8', accent3: '#ff6bd6', ink: '#1a0f3c', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
+    news: { name: 'NEWS', bg: ['#120a10', '#26101c', '#3a1024'], glow: '#ff4d6a', text: '#fff', accent: '#ff3b5c', accent2: '#ffd43d', accent3: '#4fd1ff', ink: '#2a0a18', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'grid', particles: 'dust' },
     chess: { name: 'CHESS', bg: ['#0b1f17', '#12382a', '#1f4a2f'], glow: '#ffd43d', text: '#fff', accent: '#ffd43d', accent2: '#7be0a0', accent3: '#ffffff', ink: '#0b1f17', font: "'Inter Display', Inter, sans-serif", chip: 'rgba(255,255,255,.12)', pattern: 'dots', particles: 'sparks' },
     peques: { name: 'PEQUES', bg: ['#a9dcff', '#e3f4ff', '#fff1c9'], glow: '#ffffff', text: '#28285a', accent: '#ff7043', accent2: '#66bb6a', accent3: '#42a5f5', ink: '#28285a', font: "'Fredoka', sans-serif", chip: 'rgba(255,255,255,.92)', pattern: 'none', particles: 'bubbles' },
   };
@@ -192,6 +192,15 @@
           tl.fromTo(target, { x: `+=${d[0]}`, y: `+=${d[1]}`, opacity: 0, rotation: d[0] ? (d[0] > 0 ? 8 : -8) : 0 },
             { x: `-=${d[0]}`, y: `-=${d[1]}`, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.6)' }, s + x);
         },
+        // panel minimalista: color plano, esquinas grandes, trazo fino; devuelve el grupo recortado
+        panel(id, fill = '#1e2a52', stroke = 'rgba(255,255,255,.14)', o = {}) {
+          const { x = 60, y = 290, w = 960, h = 800, r = 48 } = o;
+          const f = A.el('g', {}); const cp = A.el('clipPath', { id }, f); A.el('rect', { x, y, width: w, height: h, rx: r }, cp);
+          const c = A.el('g', { 'clip-path': `url(#${id})` }, f);
+          A.el('rect', { x, y, width: w, height: h, fill }, c);
+          A.el('rect', { x, y, width: w, height: h, rx: r, fill: 'none', stroke, 'stroke-width': 3 }, f);
+          A.pop(f, 0); return c;
+        },
         // entrada escalonada de un grupo (30-80 ms entre elementos): da ritmo sin bloquear
         stagger(targets, x = 0, step = 0.06) { targets.forEach((t, i) => A.pop(t, x + i * step)); },
         // dibuja un trazo (líneas, flechas, rutas)
@@ -208,7 +217,7 @@
         // ambiente rico para el panel (usar dentro del grupo recortado `s` de la escena):
         // haces de luz, motas flotantes, viñeta y un barrido de brillo. Da profundidad a fondos planos.
         bgFx(parent, o = {}) {
-          const { x = 60, y = 290, w = 960, h = 800, motes = 16, shafts = true, vignette = true, sweep = true, color = '#ffffff' } = o;
+          const { x = 60, y = 290, w = 960, h = 800, motes = 8, shafts = false, vignette = true, sweep = false, color = '#ffffff' } = o;
           const fx = el('g', { 'pointer-events': 'none' }, parent);
           if (shafts) for (let i = 0; i < 3; i++) {
             const sh = el('path', { d: `M${x + 140 + i * 280},${y - 40} l-110,${h + 80} h210z`, fill: color, opacity: 0.07 }, fx);
@@ -265,8 +274,6 @@
         card(x, y, w, h, fill, r = 36, parent) {
           const c = el('g', {}, parent || g);
           el('rect', { x, y, width: w, height: h, rx: r, fill }, c);
-          el('rect', { x, y, width: w, height: h, rx: r, fill: 'url(#shade)' }, c);
-          el('rect', { x: x + 6, y: y + 6, width: w - 12, height: h * 0.45, rx: r - 6, fill: 'url(#shine)' }, c);
           return c;
         },
         charTo(props, x = 0, d = 0.6) { tl.to(ch, { ...props, duration: d, ease: 'power3.inOut' }, s + x); },

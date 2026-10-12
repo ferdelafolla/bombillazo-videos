@@ -71,3 +71,9 @@ Metricool `createScheduledPost` con youtubeData `{type:'short', madeForKids: (pe
 - Objetos héroe GRANDES: el elemento principal de cada escena debe ocupar al menos un tercio del panel (los props de 30-60 px se pierden). Fondo con 2-3 capas de profundidad (cielo, colinas, suelo) que se muevan a distinta velocidad.
 - Cada escena: 1 elemento héroe + 2-3 secundarios animados con ritmo distinto (float, pop, draw) y un detalle de énfasis (A.ring/A.burst) al decir la palabra clave.
 - Tras cada vídeo, mirar 4-6 fotogramas (ffmpeg -ss) y apuntar una mejora concreta para el siguiente.
+
+## Estilo moderno y minimal (desde 12/10/2026)
+- Usa `A.panel(id, colorPlano)` (no gradientes brillantes ni bordes blancos gruesos) + `A.bgFx(s, {})` sobrio.
+- Piezas grandes de `KIT` (nube, sol, lluvia, suelo, brote, lupa, gráficos) con paleta limitada: 1 color de panel + 1 acento (amarillo marca) + blanco.
+- Tarjetas planas (sin brillo). Mucho aire alrededor del héroe. Tipografía grande y sin adornos.
+- Three.js: no hace falta para este estilo; solo se añadiría para escenas 3D reales.
