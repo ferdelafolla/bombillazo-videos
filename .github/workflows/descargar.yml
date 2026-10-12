@@ -25,5 +25,12 @@ jobs:
           git config user.name "Claude"
           git config user.email "noreply@anthropic.com"
           git add voces
-          git diff --cached --quiet || git commit -m "Audios descargados"
-          git push
+          git diff --cached --quiet && exit 0
+          git commit -m "Audios descargados"
+          # si alguien sube a la vez, se integra y se reintenta
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            sleep $((i * 3))
+            git pull --rebase origin main || exit 1
+          done
+          exit 1
