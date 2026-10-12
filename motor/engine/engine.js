@@ -180,7 +180,7 @@
         at: (x) => s + x, // tiempo relativo dentro de la escena
         // aparición con anticipación + estirado + rebote (squash & stretch)
         pop(target, x = 0, extra = {}) {
-          gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box', scale: 0, opacity: 0 });
+          gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box', scale: 0.55, opacity: 0 });
           tl.to(target, { scaleX: 0.85, scaleY: 1.18, opacity: 1, duration: 0.18, ease: 'power2.out', ...extra }, s + x);
           tl.to(target, { scaleX: 1.06, scaleY: 0.94, duration: 0.12, ease: 'power1.inOut' }, s + x + 0.18);
           tl.to(target, { scaleX: 1, scaleY: 1, duration: 0.35, ease: 'elastic.out(1, 0.5)' }, s + x + 0.3);
@@ -192,6 +192,8 @@
           tl.fromTo(target, { x: `+=${d[0]}`, y: `+=${d[1]}`, opacity: 0, rotation: d[0] ? (d[0] > 0 ? 8 : -8) : 0 },
             { x: `-=${d[0]}`, y: `-=${d[1]}`, opacity: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.6)' }, s + x);
         },
+        // entrada escalonada de un grupo (30-80 ms entre elementos): da ritmo sin bloquear
+        stagger(targets, x = 0, step = 0.06) { targets.forEach((t, i) => A.pop(t, x + i * step)); },
         // dibuja un trazo (líneas, flechas, rutas)
         draw(path, x = 0, d = 0.8, ease = 'power2.inOut') {
           const len = path.getTotalLength ? path.getTotalLength() : 1000;
