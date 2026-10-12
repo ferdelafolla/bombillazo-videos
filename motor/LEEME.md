@@ -97,7 +97,7 @@ La gente ve los vídeos pero no se suscribe: hay que darle una RAZÓN y un MOMEN
 - Para dibujar: piensa en contornos y formas simples (personas como tubos redondeados, objetos con 2-3 trazos), no en colores. Usa rojo (#e63b2e) solo para lo que debe destacar.
 - Tarjetas de texto: negras con texto amarillo (A.th.cardFill / A.th.cardInk). El texto se reduce solo si no cabe.
 - Chispa: bombilla amarilla redonda, ojos cerrados en arco, nariz "<", sonrisa roja (se abre al hablar), casquillo a rayas.
-- Tipografía: Vemoly (fonts/VemolyChispazo.ttf, con tildes, ñ, ¿¡ añadidas). Si falta el archivo, cae a Inter.
+- Tipografías: TÍTULOS (tarjetas, chip, miniaturas) en Vemoly (fonts/VemolyChispazo.ttf, con tildes, ñ, ¿¡ añadidas); SUBTÍTULOS en Fredoka SemiBold (sans simple, licencia OFL).
 - Trazo vivo: bordes ásperos (roughen edges) + temblor sutil (wiggle); vídeo a 24 fps con la animación posterizada a 12 dibujos/s ("a doses").
 - El brazo de Chispa va detrás del cuerpo.
 - `estilo: 'clasico'` en VIDEO({...}) vuelve al estilo anterior.
