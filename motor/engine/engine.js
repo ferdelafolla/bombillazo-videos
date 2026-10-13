@@ -155,7 +155,7 @@
     const TRANS = ['whip', 'zoom', 'whipUp', 'iris'];
     // plano secuencia (por defecto en tinta; spec.plano = 'cortes' vuelve a las transiciones por escena)
     const ONE = TINTA && spec.plano !== 'cortes';
-    const WORLD = (i) => [i * 950, (i % 2) * 480 - (i % 4 === 3 ? 960 : 0)]; // recorrido en zigzag
+    const WORLD = (i) => [i * 1500, (i % 2) * 900 - (i % 4 === 3 ? 1800 : 0)]; // recorrido en zigzag (vecinas fuera de cuadro en reposo)
     scenes.forEach((sc) => {
       const blurF = el('filter', { id: `mb${sc.i}`, x: '-30%', y: '-30%', width: '160%', height: '160%' }, defs);
       const blur = el('feGaussianBlur', { stdDeviation: '0 0' }, blurF);
@@ -173,9 +173,9 @@
       const isIris = kind === 'iris';
       if (ONE) {
         // ---- plano secuencia: cada escena vive en su sitio de un mismo mundo y la cámara viaja entre ellas
-        const O = WORLD(sc.i); sc.O = O;
+        const O = WORLD(sc.i); sc.O = O; if (sc.i > 0) sc.prevOuter = scenes[sc.i - 1].outerEl; sc.outerEl = outer;
         outer.setAttribute('transform', `translate(${O[0]} ${O[1]})`);
-        tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.75));
+        tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.4));
       } else {
       tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.02));
       if (sc.i > 0) window.SFX.push({ type: sc.transicion === 'iris' ? 'swell' : 'whoosh', t: s - 0.06 });
@@ -220,8 +220,13 @@
           // entrada sutil: nada aparece de la nada (escala 0.86, no 0), ease-out fuerte y un rebote mínimo
           // el panel de la escena ya entra con la transición: no le sumamos otro movimiento
           if (x < 0.05 && target.querySelector && target.querySelector('clipPath')) { gsap.set(target, { opacity: 1 }); return; }
-          gsap.set(target, { transformOrigin: '50% 50%', transformBox: 'fill-box', scale: 0.86, opacity: 0 });
-          tl.to(target, { scale: 1, opacity: 1, duration: 0.42, ease: 'back.out(1.25)', ...extra }, s + x);
+          // entrada trabajada: sube desde abajo con un leve giro, se pasa un poco (squash) y se asienta
+          // (conserva la posición, escala y giro que el guion ya le dio al elemento)
+          const k = (x * 7 + 3) % 2 < 1 ? 1 : -1; // giro alterno determinista
+          const s0 = gsap.getProperty(target, 'scale') || 1, y0 = gsap.getProperty(target, 'y') || 0, r0 = gsap.getProperty(target, 'rotation') || 0;
+          gsap.set(target, { transformOrigin: '50% 60%', transformBox: 'fill-box', scale: s0 * 0.7, y: y0 + 36, rotation: r0 + 5 * k, opacity: 0 });
+          tl.to(target, { opacity: 1, duration: 0.18, ease: 'power1.out' }, s + x);
+          tl.to(target, { scale: s0, y: y0, rotation: r0, duration: 0.6, ease: 'back.out(1.9)', ...extra }, s + x);
         },
         // entra desplazándose desde un lado con arco y asentado
         enter(target, x = 0, from = 'down', dist = 260) {
@@ -338,6 +343,7 @@
       // solo si la escena usa un panel recortado y no lo desactiva (spec.ambiente === false o sc.ambiente === false)
       if (TINTA) inkify(g, PAL, spec.colores === true);
       if (TINTA && spec.dibujo !== false && sc.dibujo !== false) drawOn(g, sc);
+      if (ONE) sc.gEl = g;
       if (!TINTA && spec.ambiente !== false && sc.ambiente !== false && !g.querySelector('[data-amb]') && g.querySelector('clipPath')) {
         const cid = `amb${sc.i}`;
         const cp = el('clipPath', { id: cid }, defs); el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 50 }, cp);
@@ -349,21 +355,44 @@
 
     // ---------- cámara del plano secuencia: macro al llegar a cada escena, se aleja para viajar y vuelve a acercarse
     if (ONE) {
-      const P = { x: 0, y: 0, z: 2.0 };
-      const apply = () => cam.setAttribute('transform', `translate(540 680) scale(${P.z.toFixed(4)}) translate(${(-540 - P.x).toFixed(2)} ${(-680 - P.y).toFixed(2)})`);
+      // encuadre de cada escena: centro de su dibujo y zoom que lo llena sin cortarlo (zona útil 900×820 sobre los subtítulos)
+      const frame = (sc, i) => {
+        const O = sc.O, last = i === scenes.length - 1;
+        if (!sc.bb || last) return { x: O[0] + 540, y: O[1] + 745, z: 1 };
+        const b = sc.bb, z = Math.max(0.6, Math.min(1.6, 900 / b.w, 820 / b.h));
+        return { x: O[0] + b.x + b.w / 2, y: O[1] + b.y + b.h / 2, z };
+      };
+      // medida del dibujo ya terminado: se lleva el reloj al final de cada escena y se mide su contenido
+      scenes.forEach((sc) => {
+        try {
+          tl.seek(Math.max(0, sc.start + sc.dur - 0.08), false);
+          // getBoundingClientRect incluye las transformaciones CSS que pone GSAP (getBBox no); se pasa a coordenadas locales de la escena
+          const r = sc.gEl.getBoundingClientRect(), M = sc.gEl.getScreenCTM().inverse(), svg = sc.gEl.ownerSVGElement;
+          const pt = (x, y) => { const q = svg.createSVGPoint(); q.x = x; q.y = y; return q.matrixTransform(M); };
+          const a = pt(r.left, r.top), c = pt(r.right, r.bottom);
+          sc.bb = { x: Math.min(a.x, c.x), y: Math.min(a.y, c.y), w: Math.max(1, Math.abs(c.x - a.x)), h: Math.max(1, Math.abs(c.y - a.y)) };
+        } catch (err) { sc.bb = null; }
+      });
+      tl.seek(0, false);
+      const F = scenes.map(frame); window.__F = F.map((f, i) => [Math.round(f.x), Math.round(f.y), +f.z.toFixed(2), scenes[i].bb && [Math.round(scenes[i].bb.x), Math.round(scenes[i].bb.y), Math.round(scenes[i].bb.w), Math.round(scenes[i].bb.h)]]);
+      const P = { x: F[0].x, y: F[0].y, z: F[0].z * 1.25 };
+      const apply = () => cam.setAttribute('transform', `translate(540 745) scale(${P.z.toFixed(4)}) translate(${(-P.x).toFixed(2)} ${(-P.y).toFixed(2)})`);
       apply();
       const upd = { onUpdate: apply };
-      tl.to(P, { z: 1, duration: 1.4, ease: 'sine.out', ...upd }, 0.05); // apertura: del detalle al conjunto
+      tl.to(P, { z: F[0].z, duration: 1.2, ease: 'sine.out', ...upd }, 0.05); // apertura: del detalle al conjunto
       scenes.forEach((sc, i) => {
         if (i === 0) return;
-        const T = sc.start - 0.6, O = sc.O;
-        const nxt = scenes[i + 1]; const limit = nxt ? nxt.start - 0.65 : total;
+        const T = sc.start - 0.35, f = F[i], fp = F[i - 1];
+        const nxt = scenes[i + 1]; const limit = nxt ? nxt.start - 0.4 : total;
         window.SFX.push({ type: 'whoosh', t: T });
-        tl.to(P, { x: O[0], y: O[1], duration: 0.95, ease: 'power3.inOut', ...upd }, T);
-        tl.to(P, { z: 0.45, duration: 0.45, ease: 'sine.out', ...upd }, T); // zoom out: se ven las dos escenas
-        tl.to(P, { z: 1.35, duration: 0.45, ease: 'expo.out', ...upd }, T + 0.5); // zoom in: llega en macro
-        const sd = Math.max(0.3, Math.min(1.1, limit - (T + 0.95)));
-        tl.to(P, { z: 1, duration: sd, ease: 'sine.inOut', ...upd }, T + 0.95); // se asienta
+        // viaje: se aleja (zoom out) mientras se desplaza, y vuelve a acercarse (zoom in) ya sobre la escena nueva
+        tl.to(P, { x: f.x, y: f.y, duration: 0.62, ease: 'power2.inOut', ...upd }, T);
+        tl.to(P, { z: Math.min(fp.z, f.z) * 0.45, duration: 0.3, ease: 'sine.out', ...upd }, T);
+        tl.to(P, { z: f.z * 1.06, duration: 0.45, ease: 'expo.out', ...upd }, T + 0.34);
+        const sd = Math.max(0.3, Math.min(1.1, limit - (T + 0.8)));
+        tl.to(P, { z: f.z, duration: sd, ease: 'sine.inOut', ...upd }, T + 0.8); // se asienta con todo dentro
+        // la escena anterior desaparece cuando la cámara ya se ha asentado (nada de restos en los bordes)
+        if (sc.prevOuter) tl.set(sc.prevOuter, { autoAlpha: 0 }, T + 0.85);
       });
     }
 
