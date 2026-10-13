@@ -13,7 +13,8 @@ const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); if (i < 0) return null; const v = args[i + 1]; args.splice(i, 2); return v; };
 const flag = (k) => { const i = args.indexOf(k); if (i < 0) return false; args.splice(i, 1); return true; };
 let voice = opt('--voz');
-const noSub = flag('--sin-suscripcion'); // no insertar la pausa de suscripción a mitad de vídeo
+const noSub = flag('--sin-suscripcion');
+const noSfx = flag('--sin-efectos'); // sin efectos de sonido // no insertar la pausa de suscripción a mitad de vídeo
 const noMusic = flag('--sin-musica');
 const preview = flag('--preview'); // solo unos fotogramas sueltos en PNG
 const at = opt('--en'); // tiempos concretos para --preview, p. ej. 1.5,6,10
@@ -131,6 +132,7 @@ for (let f = 0; f < nframes; f++) {
 }
 ff.stdin.end();
 await new Promise((r) => ff.on('close', r));
+const sfxEvents = await page.evaluate(() => window.SFX || []);
 await browser.close();
 
 // audio: voz + música original
@@ -143,9 +145,22 @@ if (!noMusic) {
   inputs.push('-i', mus);
 }
 if (voice) inputs.push('-i', path.resolve(voice));
-if (voice && !noMusic) { fc = '[1:a]volume=0.28[m];[2:a]volume=1.0[v];[m][v]amix=inputs=2:duration=first:normalize=0[a]'; maps.push('-map', '[a]'); }
-else if (voice || !noMusic) maps.push('-map', '1:a');
+// efectos (rotulador, transiciones, botón): sintetizados y en una sola sala (sfx.py)
+const sfxWav = outMp4 + '.sfx.wav';
+let haveSfx = false;
+if (sfxEvents.length && !noSfx) {
+  const evj = outMp4 + '.sfx.json'; fs.writeFileSync(evj, JSON.stringify(sfxEvents));
+  try { execFileSync('python3', [path.join(HERE, 'sfx.py'), evj, sfxWav, String(total)]); haveSfx = true; inputs.push('-i', sfxWav); } catch (e) { console.error('sin efectos:', e.message); }
+  fs.unlinkSync(evj);
+}
+const parts = []; let k = 1;
+if (!noMusic) parts.push(`[${k++}:a]volume=0.24[m]`);
+if (voice) parts.push(`[${k++}:a]volume=1.0[v]`);
+if (haveSfx) parts.push(`[${k++}:a]volume=0.55[x]`);
+const labels = [!noMusic && '[m]', voice && '[v]', haveSfx && '[x]'].filter(Boolean);
+if (labels.length > 1) { fc = parts.join(';') + ';' + labels.join('') + `amix=inputs=${labels.length}:duration=longest:normalize=0[a]`; maps.push('-map', '[a]'); }
+else if (labels.length === 1) maps.push('-map', '1:a');
 execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...inputs, ...(fc ? ['-filter_complex', fc] : []), ...maps,
   '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-t', String(total), '-movflags', '+faststart', outMp4]);
-for (const p of [tmp, mus]) if (fs.existsSync(p)) fs.unlinkSync(p);
+for (const p of [tmp, mus, sfxWav]) if (fs.existsSync(p)) fs.unlinkSync(p);
 console.log('OK', outMp4);

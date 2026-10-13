@@ -127,3 +127,9 @@ La serie Peques no funciona: NO se producen ni se programan más vídeos de Pequ
 
 ## PAUSA DE SUSCRIPCIÓN A MITAD DE VÍDEO (decisión del usuario, 13/10/2026)
 render.mjs la pone sola en todos los vídeos con voz (menos los que tengan `suscripcion:false`): busca el corte de escena más cercano al 45 % del vídeo, inserta la frase grabada "Si quieres saber más, ¡suscríbete!" (voces/sub_es.mp3; en inglés voces/sub_en.mp3 "Want to know more? Subscribe!"; en chino pon `subVoz: 'zh'` para usar voces/sub_zh.mp3) y el motor muestra a pantalla completa, centrado, "¿QUIERES SABER MÁS?" con el botón SUSCRÍBETE que una mano pulsa (→ SUSCRITO ✓). Después el vídeo continúa. Los --cortes se dan como siempre, sobre la voz original: render.mjs los desplaza solo. `--sin-suscripcion` la desactiva.
+
+## DIBUJO EN DIRECTO Y SONIDO (13/10/2026, gramática de lemo-opuscar —MIT— y principios de dirección)
+- En estilo tinta, cada contorno se TRAZA delante del espectador (curva lenta-rápida-lenta) en el momento en que su elemento aparece, y el relleno entra justo detrás. Automático; `dibujo:false` en VIDEO({...}) o en una escena lo desactiva.
+- Efectos de sonido sintetizados (sfx.py), todos en la misma sala y por debajo de la voz: rotulador sobre papel en cada trazo, barrido en cada transición, toque y campanita al pulsar SUSCRÍBETE. `--sin-efectos` los quita.
+- Principios de dirección que seguimos (de lemo-opuscar DIRECTOR.md y de la idea de "carry"): gancho en 3 s; variar el ritmo (planos cortos junto a pausas largas, al menos un respiro); algo que sobreviva de una escena a la siguiente (Chispa, una tarjeta, el objeto héroe) en vez de cambiar de diapositiva; cada acción visible tiene su sonido; el sujeto ocupa al menos un tercio del alto en los momentos clave.
+- onetake NO se usa: su licencia (PolyForm Noncommercial) prohíbe el uso comercial y el canal se monetiza.

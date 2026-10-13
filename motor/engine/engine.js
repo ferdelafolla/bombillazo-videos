@@ -44,6 +44,7 @@
       chip: PAL.INK, font: "'Vemoly', 'Inter Display', Inter, sans-serif", pattern: 'tinta', particles: 'none', panel: [PAL.Y, PAL.Y], cardFill: PAL.INK, cardInk: PAL.Y }) : THEMES[spec.canal];
     const PEQ = spec.canal === 'peques';
     const tl = gsap.timeline({ paused: true });
+    window.__TL = tl; window.SFX = [];
     const stage = document.getElementById('stage');
     stage.style.background = `linear-gradient(165deg, ${th.bg[0]} 0%, ${th.bg[1]} 55%, ${th.bg[2]} 100%)`;
     stage.style.fontFamily = th.font;
@@ -166,6 +167,7 @@
       // se funde y se desenfoca. Pequeño solape = fundido limpio; el desenfoque disimula la doble exposición.
       const isIris = kind === 'iris';
       tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.02));
+      if (sc.i > 0) window.SFX.push({ type: sc.transicion === 'iris' ? 'swell' : 'whoosh', t: s - 0.06 });
       if (sc.i > 0) {
         if (isIris) {
           const clipId = `iris${sc.i}`;
@@ -318,6 +320,7 @@
       // ambiente automático sobre el panel estándar (motas, viñeta y barrido de brillo de entrada):
       // solo si la escena usa un panel recortado y no lo desactiva (spec.ambiente === false o sc.ambiente === false)
       if (TINTA) inkify(g, PAL, spec.colores === true);
+      if (TINTA && spec.dibujo !== false && sc.dibujo !== false) drawOn(g, sc);
       if (!TINTA && spec.ambiente !== false && sc.ambiente !== false && !g.querySelector('[data-amb]') && g.querySelector('clipPath')) {
         const cid = `amb${sc.i}`;
         const cp = el('clipPath', { id: cid }, defs); el('rect', { x: 60, y: 290, width: 960, height: 800, rx: 50 }, cp);
@@ -373,6 +376,7 @@
       const press = t1 + Math.min(1.5, S.dur * 0.6);
       tl.call(() => { const r = btn.getBoundingClientRect(), so = stage.getBoundingClientRect(), k = 1080 / so.width; gsap.set(hand, { x: (r.left - so.left + r.width * 0.62) * k, y: (r.top - so.top + r.height * 0.45) * k }); }, null, press - 0.45);
       tl.fromTo(hand, { autoAlpha: 0, xPercent: 60, yPercent: 80 }, { autoAlpha: 1, xPercent: 0, yPercent: 0, duration: 0.35, ease: 'power3.out' }, press - 0.42);
+      window.SFX.push({ type: 'tap', t: press }, { type: 'ding', t: press + 0.08 }, { type: 'whoosh', t: t1 - 0.05 });
       tl.to(btn, { scale: 0.92, duration: 0.1, ease: 'power2.out' }, press);
       tl.to(hand, { scale: 0.9, duration: 0.1, ease: 'power2.out' }, press);
       tl.to(btn, { scale: 1, duration: 0.2, ease: 'back.out(2)' }, press + 0.1);
@@ -453,6 +457,56 @@
   }
   const lum = (c) => (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
   const isRed = (c) => c[0] > 170 && c[1] < 120 && c[2] < 130;
+  // ---------- dibujo en directo (gramática de pizarra / línea continua): cada contorno de tinta se traza delante
+  // del espectador con curva lenta-rápida-lenta, cuando su elemento aparece; el relleno entra justo detrás del trazo.
+  // Cada trazo deja un evento de sonido (rotulador sobre papel) en window.SFX.
+  function drawOn(g, sc) {
+    const tl = window.__TL; if (!tl) return;
+    const INK = (window.TINTA_PAL || {}).INK || '#161412';
+    const shapes = [...g.querySelectorAll('path,circle,ellipse,rect,polyline,line,polygon')].filter((e) => {
+      if (e.closest('clipPath,defs,mask,text') || e.getAttribute('display') === 'none') return false;
+      const st = (e.getAttribute('stroke') || '').toLowerCase();
+      return st && st !== 'none' && parseFloat(e.getAttribute('stroke-width') || '1') >= 3;
+    });
+    const appear = (e) => { // instante en que el elemento (o un antecesor) se hace visible
+      let t = sc.start + 0.05;
+      for (let a = e; a && a !== g.parentNode; a = a.parentNode) {
+        for (const tw of gsap.getTweensOf(a)) {
+          const v = tw.vars || {};
+          if (v.opacity === 1 || v.autoAlpha === 1 || v.scale === 1) { const st = tw.startTime(); if (st >= sc.start - 0.1 && st < sc.start + sc.dur) t = Math.max(t, st); }
+        }
+      }
+      return t;
+    };
+    const groups = new Map();
+    for (const e of shapes) {
+      let len = 0; try { len = e.getTotalLength ? e.getTotalLength() : 0; } catch (err) { len = 0; }
+      if (len < 30 || len > 9000) continue;
+      const t = Math.round(appear(e) * 20) / 20;
+      if (!groups.has(t)) groups.set(t, []);
+      groups.get(t).push({ e, len });
+    }
+    window.SFX = window.SFX || [];
+    for (const [t0, list] of groups) {
+      const step = Math.min(0.07, 0.6 / list.length);
+      list.forEach(({ e, len }, k) => {
+        const d = Math.max(0.16, Math.min(0.7, len / 1500));
+        const ts = t0 + k * step;
+        if (ts + d > sc.start + sc.dur) return;
+        e.setAttribute('pathLength', '1');
+        gsap.set(e, { attr: { 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1 } });
+        tl.to(e, { attr: { 'stroke-dashoffset': 0 }, duration: d, ease: 'power2.inOut' }, ts);
+        tl.set(e, { attr: { 'stroke-dasharray': 'none' } }, ts + d + 0.01);
+        const f = (e.getAttribute('fill') || '').toLowerCase();
+        if (f && f !== 'none' && f !== INK.toLowerCase() && !f.startsWith('url')) {
+          gsap.set(e, { attr: { 'fill-opacity': 0 } });
+          tl.to(e, { attr: { 'fill-opacity': 1 }, duration: 0.22, ease: 'power1.out' }, ts + d * 0.65);
+        }
+        window.SFX.push({ type: 'pen', t: ts, d, len });
+      });
+    }
+  }
+
   function inkify(root, P, keepColors) {
     const skip = 'clipPath,defs,mask,filter,linearGradient,radialGradient';
     const shapes = [...root.querySelectorAll('path,rect,circle,ellipse,polygon,polyline,line')].filter((e) => !e.closest(skip));
