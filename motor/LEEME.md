@@ -124,3 +124,6 @@ Los botones e textos de YouTube Shorts, TikTok e Instagram Reels tapan los borde
 
 ## CHISPAZO PEQUES: FUERA (decisión del usuario, 12/10/2026)
 La serie Peques no funciona: NO se producen ni se programan más vídeos de Peques (ni en español ni en inglés). Los huecos se rellenan con Hoy, News, Curiosidades o Chess.
+
+## PAUSA DE SUSCRIPCIÓN A MITAD DE VÍDEO (decisión del usuario, 13/10/2026)
+render.mjs la pone sola en todos los vídeos con voz (menos los que tengan `suscripcion:false`): busca el corte de escena más cercano al 45 % del vídeo, inserta la frase grabada "Si quieres saber más, ¡suscríbete!" (voces/sub_es.mp3; en inglés voces/sub_en.mp3 "Want to know more? Subscribe!"; en chino pon `subVoz: 'zh'` para usar voces/sub_zh.mp3) y el motor muestra a pantalla completa, centrado, "¿QUIERES SABER MÁS?" con el botón SUSCRÍBETE que una mano pulsa (→ SUSCRITO ✓). Después el vídeo continúa. Los --cortes se dan como siempre, sobre la voz original: render.mjs los desplaza solo. `--sin-suscripcion` la desactiva.

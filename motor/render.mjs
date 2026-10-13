@@ -12,7 +12,8 @@ const FPS = 24; // 24 fps con animación posterizada a 12 (estilo tinta)
 const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); if (i < 0) return null; const v = args[i + 1]; args.splice(i, 2); return v; };
 const flag = (k) => { const i = args.indexOf(k); if (i < 0) return false; args.splice(i, 1); return true; };
-const voice = opt('--voz');
+let voice = opt('--voz');
+const noSub = flag('--sin-suscripcion'); // no insertar la pausa de suscripción a mitad de vídeo
 const noMusic = flag('--sin-musica');
 const preview = flag('--preview'); // solo unos fotogramas sueltos en PNG
 const at = opt('--en'); // tiempos concretos para --preview, p. ej. 1.5,6,10
@@ -69,13 +70,38 @@ let nScenes = 0;
 if (voice) {
   // contamos escenas cargando el guion en modo "sólo contar"
   nScenes = await page.evaluate(async (src) => {
-    let n = []; const real = window.VIDEO; window.VIDEO = (s) => { n = s.escenas.map((e) => e.texto.split(/\s+/).length); };
+    let n = [], meta = {}; const real = window.VIDEO; window.VIDEO = (s) => { n = s.escenas.map((e) => e.texto.split(/\s+/).length); meta = { canal: s.canal, suscripcion: s.suscripcion, lang: s.lang, titulo: s.titulo, subVoz: s.subVoz }; };
     const sc = document.createElement('script'); sc.src = src; document.head.appendChild(sc);
-    await new Promise((r) => (sc.onload = r)); window.VIDEO = real; return n;
-  }, 'file://' + videoJs);
-  const va = voiceAnalysis(voice, nScenes, manualCuts ? manualCuts.split(',').map(Number) : null);
+    await new Promise((r) => (sc.onload = r)); window.VIDEO = real; return { n, meta };
+  }, 'file://' + videoJs).then((r) => { globalThis.META = r.meta; return r.n; });
+  let va = voiceAnalysis(voice, nScenes, manualCuts ? manualCuts.split(',').map(Number) : null);
+  // ---- pausa de suscripción a mitad de vídeo: se inserta la frase "Si quieres saber más, ¡suscríbete!" en un corte de escena
+  // cercano al 45 % del vídeo, la voz se alarga y el motor pinta la tarjeta central (window.SUB).
+  const M = globalThis.META || {};
+  const lang = M.lang || (/^[¿¡]|[áéíóúñ]/i.test(M.titulo || '') ? 'es' : 'en');
+  const clip = path.join(HERE, 'voces', `sub_${M.subVoz || lang}.mp3`);
+  let SUB = null;
+  if (!noSub && M.canal !== 'peques' && M.suscripcion !== false && nScenes.length >= 4 && fs.existsSync(clip)) {
+    const starts = va.timing.map((t) => t.start);
+    let k = 2, bd = 1e9;
+    for (let i = 2; i <= nScenes.length - 2; i++) { const d = Math.abs(starts[i] - va.dur * 0.45); if (d < bd) { bd = d; k = i; } }
+    const cutT = starts[k];
+    const tmpd = fs.mkdtempSync(path.join(path.dirname(outMp4), '.sub_'));
+    const a = path.join(tmpd, 'a.wav'), m = path.join(tmpd, 'm.wav'), b = path.join(tmpd, 'b.wav'), nv = path.join(tmpd, 'voz.wav');
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', voice, '-t', String(cutT), '-ar', '44100', '-ac', '1', a]);
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', clip, '-af', 'silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse,adelay=350|350,apad=pad_dur=0.6', '-ar', '44100', '-ac', '1', m]);
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(cutT), '-i', voice, '-ar', '44100', '-ac', '1', b]);
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', a, '-i', m, '-i', b, '-filter_complex', '[0][1][2]concat=n=3:v=0:a=1', nv]);
+    const L = probe(m);
+    const cuts = va.timing.slice(1).map((t) => t.start).map((c) => (c >= cutT - 0.01 ? c + L : c));
+    voice = nv;
+    va = voiceAnalysis(voice, nScenes, cuts);
+    SUB = { start: cutT, dur: L, lang };
+    process.on('exit', () => { try { fs.rmSync(tmpd, { recursive: true, force: true }); } catch (e) { /* nada */ } });
+    console.log(`Suscripción a mitad: ${cutT.toFixed(2)} s (+${L.toFixed(2)} s, ${path.basename(clip)})`);
+  }
   await page.reload();
-  await page.evaluate(({ amp, timing }) => { window.AMP = amp; window.TIMING = timing; }, va);
+  await page.evaluate(({ amp, timing, sub }) => { window.AMP = amp; window.TIMING = timing; window.SUB = sub; }, { ...va, sub: SUB });
   console.log('Escenas:', va.timing.map((t) => t.dur.toFixed(2)).join(' | '));
 }
 await page.addScriptTag({ path: videoJs });

@@ -342,7 +342,39 @@
     // ---------- recordatorio de suscripción a mitad de vídeo (la mayoría no llega al final).
     // Píldora roja con campana arriba a la derecha: entra (expo.out), la campana suena, se "pulsa"
     // (escala 0.94, 100 ms), cambia a "suscrito" y sale más rápido de lo que entró.
-    if (spec.canal !== 'peques' && spec.suscripcion !== false) {
+    if (window.SUB && spec.suscripcion !== false) {
+      // ---------- pausa de suscripción a mitad de vídeo (la voz dice "Si quieres saber más, ¡suscríbete!"):
+      // tarjeta centrada dentro de la zona segura; el vídeo sigue después.
+      const S = window.SUB, en = S.lang !== 'es';
+      const Q = en ? 'WANT TO KNOW MORE?' : '¿QUIERES SABER MÁS?';
+      const BL = en ? ['SUBSCRIBE', 'SUBSCRIBED ✓'] : ['SUSCRÍBETE', 'SUSCRITO ✓'];
+      const Yc = TINTA ? PAL.Y : '#ffd93b', Kc = TINTA ? PAL.INK : '#161412', Rc = TINTA ? PAL.RED : '#ff0033';
+      const ov = document.createElement('div');
+      ov.style.cssText = `position:absolute;inset:0;z-index:50;background:${Yc};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:70px;padding:240px 150px 470px 60px;box-sizing:border-box;font-family:${th.font}`;
+      ov.innerHTML = `<div class="q" style="font-size:96px;line-height:1.05;text-align:center;color:${Kc};max-width:840px">${Q}</div>`
+        + `<div class="b" style="display:flex;align-items:center;gap:22px;height:150px;padding:0 64px 0 48px;border-radius:75px;background:${Rc};border:7px solid ${Kc};box-shadow:0 10px 0 ${Kc};color:#fff;font-size:68px;letter-spacing:1px">`
+        + `<svg class="bell" width="70" height="70" viewBox="-20 -22 40 44"><path d="M-12,8 V-4 a12,12 0 0,1 24,0 V8 l4,5 h-32z" fill="#fff"/><circle cy="16" r="4" fill="#fff"/></svg><span>${BL[0]}</span></div>`
+        + `<svg class="hand" width="150" height="150" viewBox="0 0 100 100" style="position:absolute;left:0;top:0"><path d="M38,92 C30,80 18,66 22,60 C26,55 33,60 38,66 L38,22 C38,14 50,14 50,22 L50,50 L52,40 C53,33 63,33 63,41 L63,52 L65,45 C66,38 76,38 76,46 L76,56 L78,52 C80,46 88,48 88,55 L86,74 C84,84 80,92 74,92 Z" fill="#fff" stroke="${Kc}" stroke-width="5" stroke-linejoin="round"/></svg>`;
+      stage.appendChild(ov);
+      const q = ov.querySelector('.q'), btn = ov.querySelector('.b'), lab = btn.querySelector('span'), bell = btn.querySelector('.bell'), hand = ov.querySelector('.hand');
+      const t1 = S.start;
+      gsap.set(ov, { autoAlpha: 0 }); gsap.set(hand, { autoAlpha: 0 });
+      tl.to(ov, { autoAlpha: 1, duration: 0.22, ease: 'power2.out' }, t1);
+      tl.fromTo(q, { y: 60, scale: 0.92 }, { y: 0, scale: 1, duration: 0.45, ease: 'expo.out' }, t1);
+      tl.fromTo(btn, { scale: 0.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.8)' }, t1 + 0.18);
+      tl.fromTo(bell, { rotation: -18, transformOrigin: '50% 10%' }, { rotation: 18, duration: 0.09, ease: 'sine.inOut', yoyo: true, repeat: 5 }, t1 + 0.5);
+      // la mano entra y pulsa el botón
+      const press = t1 + Math.min(1.5, S.dur * 0.6);
+      tl.call(() => { const r = btn.getBoundingClientRect(), so = stage.getBoundingClientRect(), k = 1080 / so.width; gsap.set(hand, { x: (r.left - so.left + r.width * 0.62) * k, y: (r.top - so.top + r.height * 0.45) * k }); }, null, press - 0.45);
+      tl.fromTo(hand, { autoAlpha: 0, xPercent: 60, yPercent: 80 }, { autoAlpha: 1, xPercent: 0, yPercent: 0, duration: 0.35, ease: 'power3.out' }, press - 0.42);
+      tl.to(btn, { scale: 0.92, duration: 0.1, ease: 'power2.out' }, press);
+      tl.to(hand, { scale: 0.9, duration: 0.1, ease: 'power2.out' }, press);
+      tl.to(btn, { scale: 1, duration: 0.2, ease: 'back.out(2)' }, press + 0.1);
+      tl.to(hand, { scale: 1, duration: 0.2, ease: 'power2.out' }, press + 0.1);
+      tl.call(() => { lab.textContent = BL[1]; btn.style.background = Kc; }, null, press + 0.08);
+      tl.call(() => { lab.textContent = BL[0]; btn.style.background = Rc; }, null, press + 0.02);
+      tl.to(ov, { autoAlpha: 0, duration: 0.22, ease: 'power2.in' }, t1 + S.dur - 0.22);
+    } else if (spec.canal !== 'peques' && spec.suscripcion !== false) {
       const L = lang === 'en' ? ['SUBSCRIBE', 'SUBSCRIBED ✓'] : ['SUSCRÍBETE', 'SUSCRITO ✓'];
       const pill = document.createElement('div');
       pill.style.cssText = 'position:absolute;right:160px;top:240px;height:72px;border-radius:36px;background:#ff0033;color:#fff;display:flex;align-items:center;gap:12px;padding:0 30px 0 22px;font-size:32px;font-weight:900;letter-spacing:.5px;box-shadow:0 10px 30px rgba(0,0,0,.3);font-family:' + th.font;
