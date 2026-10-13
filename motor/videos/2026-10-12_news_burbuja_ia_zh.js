@@ -24,7 +24,7 @@ function card(A, s, x, y, w, h, c1, c2, text, size) {
   const g = A.el('g', {}, s); window.gsap.set(g, { x, y }); A.card(-w / 2, -h / 2, w, h, A.th.cardFill, 44, g); A.txt(text, 0, size * 0.36, size, A.th.cardInk, { parent: g }); return g;
 }
 VIDEO({
-  canal: 'news', personaje: 'chispa',
+  canal: 'news', personaje: 'chispa', subVoz: 'zh',
   titulo: 'Is AI a bubble?',
   escenas: [
     { texto: 'Is AI a bubble? Everyone is asking.', destacar: ['bubble?', 'asking.'], emocion: 'sorpresa',
