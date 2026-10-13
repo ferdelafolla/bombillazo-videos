@@ -66,7 +66,7 @@
       <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
       <radialGradient id="vig" cx="50%" cy="50%" r="70%"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
       <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
-      <filter id="wob" x="-5%" y="-5%" width="110%" height="110%">
+      <filter id="wob" filterUnits="userSpaceOnUse" x="-60" y="-60" width="1200" height="2040">
         <feTurbulence id="wobT" type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="1" result="n"/>
         <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G" result="w"/>
         <feTurbulence id="wobR" type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="2" result="r"/>
@@ -121,8 +121,10 @@
 
     // cámara: todas las escenas viven aquí
     // zona segura de redes: el arte (pensado para x 60-1020, y 290-1100) se encoge a x 60-930, y 285-1015
-    const safe = el('g', { transform: 'translate(60 240) scale(0.906) translate(-60 -240)' }, art);
-    const cam = el('g', TINTA ? { filter: 'url(#wob)' } : {}, safe);
+    // el temblor de trazo va en una capa fija a la pantalla (región de filtro fija): así la cámara puede viajar por un mundo grande
+    const wobL = el('g', TINTA ? { filter: 'url(#wob)' } : {}, art);
+    const safe = el('g', { transform: 'translate(60 240) scale(0.906) translate(-60 -240)' }, wobL);
+    const cam = el('g', {}, safe);
     if (TINTA) charLayer.setAttribute('style', 'filter:url(#wob)');
     const charSafe = document.createElementNS('http://www.w3.org/2000/svg', 'g'); charSafe.setAttribute('transform', 'translate(60 240) scale(0.906) translate(-60 -240)'); charLayer.appendChild(charSafe); // misma zona segura que el arte
 
@@ -151,6 +153,9 @@
 
     // ---------- escenas
     const TRANS = ['whip', 'zoom', 'whipUp', 'iris'];
+    // plano secuencia (por defecto en tinta; spec.plano = 'cortes' vuelve a las transiciones por escena)
+    const ONE = TINTA && spec.plano !== 'cortes';
+    const WORLD = (i) => [i * 950, (i % 2) * 480 - (i % 4 === 3 ? 960 : 0)]; // recorrido en zigzag
     scenes.forEach((sc) => {
       const blurF = el('filter', { id: `mb${sc.i}`, x: '-30%', y: '-30%', width: '160%', height: '160%' }, defs);
       const blur = el('feGaussianBlur', { stdDeviation: '0 0' }, blurF);
@@ -166,6 +171,12 @@
       // desenfoque 6→0. Salida 0.28 s (más corta que la entrada) con aceleración suave: sube 120 px, 1→0.94,
       // se funde y se desenfoca. Pequeño solape = fundido limpio; el desenfoque disimula la doble exposición.
       const isIris = kind === 'iris';
+      if (ONE) {
+        // ---- plano secuencia: cada escena vive en su sitio de un mismo mundo y la cámara viaja entre ellas
+        const O = WORLD(sc.i); sc.O = O;
+        outer.setAttribute('transform', `translate(${O[0]} ${O[1]})`);
+        tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.75));
+      } else {
       tl.set(outer, { autoAlpha: 1 }, Math.max(0, s - 0.02));
       if (sc.i > 0) window.SFX.push({ type: sc.transicion === 'iris' ? 'swell' : 'whoosh', t: s - 0.06 });
       if (sc.i > 0) {
@@ -198,6 +209,7 @@
         }
         tl.set(outer, { autoAlpha: 0 }, e + 0.7);
       }
+      } // fin del modo con cortes
 
       const A = {
         g, tl, t0: s, dur: sc.dur, th, W, H, ch, pal: KIDS, grad, rnd: R,
@@ -334,6 +346,26 @@
       }
       buildCaption(sc, th, tl, caps);
     });
+
+    // ---------- cámara del plano secuencia: macro al llegar a cada escena, se aleja para viajar y vuelve a acercarse
+    if (ONE) {
+      const P = { x: 0, y: 0, z: 2.0 };
+      const apply = () => cam.setAttribute('transform', `translate(540 680) scale(${P.z.toFixed(4)}) translate(${(-540 - P.x).toFixed(2)} ${(-680 - P.y).toFixed(2)})`);
+      apply();
+      const upd = { onUpdate: apply };
+      tl.to(P, { z: 1, duration: 1.4, ease: 'sine.out', ...upd }, 0.05); // apertura: del detalle al conjunto
+      scenes.forEach((sc, i) => {
+        if (i === 0) return;
+        const T = sc.start - 0.6, O = sc.O;
+        const nxt = scenes[i + 1]; const limit = nxt ? nxt.start - 0.65 : total;
+        window.SFX.push({ type: 'whoosh', t: T });
+        tl.to(P, { x: O[0], y: O[1], duration: 0.95, ease: 'power3.inOut', ...upd }, T);
+        tl.to(P, { z: 0.45, duration: 0.45, ease: 'sine.out', ...upd }, T); // zoom out: se ven las dos escenas
+        tl.to(P, { z: 1.35, duration: 0.45, ease: 'expo.out', ...upd }, T + 0.5); // zoom in: llega en macro
+        const sd = Math.max(0.3, Math.min(1.1, limit - (T + 0.95)));
+        tl.to(P, { z: 1, duration: sd, ease: 'sine.inOut', ...upd }, T + 0.95); // se asienta
+      });
+    }
 
     // ---------- marca y progreso
     document.getElementById('chipname').textContent = th.name;
