@@ -176,8 +176,11 @@
           outer.setAttribute('clip-path', `url(#${clipId})`);
           tl.fromTo(circ, { attr: { r: 0 } }, { attr: { r: 1400 }, duration: 0.7, ease: 'power3.out' }, s - 0.05);
         } else {
-          tl.fromTo(mid, { y: 160, scale: 0.96, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.45, ease: 'expo.out' }, s - 0.06);
-          tl.fromTo(blur, { attr: { stdDeviation: '6 6' } }, { attr: { stdDeviation: '0 0' }, duration: 0.3, ease: 'power2.out' }, s - 0.06);
+          // zoom de cámara alterno: escenas impares "zoom in" (la nueva llega desde lejos, pequeña),
+          // pares "zoom out" (la nueva llega desde cerca, grande). Entrada 0.5 s expo.out con desenfoque.
+          const zin = sc.i % 2 === 1;
+          tl.fromTo(mid, { scale: zin ? 0.55 : 1.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'expo.out' }, s - 0.06);
+          tl.fromTo(blur, { attr: { stdDeviation: '10 10' } }, { attr: { stdDeviation: '0 0' }, duration: 0.35, ease: 'power2.out' }, s - 0.06);
         }
       }
       // empuje lento de cámara durante la escena (capa ambiente), con curva suave en vez de lineal
@@ -188,8 +191,10 @@
         const nk = next.transicion === 'iris' ? 'iris' : 'push';
         if (nk === 'iris') { tl.to(mid, { scale: 0.95, opacity: 0.6, duration: 0.5, ease: 'sine.inOut' }, e - 0.4); }
         else {
-          tl.to(mid, { y: -120, scale: 0.94, opacity: 0, duration: 0.28, ease: 'power2.in' }, e - 0.22);
-          tl.to(blur, { attr: { stdDeviation: '6 6' }, duration: 0.28, ease: 'power2.in' }, e - 0.22);
+          // salida a juego con la entrada de la siguiente: zoom in = la actual crece hacia la cámara; zoom out = se aleja
+          const zin = next.i % 2 === 1;
+          tl.to(mid, { scale: zin ? 1.8 : 0.5, opacity: 0, duration: 0.3, ease: 'power2.in' }, e - 0.24);
+          tl.to(blur, { attr: { stdDeviation: '10 10' }, duration: 0.3, ease: 'power2.in' }, e - 0.24);
         }
         tl.set(outer, { autoAlpha: 0 }, e + 0.7);
       }
