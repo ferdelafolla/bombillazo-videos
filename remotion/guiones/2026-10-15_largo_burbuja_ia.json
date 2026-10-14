@@ -1,0 +1,567 @@
+{
+ "id": "2026-10-15_largo_burbuja_ia",
+ "titulo": "¿Es la inteligencia artificial una burbuja?",
+ "serie": "NEWS",
+ "lang": "es",
+ "voz": "s4NXWwstm4IwAI2dMQ6M",
+ "fuentes": [
+  "FMI, Global Financial Stability Report (13/10/2026), resumido por The Register",
+  "Bloomberg 06/02/2026 (650.000 M$), Statista (760.000 M$), Futurum (690.000 M$): gasto en IA de las grandes tecnológicas en 2026",
+  "Bloomberg 07/10/2026: Ray Dalio avisa de una burbuja",
+  "Nasdaq: máximo 10/03/2000 (5.048) y mínimo 09/10/2002 (1.114), caída ~78 %",
+  "Burbuja de los Mares del Sur (1720) y pérdidas atribuidas a Isaac Newton (relato histórico extendido)"
+ ],
+ "capitulos": [
+  {
+   "id": "gancho",
+   "escenas": [
+    {
+     "texto": "¿Es la inteligencia artificial una burbuja a punto de estallar?",
+     "tipo": "titulo",
+     "icono": "burbuja",
+     "destacar": [
+      "burbuja"
+     ]
+    },
+    {
+     "texto": "Esta semana, el Fondo Monetario Internacional ha avisado del riesgo.",
+     "tipo": "tarjetas",
+     "items": [
+      "FMI",
+      "13 OCT 2026"
+     ],
+     "icono": "banco",
+     "destacar": [
+      "Fondo",
+      "Monetario"
+     ]
+    },
+    {
+     "texto": "Y no es el único: inversores muy conocidos dicen lo mismo.",
+     "tipo": "icono",
+     "icono": "personas",
+     "destacar": [
+      "inversores"
+     ]
+    },
+    {
+     "texto": "Pero otros creen que esta vez es distinto.",
+     "tipo": "comparar",
+     "izq": "BURBUJA",
+     "der": "NO LO ES",
+     "destacar": [
+      "distinto."
+     ]
+    },
+    {
+     "texto": "Vamos a verlo con calma, sin tomar partido.",
+     "tipo": "icono",
+     "icono": "balanza",
+     "destacar": [
+      "calma,"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "que_es",
+   "escenas": [
+    {
+     "texto": "¿Qué es exactamente una burbuja?",
+     "tipo": "titulo",
+     "icono": "burbuja",
+     "destacar": [
+      "burbuja?"
+     ]
+    },
+    {
+     "texto": "Es cuando el precio de algo sube muy por encima de lo que vale.",
+     "tipo": "grafica",
+     "forma": "sube",
+     "etiquetas": [
+      "PRECIO",
+      "VALOR"
+     ],
+     "destacar": [
+      "precio",
+      "vale."
+     ]
+    },
+    {
+     "texto": "La gente compra porque sube, y sube porque la gente compra.",
+     "tipo": "icono",
+     "icono": "ciclo",
+     "destacar": [
+      "compra",
+      "sube,"
+     ]
+    },
+    {
+     "texto": "Hasta que un día faltan compradores, y el precio cae de golpe.",
+     "tipo": "grafica",
+     "forma": "cae",
+     "etiquetas": [
+      "¡PLOF!"
+     ],
+     "destacar": [
+      "cae"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "escenas": [
+    {
+     "texto": "¿Por qué se llama burbuja?",
+     "tipo": "titulo",
+     "icono": "burbuja",
+     "destacar": [
+      "burbuja?"
+     ]
+    },
+    {
+     "texto": "Curiosidad: el nombre viene de 1720, de la Compañía de los Mares del Sur, en Inglaterra.",
+     "tipo": "cifra",
+     "valor": "1720",
+     "etiqueta": "MARES DEL SUR",
+     "icono": "barco",
+     "destacar": [
+      "Curiosidad:",
+      "1720,"
+     ]
+    },
+    {
+     "texto": "Sus acciones se multiplicaron por diez en pocos meses… y luego se hundieron.",
+     "tipo": "grafica",
+     "forma": "pico",
+     "etiquetas": [
+      "×10"
+     ],
+     "destacar": [
+      "diez",
+      "hundieron."
+     ]
+    },
+    {
+     "texto": "Según la historia más contada, hasta Isaac Newton perdió una fortuna.",
+     "tipo": "foto",
+     "foto": "newton",
+     "etiqueta": "ISAAC NEWTON",
+     "encuadre": "50% 18%",
+     "credito": "Retrato: Godfrey Kneller (1689), dominio público",
+     "destacar": [
+      "Newton"
+     ]
+    },
+    {
+     "texto": "A aquella locura la llamaron, justamente, la burbuja.",
+     "tipo": "titulo",
+     "icono": "burbuja",
+     "texto_grande": "LA BURBUJA",
+     "destacar": [
+      "burbuja."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gasto",
+   "escenas": [
+    {
+     "texto": "¿Cuánto dinero se está metiendo en inteligencia artificial?",
+     "tipo": "titulo",
+     "icono": "dinero",
+     "destacar": [
+      "dinero"
+     ]
+    },
+    {
+     "texto": "Solo este año, las grandes tecnológicas gastarán entre seiscientos cincuenta mil y setecientos cincuenta mil millones de dólares.",
+     "tipo": "cifra",
+     "valor": "650–750 MIL M$",
+     "etiqueta": "EN 2026",
+     "icono": "dinero",
+     "destacar": [
+      "seiscientos",
+      "setecientos"
+     ]
+    },
+    {
+     "texto": "Sobre todo en centros de datos y chips.",
+     "tipo": "tarjetas",
+     "items": [
+      "CENTROS DE DATOS",
+      "CHIPS"
+     ],
+     "icono": "chip",
+     "destacar": [
+      "centros",
+      "chips."
+     ]
+    },
+    {
+     "texto": "Y muchas de esas empresas se invierten y se compran entre ellas.",
+     "tipo": "icono",
+     "icono": "ciclo",
+     "destacar": [
+      "entre",
+      "ellas."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "quien",
+   "escenas": [
+    {
+     "texto": "¿Quién está gastando todo ese dinero?",
+     "tipo": "titulo",
+     "icono": "dinero",
+     "destacar": [
+      "gastando"
+     ]
+    },
+    {
+     "texto": "Sobre todo cuatro gigantes: Microsoft, Alphabet, que es la dueña de Google, Amazon y Meta.",
+     "tipo": "tarjetas",
+     "items": [
+      "MICROSOFT",
+      "ALPHABET",
+      "AMAZON",
+      "META"
+     ],
+     "destacar": [
+      "cuatro",
+      "gigantes:"
+     ]
+    },
+    {
+     "texto": "Construyen centros de datos enormes, llenos de chips especializados.",
+     "tipo": "foto",
+     "foto": "servidores",
+     "etiqueta": "CENTRO DE DATOS",
+     "credito": "Foto: Carl Lender, CC BY 2.0, vía Wikimedia Commons",
+     "destacar": [
+      "centros",
+      "chips"
+     ]
+    },
+    {
+     "texto": "Y esos centros necesitan muchísima electricidad, tanta como algunas ciudades.",
+     "tipo": "icono",
+     "icono": "rayo",
+     "destacar": [
+      "electricidad,",
+      "ciudades."
+     ]
+    },
+    {
+     "texto": "La gran pregunta es si todo ese gasto se convertirá en ingresos suficientes.",
+     "tipo": "comparar",
+     "izq": "GASTO",
+     "der": "INGRESOS",
+     "destacar": [
+      "gasto",
+      "ingresos"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "si_burbuja",
+   "escenas": [
+    {
+     "texto": "¿Por qué algunos ven una burbuja?",
+     "tipo": "titulo",
+     "icono": "lupa",
+     "destacar": [
+      "burbuja?"
+     ]
+    },
+    {
+     "texto": "El FMI señala tres riesgos: mucha deuda, mucho dinero en pocas empresas y financiación en círculo.",
+     "tipo": "tarjetas",
+     "items": [
+      "DEUDA",
+      "POCAS EMPRESAS",
+      "EN CÍRCULO"
+     ],
+     "destacar": [
+      "deuda,",
+      "pocas",
+      "círculo."
+     ]
+    },
+    {
+     "texto": "Si los beneficios no llegan tan rápido como se espera, podría haber una corrección.",
+     "tipo": "grafica",
+     "forma": "cae",
+     "etiquetas": [
+      "CORRECCIÓN"
+     ],
+     "destacar": [
+      "beneficios",
+      "corrección."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "no_burbuja",
+   "escenas": [
+    {
+     "texto": "¿Y por qué otros dicen que no?",
+     "tipo": "titulo",
+     "icono": "balanza",
+     "destacar": [
+      "no?"
+     ]
+    },
+    {
+     "texto": "Porque la inteligencia artificial ya la usan cientos de millones de personas cada semana.",
+     "tipo": "icono",
+     "icono": "personas",
+     "destacar": [
+      "cientos",
+      "millones"
+     ]
+    },
+    {
+     "texto": "Y porque las grandes tecnológicas, a diferencia de muchas empresas del año dos mil, ganan dinero.",
+     "tipo": "comparar",
+     "izq": "2000",
+     "der": "HOY",
+     "destacar": [
+      "ganan",
+      "dinero."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "puntocom",
+   "escenas": [
+    {
+     "texto": "¿Qué pasó con la burbuja de internet del año dos mil?",
+     "tipo": "titulo",
+     "icono": "ordenador",
+     "destacar": [
+      "internet"
+     ]
+    },
+    {
+     "texto": "El índice tecnológico Nasdaq llegó a su máximo en marzo del dos mil.",
+     "tipo": "foto",
+     "foto": "nasdaq",
+     "etiqueta": "NASDAQ · MARZO 2000",
+     "credito": "Foto: Luca Marfè, CC BY 2.0, vía Wikimedia Commons",
+     "destacar": [
+      "Nasdaq",
+      "máximo"
+     ]
+    },
+    {
+     "texto": "En dos años y medio perdió casi el ochenta por ciento.",
+     "tipo": "cifra",
+     "valor": "−78 %",
+     "etiqueta": "2000 → 2002",
+     "icono": "grafica_baja",
+     "destacar": [
+      "ochenta"
+     ]
+    },
+    {
+     "texto": "Muchas empresas desaparecieron, pero internet siguió creciendo y cambió el mundo.",
+     "tipo": "foto",
+     "foto": "tierra_noche",
+     "etiqueta": "EL MUNDO CONECTADO",
+     "credito": "Imagen: NASA (Black Marble), dominio público",
+     "destacar": [
+      "internet",
+      "creciendo"
+     ]
+    },
+    {
+     "texto": "Una burbuja puede estallar aunque la tecnología sea real.",
+     "tipo": "titulo",
+     "icono": "bombilla",
+     "destacar": [
+      "estallar",
+      "real."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "escenarios",
+   "escenas": [
+    {
+     "texto": "¿Qué podría pasar a partir de ahora?",
+     "tipo": "titulo",
+     "icono": "lupa",
+     "destacar": [
+      "pasar"
+     ]
+    },
+    {
+     "texto": "Primer escenario: la inteligencia artificial cumple lo prometido y el gasto se recupera.",
+     "tipo": "grafica",
+     "forma": "sube",
+     "etiquetas": [
+      "1"
+     ],
+     "destacar": [
+      "Primer",
+      "cumple"
+     ]
+    },
+    {
+     "texto": "Segundo: las expectativas bajan poco a poco, sin un gran susto.",
+     "tipo": "grafica",
+     "forma": "suave",
+     "etiquetas": [
+      "2"
+     ],
+     "destacar": [
+      "Segundo:",
+      "poco"
+     ]
+    },
+    {
+     "texto": "Tercero: una caída brusca, como la del año dos mil.",
+     "tipo": "grafica",
+     "forma": "cae",
+     "etiquetas": [
+      "3"
+     ],
+     "destacar": [
+      "Tercero:",
+      "brusca,"
+     ]
+    },
+    {
+     "texto": "Los expertos no se ponen de acuerdo sobre cuál es el más probable.",
+     "tipo": "icono",
+     "icono": "personas",
+     "destacar": [
+      "acuerdo"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "senales",
+   "escenas": [
+    {
+     "texto": "¿Y qué miran los expertos para saberlo?",
+     "tipo": "titulo",
+     "icono": "lupa",
+     "destacar": [
+      "expertos"
+     ]
+    },
+    {
+     "texto": "Primero, si las empresas que usan inteligencia artificial empiezan a ganar más con ella.",
+     "tipo": "tarjetas",
+     "items": [
+      "1 · BENEFICIOS"
+     ],
+     "destacar": [
+      "ganar"
+     ]
+    },
+    {
+     "texto": "Segundo, cuánta deuda se pide para construir centros de datos.",
+     "tipo": "tarjetas",
+     "items": [
+      "2 · DEUDA"
+     ],
+     "destacar": [
+      "deuda"
+     ]
+    },
+    {
+     "texto": "Y tercero, si el dinero se concentra cada vez en menos empresas.",
+     "tipo": "tarjetas",
+     "items": [
+      "3 · CONCENTRACIÓN"
+     ],
+     "destacar": [
+      "menos",
+      "empresas."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cierre",
+   "escenas": [
+    {
+     "texto": "Entonces, ¿es una burbuja? Hoy nadie lo sabe con certeza.",
+     "tipo": "comparar",
+     "izq": "SÍ",
+     "der": "NO",
+     "destacar": [
+      "nadie",
+      "certeza."
+     ]
+    },
+    {
+     "texto": "Hay quien ve riesgo y quien ve una revolución.",
+     "tipo": "icono",
+     "icono": "balanza",
+     "destacar": [
+      "riesgo",
+      "revolución."
+     ]
+    },
+    {
+     "texto": "Suscríbete para más noticias explicadas, y en el canal tienes muchas más historias como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ],
+ "shorts": [
+  {
+   "capitulos": [
+    "curiosidad"
+   ],
+   "titulo": "¿Por qué se llama burbuja? Newton lo sufrió 🫧",
+   "remate": "¿Y LA IA? ¿ES OTRA BURBUJA?",
+   "escenas": [
+    0,
+    1,
+    3
+   ]
+  },
+  {
+   "capitulos": [
+    "puntocom"
+   ],
+   "titulo": "El día que internet se desinfló: −78 % 💻",
+   "remate": "¿LE PASARÁ LO MISMO A LA IA?",
+   "escenas": [
+    1,
+    2,
+    4
+   ]
+  }
+ ],
+ "miniatura": {
+  "arriba": "¿LA IA ES UNA",
+  "abajo": "BURBUJA?",
+  "icono": "burbuja",
+  "grafica": true
+ },
+ "fotos": [
+  "Datacenter Server Racks (22370909788).jpg — Carl Lender, CC BY 2.0, Wikimedia Commons",
+  "NASDAQ Market Site 201506.jpg — Luca Marfè, CC BY 2.0, Wikimedia Commons",
+  "Portrait of Sir Isaac Newton, 1689 (brightened).jpg — Godfrey Kneller, dominio público, Wikimedia Commons",
+  "Black Marble - City Lights 2012 (8246892319).jpg — NASA, dominio público, Wikimedia Commons"
+ ]
+}

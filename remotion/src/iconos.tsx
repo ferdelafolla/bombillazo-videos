@@ -1,0 +1,138 @@
+// Iconos dibujados a mano en estilo tinta (caja de -200..200). Cada trazo se dibuja en directo
+// (pathLength=1 + dashoffset) y su relleno aparece al terminar el trazo.
+import React from 'react';
+import { P } from './tinta';
+
+type F = 'R' | 'K' | 'W' | 'Y' | 'B' | 'LB' | 'G' | 'LG' | 'O' | 'PU' | 'T' | 'S' | 'M' | 'GR';
+type El = { d: string; f?: F; w?: number; s?: F };
+const c = (cx: number, cy: number, r: number) => `M${cx - r},${cy} a${r},${r} 0 1,0 ${2 * r},0 a${r},${r} 0 1,0 ${-2 * r},0`;
+const r = (x: number, y: number, w: number, h: number, k = 16) =>
+  `M${x + k},${y} H${x + w - k} Q${x + w},${y} ${x + w},${y + k} V${y + h - k} Q${x + w},${y + h} ${x + w - k},${y + h} H${x + k} Q${x},${y + h} ${x},${y + h - k} V${y + k} Q${x},${y} ${x + k},${y} Z`;
+
+export const ICONOS: Record<string, El[]> = {
+  burbuja: [
+    { d: c(0, 10, 150), f: 'LB' },
+    { d: 'M-100,-30 A110,110 0 0 1 -40,-95', w: 12, s: 'W' },
+    { d: c(150, -140, 30), f: 'LB' },
+    { d: c(185, -80, 14), f: 'PU' },
+    { d: c(70, 70, 18), f: 'PU' },
+  ],
+  banco: [
+    { d: 'M-175,-55 L0,-170 L175,-55 Z', f: 'Y' },
+    { d: c(0, -95, 20), f: 'R' },
+    { d: 'M-160,-40 H160' },
+    { d: 'M-145,-30 H-95 V120 H-145 Z M-65,-30 H-15 V120 H-65 Z M15,-30 H65 V120 H15 Z M95,-30 H145 V120 H95 Z', f: 'GR', w: 8 },
+    { d: 'M-175,135 H175 M-195,165 H195' },
+  ],
+  personas: [-125, 0, 125].flatMap((x, i) => [
+    { d: `M${x - 70},150 Q${x - 70},15 ${x},15 Q${x + 70},15 ${x + 70},150 Z`, f: (['B', 'R', 'G'] as F[])[i] },
+    { d: c(x, -55, i === 1 ? 46 : 38), f: 'S' as F },
+  ]),
+  balanza: [
+    { d: 'M0,-150 V150 M-95,155 H95', s: 'M' },
+    { d: c(0, -160, 16), f: 'Y' },
+    { d: 'M-165,-105 H165' },
+    { d: 'M-165,-105 L-215,20 M-165,-105 L-115,20 M165,-105 L115,20 M165,-105 L215,20', w: 6 },
+    { d: 'M-222,20 Q-165,75 -108,20 Z', f: 'R' },
+    { d: 'M108,20 Q165,75 222,20 Z', f: 'B' },
+  ],
+  ciclo: [
+    { d: 'M-131.6,-47.9 A140,140 0 0 1 131.6,-47.9', w: 14, s: 'B' },
+    { d: 'M142.5,-99.8 L131.6,-47.9 L89.9,-80.6', w: 14, s: 'B' },
+    { d: 'M131.6,47.9 A140,140 0 0 1 -131.6,47.9', w: 14, s: 'R' },
+    { d: 'M-89.9,80.6 L-131.6,47.9 L-142.5,99.8', w: 14, s: 'R' },
+    { d: c(0, 0, 46), f: 'Y' },
+    { d: 'M14,-18 Q0,-26 -12,-18 Q-22,-8 -6,-2 L8,4 Q22,12 12,22 Q0,28 -16,18 M0,-32 V32', w: 7 },
+  ],
+  barco: [
+    { d: 'M-180,60 L180,60 L130,140 L-130,140 Z', f: 'M' },
+    { d: 'M0,60 V-175', s: 'M' },
+    { d: 'M12,-160 L150,30 L12,30 Z', f: 'R' },
+    { d: 'M-12,-130 L-125,30 L-12,30 Z', f: 'W' },
+    { d: 'M0,-175 L55,-160 L0,-145', f: 'Y' },
+    { d: 'M-210,180 q26,-20 52,0 t52,0 t52,0 t52,0 t52,0 t52,0 t52,0 t52,0', w: 9, s: 'B' },
+  ],
+  manzana: [
+    { d: 'M0,-80 C-60,-130 -170,-100 -165,10 C-160,110 -80,170 -40,160 C-20,155 -10,148 0,148 C10,148 20,155 40,160 C80,170 160,110 165,10 C170,-100 60,-130 0,-80 Z', f: 'R' },
+    { d: 'M0,-80 Q5,-130 30,-165', w: 12, s: 'M' },
+    { d: 'M14,-118 Q62,-172 112,-140 Q62,-100 14,-118 Z', f: 'G' },
+    { d: 'M-110,-20 Q-115,30 -90,70', w: 9, s: 'W' },
+  ],
+  dinero: [
+    { d: r(-185, -105, 370, 210, 22), f: 'LG' },
+    { d: r(-160, -80, 320, 160, 14), w: 5, s: 'G' },
+    { d: c(0, 0, 62), f: 'W' },
+    { d: 'M28,-32 Q0,-52 -24,-38 Q-44,-18 -14,-4 L14,6 Q44,20 24,40 Q0,54 -30,34 M0,-62 V62', w: 10, s: 'G' },
+    { d: c(165, 115, 50), f: 'Y' },
+  ],
+  chip: [
+    { d: r(-115, -115, 230, 230, 20), f: 'G' },
+    { d: r(-60, -60, 120, 120, 10), f: 'Y' },
+    { d: [-75, -25, 25, 75].map((x) => `M${x},-115 V-170 M${x},115 V170 M-115,${x} H-170 M115,${x} H170`).join(' '), s: 'O' },
+  ],
+  servidor: [
+    ...[-165, -50, 65].flatMap((y, i) => [
+      { d: r(-155, y, 310, 95, 16), f: 'GR' as F },
+      { d: `M-115,${y + 47} H25`, w: 8 },
+      { d: c(108, y + 47, 13), f: (['G', 'Y', 'R'] as F[])[i] },
+    ]),
+    { d: 'M-120,160 V190 M120,160 V190 M-150,190 H150' },
+  ],
+  rayo: [{ d: 'M35,-195 L-115,20 L-5,20 L-45,195 L125,-45 L15,-45 L65,-195 Z', f: 'Y' }, { d: 'M-160,-120 l30,10 M160,90 l-30,-10 M-150,120 l25,-15', w: 9, s: 'O' }],
+  lupa: [
+    { d: c(-30, -30, 125), f: 'LB' },
+    { d: 'M-105,-45 A80,80 0 0 1 -50,-105', w: 10, s: 'W' },
+    { d: 'M60,60 L175,175', w: 30, s: 'M' },
+  ],
+  ordenador: [
+    { d: r(-185, -155, 370, 250, 18), f: 'GR' },
+    { d: r(-155, -125, 310, 190, 8), w: 5, f: 'LB' },
+    { d: 'M-115,30 L-55,-35 L-5,5 L55,-70 L115,-25', w: 12, s: 'R' },
+    { d: 'M-30,95 L-45,155 M30,95 L45,155 M-105,160 H105' },
+  ],
+  mundo: [
+    { d: c(0, 0, 165), f: 'B' },
+    { d: 'M-90,-60 Q-40,-90 0,-50 Q-20,0 -70,10 Q-110,-20 -90,-60 Z', f: 'G' },
+    { d: 'M40,30 Q90,10 110,60 Q80,110 40,90 Z', f: 'G' },
+    { d: 'M0,-165 C-95,-100 -95,100 0,165 C95,100 95,-100 0,-165', w: 6, s: 'W' },
+    { d: 'M-165,0 H165', w: 6, s: 'W' },
+  ],
+  bombilla: [
+    { d: 'M-90,40 C-150,-20 -130,-170 0,-170 C130,-170 150,-20 90,40 C70,60 60,80 60,100 L-60,100 C-60,80 -70,60 -90,40 Z', f: 'Y' },
+    { d: 'M-35,100 L-35,20 L-15,-20 L0,10 L15,-20 L35,20 L35,100', w: 8, s: 'O' },
+    { d: 'M-58,128 H58 M-50,155 H50 M-28,180 H28', w: 12, s: 'GR' },
+    { d: 'M0,-205 V-245 M-140,-140 L-168,-168 M140,-140 L168,-168 M-185,-40 H-225 M185,-40 H225', w: 12, s: 'O' },
+  ],
+  grafica_baja: [
+    { d: 'M-175,-170 V160 H185' },
+    { d: r(-140, -60, 50, 220, 6), f: 'B' },
+    { d: r(-70, 0, 50, 160, 6), f: 'G' },
+    { d: r(0, 50, 50, 110, 6), f: 'O' },
+    { d: r(70, 110, 50, 50, 6), f: 'R' },
+    { d: 'M-150,-140 L-60,-80 L0,-100 L160,95', w: 14, s: 'R' },
+    { d: 'M110,92 L160,95 L152,45', w: 14, s: 'R' },
+  ],
+};
+
+const COL: Record<F, string> = { R: P.RED, K: P.INK, W: P.PAPER, Y: P.Y, B: P.BLUE, LB: P.LBLUE, G: P.GREEN, LG: P.LGREEN, O: P.ORANGE, PU: P.PURPLE, T: P.TEAL, S: P.SKIN, M: P.BROWN, GR: P.GRAY };
+
+// p: progreso global del dibujo 0..1 (los trazos se escalonan dentro)
+export const Icono: React.FC<{ nombre: string; p: number; tam?: number; tinta?: string }> = ({ nombre, p, tam = 400, tinta = P.INK }) => {
+  const els = ICONOS[nombre] || ICONOS.bombilla;
+  const n = els.length;
+  return (
+    <g transform={`scale(${tam / 400})`}>
+      {els.map((e, i) => {
+        const a = (i / n) * 0.6, b = a + 0.4 + 0.4 / n;
+        const q = Math.max(0, Math.min(1, (p - a) / (b - a)));
+        const fo = Math.max(0, Math.min(1, (q - 0.75) / 0.25));
+        if (q <= 0) return null;
+        return (
+          <path key={i} d={e.d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - q}
+            stroke={e.s ? COL[e.s] : tinta} strokeWidth={e.w ?? 10} strokeLinecap="round" strokeLinejoin="round"
+            fill={e.f ? COL[e.f] : 'none'} fillOpacity={fo} />
+        );
+      })}
+    </g>
+  );
+};
