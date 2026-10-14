@@ -32,6 +32,7 @@ Formato que se produce **cada 2 días**: un vídeo largo horizontal (1920×1080,
   - el arte entre y 330 y 1140;
   - el subtítulo en x 290–930, y 1190–1300;
   - la barra a y 1468.
+- Shorts CORTOS (15–25 s, decisión del usuario 14/10/2026): `shorts[].escenas` elige 2–3 escenas álgidas de los capítulos; empiezan con un GANCHO (`shorts[].gancho`: escena tipo titulo con `texto_grande` llamativo y su propia voz `voces/<id>_short<N>_gancho.mp3`), clickbait honesto que el vídeo cumple, sin ragebait que tome partido. Sin pausa de suscripción si duran menos de 25 s.
 - Shorts: terminan con la pregunta-gancho (`shorts[].remate`, p. ej. "¿Y LA IA? ¿ES OTRA BURBUJA?") + "VÍDEO COMPLETO EN EL CANAL" + SUSCRÍBETE, con la voz `voces/final_es.mp3`.
 - Miniatura 1280×720 en **Inter ExtraBold** (sans sencilla, nunca Vemoly): pregunta, palabra clave resaltada en amarillo, icono y Chispa.
 

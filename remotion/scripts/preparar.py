@@ -7,8 +7,13 @@ dur = lambda f: float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_
 subprocess.check_call(['python3', f'{R}/scripts/tiempos.py', g, f'{R}/public/voces', '/tmp/tiempos.json'])
 subprocess.check_call(['python3', f'{R}/scripts/amplitud.py', f'{R}/public/voces', '/tmp/amp.json'])
 guion = json.load(open(g)); amp = json.load(open('/tmp/amp.json'))
+tiempos = json.load(open('/tmp/tiempos.json'))
+for i, sh in enumerate(guion.get('shorts', [])):  # voces de gancho de los Shorts
+    v = f"{guion['id']}_short{i + 1}_gancho"
+    if sh.get('gancho') and os.path.exists(f'{R}/public/voces/{v}.mp3'):
+        tiempos[v] = {'dur': dur(f'{R}/public/voces/{v}.mp3'), 'lead': 0, 'cortes': []}
 amp = {k: v for k, v in amp.items() if k.startswith(guion['id']) or k in ('sub_es', 'final_es')}
-json.dump({'guion': guion, 'tiempos': json.load(open('/tmp/tiempos.json')), 'amp': amp,
+json.dump({'guion': guion, 'tiempos': tiempos, 'amp': amp,
            'subDur': dur(f'{R}/public/voces/sub_es.mp3'), 'finalDur': dur(f'{R}/public/voces/final_es.mp3')},
           open(f'{R}/src/datos.json', 'w'))
 print('ok', guion['id'])

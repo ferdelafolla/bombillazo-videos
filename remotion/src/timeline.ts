@@ -26,7 +26,7 @@ export type Guion = {
   titulo: string;
   serie: string;
   capitulos: Capitulo[];
-  shorts: { capitulos: string[]; titulo: string; remate?: string; escenas?: number[] }[]; // escenas: índices dentro de los capítulos elegidos (fragmento corto)
+  shorts: { capitulos: string[]; titulo: string; remate?: string; escenas?: number[]; gancho?: Escena }[]; // gancho: escena inicial con voz propia public/voces/<id>_short<N>_gancho.mp3 // escenas: índices dentro de los capítulos elegidos (fragmento corto)
 };
 export type Tiempos = Record<string, { dur: number; lead: number; cortes: number[] }>;
 export type Datos = { guion: Guion; tiempos: Tiempos; amp: Record<string, number[]>; subDur: number; finalDur: number };
@@ -70,6 +70,14 @@ export function construir(d: Datos, formato: Formato, short = 0): { segs: Seg[];
     const elegidas = escenas.filter((_, i) => sel.includes(i));
     elegidas.forEach((s, i) => { s.dur = s.vozDur + (i === elegidas.length - 1 ? PAD_CAP : 0.25); s.idx = i; });
     escenas.splice(0, escenas.length, ...elegidas);
+  }
+  // Short: gancho inicial (clickbait honesto) con su propia voz
+  const g = formato === 'short' ? guion.shorts[short].gancho : undefined;
+  if (g) {
+    const voz = `${guion.id}_short${short + 1}_gancho`;
+    const vd = tiempos[voz]?.dur ?? 3;
+    escenas.unshift({ kind: 'escena', start: 0, dur: vd + 0.2, voz, vozDesde: 0, vozDur: vd, escena: g, cap: 'gancho_short', idx: 0 });
+    escenas.forEach((s, i) => { s.idx = i; });
   }
   // pausa de suscripción a mitad de vídeo: en el corte de capítulo (largo) o de escena (short) más cercano a la mitad
   const total = escenas.reduce((a, s) => a + s.dur, 0);
