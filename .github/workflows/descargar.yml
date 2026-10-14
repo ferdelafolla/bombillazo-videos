@@ -1,9 +1,12 @@
-name: Descargar audios
-# Relevo: cuando se sube descargas/<nombre>.url con una URL firmada,
-# descarga el archivo a voces/<nombre>.mp3 y lo guarda en el repositorio.
+name: Descargar audios y fotos
+# Relevo (el contenedor de trabajo no puede descargar de internet):
+#  - descargas/<nombre>.url        (URL firmada de audio)  -> voces/<nombre>.mp3
+#  - descargas/fotos/<nombre>.url  (URL directa de imagen) -> fotos_src/<nombre>.<ext>
+#  - descargas/buscar/<nombre>.q   (texto a buscar)        -> fotos_src/buscar_<nombre>.json
+#    búsqueda en Wikimedia Commons con autor, licencia y URL de una versión de 1600 px
 on:
   push:
-    paths: ['descargas/*.url']
+    paths: ['descargas/*.url', 'descargas/fotos/*.url', 'descargas/buscar/*.q']
 permissions:
   contents: write
 jobs:
@@ -11,22 +14,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Descargar
+      - name: Audios
         run: |
           mkdir -p voces
           for f in descargas/*.url; do
+            [ -e "$f" ] || continue
             n=$(basename "$f" .url)
             [ -f "voces/$n.mp3" ] && continue
             curl -sSfL --retry 3 -o "voces/$n.mp3" "$(tr -d '\r\n' < "$f")" || echo "FALLO $n"
           done
-          ls -la voces
+      - name: Fotos
+        run: |
+          mkdir -p fotos_src
+          UA="ChispazoBot/1.0 (https://github.com/ferdelafolla/bombillazo-videos)"
+          for f in descargas/fotos/*.url; do
+            [ -e "$f" ] || continue
+            n=$(basename "$f" .url); u=$(tr -d '\r\n' < "$f")
+            ext=$(echo "${u%%\?*}" | sed 's/.*\.//' | tr 'A-Z' 'a-z'); case "$ext" in jpg|jpeg|png|webp) ;; *) ext=jpg;; esac
+            ls fotos_src/"$n".* >/dev/null 2>&1 && continue
+            curl -sSfL --retry 3 -A "$UA" -o "fotos_src/$n.$ext" "$u" || echo "FALLO foto $n"
+          done
+      - name: Buscar en Commons
+        run: |
+          UA="ChispazoBot/1.0 (https://github.com/ferdelafolla/bombillazo-videos)"
+          for f in descargas/buscar/*.q; do
+            [ -e "$f" ] || continue
+            n=$(basename "$f" .q); [ -f "fotos_src/buscar_$n.json" ] && continue
+            q=$(tr -d '\r\n' < "$f")
+            curl -sSfG -A "$UA" "https://commons.wikimedia.org/w/api.php" \
+              --data-urlencode "action=query" --data-urlencode "format=json" --data-urlencode "generator=search" \
+              --data-urlencode "gsrnamespace=6" --data-urlencode "gsrlimit=15" --data-urlencode "gsrsearch=$q filetype:bitmap" \
+              --data-urlencode "prop=imageinfo" --data-urlencode "iiprop=url|extmetadata|size" --data-urlencode "iiurlwidth=1600" \
+              -o "fotos_src/buscar_$n.json" || echo "FALLO busqueda $n"
+          done
       - name: Guardar
         run: |
           git config user.name "Claude"
           git config user.email "noreply@anthropic.com"
-          git add voces
+          git add voces fotos_src 2>/dev/null || true
           git diff --cached --quiet && exit 0
-          git commit -m "Audios descargados"
+          git commit -m "Descargas del relevo"
           # si alguien sube a la vez, se integra y se reintenta
           for i in 1 2 3 4 5; do
             git push && exit 0
