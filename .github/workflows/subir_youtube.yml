@@ -1,0 +1,30 @@
+name: Subir a YouTube
+# Sube los vídeos pedidos en publicar/youtube/*.json con la API oficial de YouTube
+# (programados con publishAt si llevan "publicar"). Deja publicar/youtube/<nombre>.hecho.json con el resultado.
+on:
+  push:
+    paths: ['publicar/youtube/*.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: subir-youtube
+jobs:
+  subir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install google-api-python-client google-auth
+      - name: Subir
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python .github/scripts/subir_youtube.py
+      - name: Guardar resultado
+        if: always()
+        run: |
+          git config user.name "Claude"; git config user.email "noreply@anthropic.com"
+          git add publicar/youtube/*.hecho.json 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -m "Resultado de la subida a YouTube"
+          for i in 1 2 3 4 5; do git push && exit 0; sleep $((i*3)); git pull --rebase origin main || exit 1; done
