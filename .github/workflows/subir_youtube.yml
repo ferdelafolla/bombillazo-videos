@@ -3,7 +3,7 @@ name: Subir a YouTube
 # (programados con publishAt si llevan "publicar"). Deja publicar/youtube/<nombre>.hecho.json con el resultado.
 on:
   push:
-    paths: ['publicar/youtube/*.json']
+    paths: ['publicar/youtube/*.json', 'publicar/youtube/comprobar']
   workflow_dispatch:
 permissions:
   contents: write
@@ -24,7 +24,7 @@ jobs:
         if: always()
         run: |
           git config user.name "Claude"; git config user.email "noreply@anthropic.com"
-          git add publicar/youtube/*.hecho.json 2>/dev/null || true
+          git add -A publicar/youtube 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m "Resultado de la subida a YouTube"
           for i in 1 2 3 4 5; do git push && exit 0; sleep $((i*3)); git pull --rebase origin main || exit 1; done

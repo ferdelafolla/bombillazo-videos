@@ -13,6 +13,15 @@ cred = Credentials(None, refresh_token=os.environ['YT_REFRESH_TOKEN'], token_uri
                    scopes=['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube'])
 yt = build('youtube', 'v3', credentials=cred)
 fallos = 0
+# comprobación: si existe publicar/youtube/comprobar, deja el canal autorizado (o el error) en comprobar.hecho.json
+if __import__('os').path.exists('publicar/youtube/comprobar'):
+    try:
+        r = yt.channels().list(part='snippet,statistics', mine=True).execute()
+        res = [{'id': c['id'], 'titulo': c['snippet']['title'], 'subs': c['statistics'].get('subscriberCount')} for c in r.get('items', [])]
+    except Exception as e:
+        res = {'error': str(e)}
+    json.dump(res, open('publicar/youtube/comprobar.hecho.json', 'w'), ensure_ascii=False, indent=1); print('comprobar', res)
+    os.remove('publicar/youtube/comprobar')
 for f in sorted(glob.glob('publicar/youtube/*.json')):
     if f.endswith('.hecho.json') or os.path.exists(f[:-5] + '.hecho.json'):
         continue
