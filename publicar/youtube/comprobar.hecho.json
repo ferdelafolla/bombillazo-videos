@@ -1,3 +1,8 @@
 {
- "error": "('invalid_request: Missing required parameter: refresh_token', {'error': 'invalid_request', 'error_description': 'Missing required parameter: refresh_token'})"
+ "error": "faltan los secretos YT_CLIENT_ID, YT_CLIENT_SECRET y YT_REFRESH_TOKEN",
+ "pendientes": [
+  "publicar/youtube/2026-10-20_mar_salado.json",
+  "publicar/youtube/2026-10-20_mar_salado_short1.json",
+  "publicar/youtube/2026-10-20_mar_salado_short2.json"
+ ]
 }
