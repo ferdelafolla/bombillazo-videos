@@ -1,7 +1,7 @@
 // micro.js — vista de microscopio: un viaje continuo desde granos de sal hasta los átomos.
 // s = aumento de la cámara (1 = se ven los granos; 400 = se ven los iones del cristal).
 // agua = true: iones de sodio y cloro sueltos entre moléculas de agua (la sal disuelta).
-import { W, H, C, hash, bayer, clamp } from './px.js';
+import { W, H, C, T, hash, bayer, clamp } from './px.js';
 import { text, textW, textOutlined } from './font.js';
 
 const A = 0.06;            // distancia entre iones en el mundo (unidades del mundo)
@@ -105,4 +105,106 @@ export function micro(fb, s, t, conAgua = false, dlgY = H) {
       text(fb, s2.replace('NA', 'Na').replace('CL', 'Cl'), lx + 10, y, C.white, C.ink);
     });
   }
+}
+
+// —— escenas de microscopio con historia continua (reentrada de una cápsula) ——
+// Una sola "película" por secuencia: el progreso global avanza de escena en escena sin saltos.
+//   aire 0→1 · choque 1→2 · aprieta 2→3 · plasma 3→4      (el aire delante del escudo)
+//   ablacion 0→.5 · ablacion2 .5→1                         (la superficie del escudo)
+const ETAPA = { aire: 0, choque: 1, aprieta: 2, plasma: 3 };
+const ease = x => x < .5 ? 2 * x * x : 1 - 2 * (1 - x) * (1 - x);
+const cl01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
+let RX = 80, RY = 80;
+function marco(fb, R, mag, etiqueta, dlgY) {
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const dx = (x - CX + .5) / RX, dy = (y - CY + .5) / RY, d = Math.sqrt(dx * dx + dy * dy); if (d > 1) fb.px(x, y, d < 1 + 2 / RY ? C.steel : C.ink); else if (d > 1 - 6 / RY && bayer(x, y) < (d - 1 + 6 / RY) * RY / 7) fb.px(x, y, C.ink); }
+  const vert = H > W;
+  text(fb, 'MICROSCOPIO', vert ? Math.round(CX - textW('MICROSCOPIO') / 2) : 4, vert ? CY - R + 8 : 3, C.cyan, C.ink);
+  textOutlined(fb, mag, vert ? Math.round(CX - textW(mag, 2) / 2) : W - 4 - textW(mag, 2), vert ? CY + R - 22 : 2, C.yellow, C.ink, 2);
+  if (etiqueta) { const sc = !vert && textW(etiqueta, 2) < W - 24 ? 2 : 1, w = textW(etiqueta, sc); textOutlined(fb, etiqueta, Math.round(CX - w / 2), vert ? CY + R - 36 : dlgY - 8 - sc * 8, C.white, C.ink, sc); }
+}
+function leyenda(fb, items, dlgY, R) {
+  const vert = H > W, lx = vert ? 16 : CX - RX + 26, ly = vert ? CY - R + 22 : CY - RY + 14;
+  items.forEach(([s2, col], n) => { const y = ly + n * 11; fb.disc(lx + 2, y + 3, 2, col); fb.disc(lx + 6, y + 3, 2, col); text(fb, s2, lx + 12, y, C.white, C.ink); });
+}
+// mezcla de color "calor": de su color frío a naranja y luego blanco
+const CAL = [C.orange, C.amber, C.yellow, C.white];
+function calCol(base, h) { if (h < .2) return base; return CAL[Math.min(3, Math.floor((h - .2) / .8 * 4))]; }
+function atomo(fb, x, y, r, c) { fb.disc(x, y, r + 1, C.ink); fb.disc(x, y, r, c); if (r > 2) fb.px(x - 1, y - 1, C.white); }
+function molecula(fb, x, y, ang, r, c, sep) {   // N2 / O2: dos átomos unidos; sep > 0 los separa (se rompen)
+  const d = r * (1.1 + sep), dx = Math.cos(ang) * d, dy = Math.sin(ang) * d;
+  if (sep < .3) fb.line(Math.round(x - dx), Math.round(y - dy), Math.round(x + dx), Math.round(y + dy), C.ink);
+  atomo(fb, Math.round(x - dx), Math.round(y - dy), r, c); atomo(fb, Math.round(x + dx), Math.round(y + dy), r, c);
+}
+
+function secAire(fb, g, t, R, dlgY) {
+  // g ∈ [0,4]: progreso global de la secuencia del aire
+  const heat = cl01((g - 2) / 1.6), plasma = cl01(g - 3);
+  // fondo: noche alta que se va encendiendo
+  fb.rect(0, 0, W, H, C.night); fb.dither(0, 0, W, H, (x, y) => .1 + .5 * heat * cl01(1 - (x - CX + RX) / (2 * RX)), C.night, plasma > .3 ? C.rose : C.plum);
+  if (plasma > 0) fb.dither(0, 0, W, H, (x, y) => plasma * .45 * cl01(1 - (x - CX + RX * .6) / (1.4 * RX)), T, C.orange);
+  const xw0 = CX - RX * .62;                                   // superficie del escudo
+  const xw = g < 1 ? CX - RX * 1.6 + (xw0 - (CX - RX * 1.6)) * ease(cl01(g * 1.4 - .4)) : xw0;
+  // el escudo: bloque gris oscuro de átomos de carbono a la izquierda
+  if (xw > CX - RX - 2) { for (let y = Math.round(CY - RY); y < CY + RY; y++) for (let x = Math.round(CX - RX); x < xw; x++) fb.px(x, y, ((x >> 2) + (y >> 2)) % 2 ? C.dslate : C.slate); fb.vline(Math.round(xw), Math.round(CY - RY), Math.round(CY + RY), heat > .3 ? CAL[Math.min(3, Math.floor(heat * 3))] : C.steel); }
+  const N = 34, rows = 9, cols = 4, comp = 1 - .35 * cl01(g - 2);   // en "aprieta" el montón se comprime
+  for (let i = 0; i < N; i++) {
+    const hy = hash(i, 11), hx = hash(i, 12), N2 = hash(i, 13) < .78;   // el aire es casi 4/5 nitrógeno
+    const base = N2 ? C.blue : C.red, r = VERT ? 2 : 3;
+    let x, y, ang = t * (1 + hash(i, 14)) + i;
+    const slot = i < rows * cols ? i : -1, sc = slot >= 0 ? Math.floor(slot / rows) : 0, sr = slot >= 0 ? slot % rows : 0;
+    const slotX = xw + 7 + sc * (VERT ? 9 : 12) * comp, slotY = CY - RY * .78 + (sr + (sc % 2) * .5) * (RY * 1.56 / rows);
+    const arr = 1 + (sc * rows + sr) / (rows * cols) * .85;    // cuándo llega cada molécula (dentro de "choque")
+    // movimiento libre: deriva lenta antes del choque, rápida durante
+    const vel = g < 1 ? 7 : 7 + 55 * cl01(g - 1);
+    const xFree = CX + RX - ((hx * 2 * RX + t * vel) % (2 * RX)), yFree = CY + (hy - .5) * 1.7 * RY;
+    if (slot < 0 || g < arr - .12) { x = xFree; y = yFree; if (slot >= 0 && g > 1) { const k = cl01((g - (arr - .12)) / .12); x = xFree; } }
+    else { const k = ease(cl01((g - (arr - .12)) / .12)); x = slotX + (CX + RX - slotX) * (1 - k); y = slotY; }
+    if (slot >= 0 && g >= arr) { x = slotX; y = slotY; }
+    const jit = slot >= 0 && g >= arr ? (.6 + 2.8 * heat) : .4;
+    x += Math.sin(t * 13 + i * 2.1) * jit; y += Math.cos(t * 11 + i * 1.7) * jit;
+    const h = slot >= 0 && g >= arr ? heat * (1 - sc * .15) : heat * .3;
+    const sep = plasma > 0 && slot >= 0 ? cl01((plasma - hash(i, 15) * .5) / .4) * 2.2 : 0;
+    if (g >= 1 && g < 2 && (slot < 0 || g < arr)) for (let k = 1; k < 6; k++) fb.px(Math.round(x + k * 2), Math.round(y), C.steel);   // estela de velocidad
+    molecula(fb, Math.round(x), Math.round(y), sep > 0 ? ang * .2 + i : ang, r, calCol(base, h), sep);
+    if (sep > 1 && Math.floor(t * 10 + i) % 3 === 0) fb.px(Math.round(x), Math.round(y - 4), C.white);
+  }
+  // termómetro cuando aprieta
+  if (g > 1.8) { const hx = CX + RX - (VERT ? 22 : 44), top = CY - RY * .6, hh = RY * 1.2, lvl = cl01((g - 1.8) / 1.8);
+    fb.rect(hx - 1, top - 1, 6, hh + 2, C.ink); fb.rect(hx, top + hh * (1 - lvl), 4, hh * lvl, lvl > .7 ? C.white : lvl > .4 ? C.yellow : C.orange); fb.disc(hx + 2, top + hh + 4, 4, C.red); text(fb, 'CALOR', hx - 26, top - 2, C.yellow, C.ink); }
+  const et = g < 1 ? 'CASI NO HAY AIRE' : g < 2 ? 'NO LES DA TIEMPO A APARTARSE' : g < 3 ? 'SE APRIETAN Y SE CALIENTAN' : '¡SE ROMPEN Y BRILLAN!';
+  marco(fb, R, '×10.000.000', et, dlgY);
+  if (g < 1.2) leyenda(fb, [['N2 NITRÓGENO', C.blue], ['O2 OXÍGENO', C.red]], dlgY, R);
+  else if (xw > CX - RX) text(fb, 'ESCUDO', Math.round(Math.max(CX - RX + 10, xw - 34)), Math.round(CY - RY * .2), C.silver, C.ink);
+}
+
+function secEscudo(fb, g, t, R, dlgY) {
+  // g ∈ [0,1]: el escudo se deshace átomo a átomo y cada trocito se lleva el calor
+  fb.rect(0, 0, W, H, C.night); fb.dither(0, 0, W, H, (x, y) => .55 * cl01((x - CX + RX * .2) / (RX * 1.2)), C.night, C.orange);
+  const sp = 8, cols = 9, rows = Math.ceil(2 * RY / sp) + 1, x0 = CX - RX * .55, y0 = CY - RY;
+  const quita = g * 3.2;                                        // cuántas columnas se han ido
+  for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) {
+    const bx = x0 + c * sp, by = y0 + r * sp + (c % 2) * sp / 2, front = cols - 1 - c;   // front 0 = la capa de fuera
+    const tsuelta = (front + hash(c, r, 3) * .9) / 3.2;          // cuándo se suelta este átomo
+    const hot = cl01(1 - front / 3) , frio = front > 4;
+    if (g < tsuelta) { atomo(fb, Math.round(bx + Math.sin(t * 12 + r + c) * hot), Math.round(by), 3, frio ? C.steel : calCol(C.slate, .2 + hot * .9)); }
+    else {  // se va volando hacia la derecha y hacia arriba, con su estela de calor
+      const d = (g - tsuelta) * 3.2, x = bx + d * 70, y = by - d * 26 + Math.sin(t * 6 + r) * 3;
+      if (x < CX + RX + 6) { for (let k = 1; k < 5; k++) fb.px(Math.round(x - k * 3), Math.round(y + k), k < 3 ? C.yellow : C.orange); atomo(fb, Math.round(x), Math.round(y), 3, C.amber); }
+    }
+  }
+  // átomos de aire calientes golpeando la superficie
+  for (let i = 0; i < 26; i++) { const x = CX + RX - ((hash(i, 21) * RX * 1.2 + t * 60) % (RX * 1.2)), y = CY + (hash(i, 22) - .5) * 1.8 * RY; atomo(fb, Math.round(x), Math.round(y), 2, Math.floor(t * 8 + i) % 2 ? C.white : C.yellow); }
+  // lo de dentro, a salvo: termómetro interior que se queda bajo
+  const tx = CX - RX * .55 - 14, top = CY - RY * .5, hh = RY; fb.rect(tx - 1, top - 1, 6, hh + 2, C.ink); fb.rect(tx, top + hh * .8, 4, hh * .2, C.cyan); fb.disc(tx + 2, top + hh + 4, 4, C.blue);
+  text(fb, 'DENTRO', tx - 6, top - 12, C.cyan, C.ink);
+  marco(fb, R, '×10.000.000', g < .5 ? 'EL ESCUDO SE DESHACE' : 'CADA TROCITO SE LLEVA EL CALOR', dlgY);
+}
+
+export function microEscena(fb, modo, u, t, dlgY = H) {
+  CY = VERT ? 122 : Math.round(dlgY / 2);
+  const R = VERT ? 80 : Math.round(Math.min(W, dlgY) * .46);
+  RX = VERT ? 80 : Math.round(W * .47); RY = VERT ? 80 : Math.round(dlgY * .47);
+  if (modo in ETAPA) secAire(fb, ETAPA[modo] + u, t, R, dlgY);
+  else if (modo === 'ablacion' || modo === 'ablacion2') secEscudo(fb, (modo === 'ablacion' ? 0 : .5) + u * .5, t, R, dlgY);
+  else micro(fb, 400, t, false, dlgY);
 }

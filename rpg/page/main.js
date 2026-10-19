@@ -9,13 +9,14 @@ import { win, hand } from './ui.js';
 import { chispa, portrait } from './chispa.js';
 import { iconSprite, photoSprite, loadPhotos } from './raster.js';
 import { LUGARES, NOMBRE, FLOOR, VERT } from './lugares.js';
-import { micro } from './micro.js';
+import { micro, microEscena } from './micro.js';
 
 const q = new URLSearchParams(location.search);
 const ID = q.get('id') || 'Largo';
 const DIR = q.get('d') ? `./data/${q.get('d')}` : './data';
-const D = await (await fetch(`${DIR}/${ID}.json`)).json();
-const AMP = await (await fetch(`${DIR}/amp.json`)).json();
+// dentro de HyperFrames los datos van incrustados (window.RPG_DATA) para no depender de la red al renderizar
+const D = window.RPG_DATA ? window.RPG_DATA.comp : await (await fetch(`${DIR}/${ID}.json`)).json();
+const AMP = window.RPG_DATA ? window.RPG_DATA.amp : await (await fetch(`${DIR}/amp.json`)).json();
 const RPG = D.rpg || null;   // lugares, épocas, fotos y partidas guardadas vienen del guion
 await loadPhotos(RPG ? RPG.fotos : ['servidores', 'nasdaq', 'newton', 'tierra_noche']);
 const fb = new FB(), fbO = new FB(), out = makeOut(document.getElementById('c'));
@@ -33,7 +34,7 @@ function show(z = 1, fx = W / 2, fy = H / 2, overlay = false, lutO = null) {
 
 // —— ritmo: todo entra en los tiempos de la música (112 ppm, la misma que audio_rpg.py) ——
 const CHF = VERT ? 197 : FLOOR;
-const BPM = 112, BEAT = 60 / BPM, HB = BEAT / 2;
+const BPM = 88, BEAT = 60 / BPM, HB = BEAT / 2;
 const qa = (s, at) => Math.max(.04, Math.round((s.start + at) / HB) * HB - s.start);
 const beatP = t => { const ph = ((t % BEAT) + BEAT) % BEAT / BEAT; return Math.max(0, 1 - ph * 3.5); };
 
@@ -58,13 +59,13 @@ const L = VERT
   : { area: { x: 102, y: 22, w: 212, h: 106 }, chx: 54, hud: 4, dlg: { x: 4, y: 134, w: 312, h: 42 }, maxc: 46 };
 
 // —— transiciones: cuál toca en cada corte ——
-const TR0 = 0.6, TRD = 1.1;   // duración (s), centrada en el corte; los viajes pequeño↔grande duran más
+const TR0 = 0.9, TRD = 1.8;   // duración (s), centrada en el corte; los viajes pequeño↔grande duran más
 // minimo: la cámara se mete en algo diminuto de la escena y dentro aparece la siguiente
 // maximo: la cámara se aleja y la escena anterior resulta ser algo diminuto dentro de la siguiente
-const DENTRO = ['minimo', 'walk', 'maximo', 'zoomin', 'minimo', 'slide', 'maximo', 'iris'];
-const ENTRE = ['maximo', 'swirl', 'minimo', 'door', 'maximo', 'whip', 'minimo', 'zoomout'];
+const DENTRO = ['slide', 'minimo', 'walk', 'iris', 'maximo', 'walk'];
+const ENTRE = ['maximo', 'walk', 'minimo', 'iris', 'zoomout', 'slide'];
 const DIVE = new Set(['minimo', 'maximo']);
-const TRk = k => DIVE.has(trans[k]) ? TRD : TR0;
+const TRk = k => trans[k] === 'corte' ? .08 : DIVE.has(trans[k]) ? TRD : TR0;
 // la vista de microscopio dura más y cae casi toda dentro de la escena nueva (mientras la voz sigue)
 const MICRO = new Set(['micro', 'micro_agua']), MPRE = .5, MPOST = 2.3;
 const PRE = k => MICRO.has(trans[k]) ? MPRE : TRk(k) / 2, POST = k => MICRO.has(trans[k]) ? MPOST : TRk(k) / 2;
@@ -77,8 +78,11 @@ const trans = [];
     else if (A.kind !== 'escena' || B.kind !== 'escena') ty = 'thumb';
     else if (A.cap === B.cap) ty = DENTRO[a++ % DENTRO.length];
     else ty = ENTRE[b++ % ENTRE.length];
-    if (ty === last && ty !== 'era') ty = ty === 'mosaic' ? 'iris' : 'mosaic';
+    if (ty === last && ty !== 'era') ty = ty === 'slide' ? 'iris' : 'slide';
     if (B.escena && B.escena.transicion) ty = B.escena.transicion;
+    const esMicro = x => x.escena && x.escena.tipo === 'microscopio';
+    if (ty === 'corte' && !(esMicro(A) && esMicro(B))) ty = 'minimo';   // el corte seco solo entre vistas de microscopio seguidas
+    if (esMicro(A) && !esMicro(B) && ty !== 'maximo') ty = 'maximo';    // del microscopio se sale alejándose
     trans[k] = ty; last = ty;
   }
 }
@@ -93,11 +97,12 @@ function cues(k) {
     const e = s.escena;
     switch (e.tipo) {
       case 'titulo': c.icon = qa(s, .05); c.land = c.icon + BEAT; c.title = qa(s, .6); c.acc = [c.title]; break;
-      case 'tarjetas': { c.win = qa(s, .1); c.items = []; let t0 = qa(s, .45); (e.items || []).forEach(() => { c.items.push(t0); t0 += Math.max(HB, Math.round(.38 / HB) * HB); }); c.acc = c.items.slice(-1); break; }
+      case 'tarjetas': { c.win = qa(s, .1); c.items = []; let t0 = qa(s, .45); (e.items || []).forEach(() => { c.items.push(t0); t0 += Math.max(BEAT, Math.round(.75 / HB) * HB); }); c.acc = c.items.slice(-1); break; }
       case 'cifra': c.icon = qa(s, .05); c.win = qa(s, .3); c.val = qa(s, .45); c.settle = c.val + .07 * (e.valor || '').length + .2; c.lab = qa(s, 1.05); c.acc = [c.settle]; break;
       case 'grafica': c.win = qa(s, .05); c.draw = qa(s, .35); c.lab = c.draw + 1.4; c.acc = [c.lab]; break;
       case 'comparar': c.msg = qa(s, .05); c.L = qa(s, .3); c.R = c.L + BEAT; c.h1 = c.R + BEAT * 1.5; c.h2 = c.h1 + BEAT * 1.5; c.acc = [c.h1, c.h2]; break;
       case 'foto': c.win = qa(s, .05); c.lab = qa(s, .5); c.acc = [c.win + .2]; break;
+      case 'microscopio': c.acc = []; break;
       case 'suscribete': c.win = qa(s, .3); c.tap = qa(s, s.vozDur * .55); c.acc = [c.tap]; break;
       default: c.icon = qa(s, .05); c.land = c.icon + .45; c.acc = [c.land];
     }
@@ -107,8 +112,8 @@ function cues(k) {
 // zoom de cámara: alterna acercarse / alejarse en cada escena, con golpes de zoom en los momentos fuertes
 function camZoom(k, lt) {
   const s = segs[k], c = cues(k), u = clamp(lt / Math.max(1, s.dur), 0, 1), dir = k % 2 ? -1 : 1;
-  const za = VERT ? .08 : .14; let z = dir > 0 ? 1 + za * eio(u) : 1 + za - za * eio(u);
-  for (const a of c.acc) { const d = lt - a; if (d > -.06 && d < .7) z += (VERT ? .1 : .16) * (d < 0 ? (1 + d / .06) : Math.exp(-d * 7)); }
+  const za = VERT ? .04 : .07; let z = dir > 0 ? 1 + za * eio(u) : 1 + za - za * eio(u);
+  for (const a of c.acc) { const d = lt - a; if (d > -.3 && d < 2) z += (VERT ? .03 : .05) * (d < 0 ? (1 + d / .3) : Math.exp(-d * 2.5)); }
   const A = L.area, fx = VERT ? W / 2 : W / 2 * .4 + (A.x + A.w / 2) * .6, fy = VERT ? 150 : H / 2 * .45 + (A.y + A.h / 2) * .55;
   return { z, fx, fy };
 }
@@ -173,8 +178,8 @@ function hud(s, th, fb) {
 // —— piezas animadas ——
 // ventana que se abre desde el centro con rebote; devuelve true cuando ya está abierta
 function winA(x, y, w, h, skin, lt, at) {
-  const p = clamp((lt - at) / .2, 0, 1); if (p <= 0) return false;
-  const e = Math.min(1.08, backOut(p, 1.8)), ww = Math.max(8, Math.round(w * e)), hh = Math.max(6, Math.round(h * (p < 1 ? Math.min(1, e) : 1)));
+  const p = clamp((lt - at) / .34, 0, 1); if (p <= 0) return false;
+  const e = Math.min(1.04, backOut(p, 1.1)), ww = Math.max(8, Math.round(w * e)), hh = Math.max(6, Math.round(h * (p < 1 ? Math.min(1, e) : 1)));
   win(fb, Math.round(x + (w - ww) / 2), Math.round(y + (h - hh) / 2), ww, hh, skin); return p >= .85;
 }
 function backOut(t, k = 1.7) { t = clamp(t, 0, 1); const c3 = k + 1; return 1 + c3 * Math.pow(t - 1, 3) + k * Math.pow(t - 1, 2); }
@@ -190,7 +195,7 @@ function dropTitle(s, cx, y, maxW, col, lt, at) {
   let sc = 2, lines = wrap(s, maxW / 2);
   if (lines.length > 2 || lines.some(l => textW(l, 2) > maxW)) { sc = 1; lines = wrap(s, maxW); }
   let n = 0;
-  lines.forEach((ln, li) => { let x = Math.round(cx - textW(ln, sc) / 2); for (const ch of ln) { const p = clamp((lt - at - n * .03) / .25, 0, 1); n++; if (p > 0) textOutlined(fb, ch, x, y + li * sc * 10 - Math.round((1 - backOut(p, 2.2)) * 18), col, C.ink, sc); x += textW(ch + ' ', sc) - textW(' ', sc) + sc; } });
+  lines.forEach((ln, li) => { let x = Math.round(cx - textW(ln, sc) / 2); for (const ch of ln) { const p = clamp((lt - at - n * .055) / .4, 0, 1); n++; if (p > 0) textOutlined(fb, ch, x, y + li * sc * 10 - Math.round((1 - backOut(p, 1.3)) * 9), col, C.ink, sc); x += textW(ch + ' ', sc) - textW(' ', sc) + sc; } });
   return lines.length * sc * 10;
 }
 
@@ -380,7 +385,7 @@ function guardado(lt, th) {
 // —— render de un segmento completo (fondo + Chispa + contenido + diálogo + HUD) ——
 function renderSeg(k, t, sep = false) {
   const s = segs[k], lt = t - s.start, th = TEMA[eraOf(s)], c = cues(k);
-  const bob = beatP(t) > .5 ? 1 : 0, hop = hopAt(k, lt);
+  const bob = Math.floor(t / (BEAT * 2)) % 2, hop = hopAt(k, lt) * .6;
   const top = sep ? fbO : fb; if (sep) fbO.clear(T);
   if (s.kind === 'sub') {
     LUGARES.puerta(fb, camOf(k), t);
@@ -400,8 +405,13 @@ function renderSeg(k, t, sep = false) {
     chispa(fb, VERT ? 148 : L.chx, CHF, { t, wave: 1, talk: ampAt(s, lt), bob, hop });
     return LUT.full;
   }
-  LUGARES[lugarOf(s)](fb, camOf(k) + Math.round(lt * 6), t);
   const e = s.escena, sub = e.tipo === 'suscribete';
+  if (e.tipo === 'microscopio') {
+    microEscena(fb, e.modo, clamp(lt / s.dur, 0, 1), t, L.dlg.y);
+    dialogo(s, lt, th, top);
+    return LUT.full;
+  }
+  LUGARES[lugarOf(s)](fb, camOf(k) + Math.round(lt * 6), t);
   // reacciones: salta en los acentos, se sorprende con las cifras, embiste en los combates
   let lunge = 0; if (e.tipo === 'comparar') for (const a of [c.h1, c.h2]) { const d = lt - a; if (d > 0 && d < .2) lunge = Math.round(Math.sin(d / .2 * Math.PI) * 6); }
   chispa(fb, (sub ? (VERT ? 90 : 56) : L.chx) + lunge, CHF, { t, s: sub ? 2 : 1, talk: ampAt(s, lt), wave: sub || (e.tipo === 'tarjetas' && c.items && c.items.some(a => lt - a > 0 && lt - a < .3)) ? 1 : 0, bob, hop, surprise: e.tipo === 'cifra' && lt > c.settle && lt < c.settle + .8 ? 1 : 0 });
@@ -454,7 +464,7 @@ function frame(t) {
   if (a < 0) {
     fb.clear(C.ink); const lut = renderSeg(k, t, true);
     let Lx = lut; if (t < .3) Lx = darken(lut, 1 - t / .3); if (t > D.dur - .4) Lx = darken(lut, (t - (D.dur - .4)) / .4);
-    out.present(fb, Lx); const cz = segs[k].kind === 'escena' ? camZoom(k, t - segs[k].start) : { z: 1 + .06 * Math.sin((t - segs[k].start) * 1.5) ** 2, fx: W / 2, fy: H / 2 };
+    out.present(fb, Lx); const cz = segs[k].kind === 'escena' && segs[k].escena.tipo === 'microscopio' ? { z: 1, fx: W / 2, fy: H / 2 } : segs[k].kind === 'escena' ? camZoom(k, t - segs[k].start) : { z: 1 + .06 * Math.sin((t - segs[k].start) * 1.5) ** 2, fx: W / 2, fy: H / 2 };
     show(cz.z, cz.fx, cz.fy, true, Lx); return;
   }
   const ty = trans[b]; p = clamp(p, 0, 1);
@@ -462,6 +472,7 @@ function frame(t) {
     const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t);
     out.present(fb, darken(lut, p < .5 ? p * 2 : (1 - p) * 2)); show(1 + .5 * Math.sin(p * Math.PI), L.chx, FLOOR - 20); return;
   }
+  if (ty === 'corte') { fb.clear(C.ink); const lut = renderSeg(p < .5 ? a : b, t, true); out.present(fb, lut); show(1, W / 2, H / 2, true, lut); return; }
   if (DIVE.has(ty)) { dive(ty, a, b, p, t); return; }
   if (MICRO.has(ty)) { microT(ty === 'micro_agua', a, b, p, t); return; }
   if (ty === 'zoomin' || ty === 'zoomout') {
@@ -551,6 +562,7 @@ segs.forEach((s, k) => {
     case 'grafica': ev(st + c.win, 'open'); ev(st + c.draw, 'draw', { d: 1.4 }); ev(st + c.lab, 'sparkle'); break;
     case 'comparar': ev(st + c.msg, 'battle'); ev(st + c.L, 'whoosh'); ev(st + c.R, 'whoosh'); ev(st + c.h1, 'hit'); ev(st + c.h2, 'hit'); break;
     case 'foto': ev(st + c.win, 'flash'); ev(st + c.lab, 'cursor'); break;
+    case 'microscopio': if (e.modo === 'plasma') ev(st + .6, 'sparkle'); break;
     case 'suscribete': ev(st + c.win, 'open'); ev(st + c.tap, 'select'); ev(st + c.tap + .05, 'save'); break;
     default: if (s.cap === 'cierre') { ev(st, 'open'); [0, 1.1, 2.2].forEach(d => ev(st + d, 'cursor')); ev(st + 2.4, 'save'); break; } ev(st + c.icon, 'rise'); ev(st + c.land, 'sparkle');
   }
@@ -562,4 +574,5 @@ window.render = frame;
 window.grabLo = t => { frame(t); const b = new Uint8Array(out.u32.buffer); let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s); };
 window.grab = t => { frame(t); return cv.toDataURL('image/jpeg', .94).slice(23); };
 window.BIG = [BW, BH]; window.DUR = D.dur; window.EV = EV; window.ERAS = ERAS; window.SIZE = [W, H];
+window.RPG_FRAME = frame;
 window.READY = true;

@@ -6,7 +6,7 @@
 - voz encima y música con ducking (~-8 dB bajo la voz).
 Uso: python3 audio_rpg.py page/data/<ID>.json <render>.ev.json <carpeta_voces> salida.wav
 """
-import json, subprocess, sys, wave
+import json, os, subprocess, sys, wave
 import numpy as np
 from scipy.signal import butter, sosfilt
 from scipy.ndimage import uniform_filter1d
@@ -49,7 +49,7 @@ def add(buf, x, t, g=1.):
     e = min(len(buf), s + len(x)); buf[s:e] += x[:e - s] * g
 
 # ——————————————— música ———————————————
-BPM = 112; BEAT = 60 / BPM; BAR = BEAT * 4
+BPM = 88; BEAT = 60 / BPM; BAR = BEAT * 4
 PROG = [('C', ['C4', 'E4', 'G4']), ('A', ['A3', 'C4', 'E4']), ('F', ['F3', 'A3', 'C4']), ('G', ['G3', 'B3', 'D4'])]
 # motivo original (8 corcheas por compás, -1 = silencio)
 MOTIF = [['E5', 'G5', 'C6', -1, 'B5', 'G5', 'A5', -1], ['A5', -1, 'G5', 'E5', 'C5', -1, 'E5', -1],
@@ -171,7 +171,8 @@ def main(tl_path, ev_path, vdir, salida):
         f = SFX.get(e['type'])
         if f: add(fx, f(e) if e['type'] in ('letters', 'slots') else f(), e['t'], .4)
     fx = np.tanh(fx * 1.5) / 1.5
-    mix = np.stack([voz + musL + fx, voz + musR + fx], 1)
+    vv = 0 if os.environ.get('SIN_VOZ') else voz   # para HyperFrames: la voz va en sus propias pistas
+    mix = np.stack([vv + musL + fx, vv + musR + fx], 1)
     mix = np.tanh(mix * 1.2) / 1.2
     pk = np.abs(mix).max();
     if pk > .98: mix *= .98 / pk

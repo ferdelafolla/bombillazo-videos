@@ -46,8 +46,8 @@ export type Seg = {
 
 export type Formato = 'largo' | 'short';
 
-const PAD_CAP = 0.45; // respiro al final de cada capítulo
-const PAD_INI = 0.25;
+const PAD_CAP = 1.2; // respiro al final de cada capítulo
+const PAD_INI = 0.6;
 
 export function construir(d: Datos, formato: Formato, short = 0): { segs: Seg[]; dur: number } {
   const { guion, tiempos } = d;

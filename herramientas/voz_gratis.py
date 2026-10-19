@@ -4,11 +4,11 @@ from piper import PiperVoice
 from piper.config import SynthesisConfig
 g = json.load(open(sys.argv[1])); out = sys.argv[2]
 v = PiperVoice.load('/home/claude/piper/es_ES-sharvard-medium.onnx')
-cfg = SynthesisConfig(speaker_id=1, length_scale=.92, noise_scale=.6, noise_w_scale=.7)
+cfg = SynthesisConfig(speaker_id=1, length_scale=1.04, noise_scale=.6, noise_w_scale=.7)
 SR = v.config.sample_rate
 def frase(t):
     return np.concatenate([c.audio_float_array for c in v.synthesize(t, syn_config=cfg)])
-def guardar(nombre, frases, gap=.5):
+def guardar(nombre, frases, gap=.9):
     parts = []
     for i, t in enumerate(frases):
         a = frase(t); parts += [a] + ([np.zeros(int(gap * SR))] if i < len(frases) - 1 else [])

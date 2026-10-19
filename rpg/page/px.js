@@ -1,6 +1,6 @@
 // px.js — 索引色像素引擎：320×180 帧缓冲存调色板索引，色深 / 褪色 / 塌缩 / 回涨都是换查找表（像 SNES 的 CGRAM）
 // Chispazo: ?v=1 → vertical 180×320 (Shorts); si no, 320×180
-const VERT = typeof location !== 'undefined' && new URLSearchParams(location.search).has('v');
+const VERT = typeof window !== 'undefined' && window.RPG_VERT !== undefined ? !!window.RPG_VERT : (typeof location !== 'undefined' && new URLSearchParams(location.search).has('v'));
 export const W = VERT ? 180 : 320, H = VERT ? 320 : 180, SCALE = 6;
 export const T = 255;                      // 透明
 

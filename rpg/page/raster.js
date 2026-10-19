@@ -12,7 +12,7 @@ export function iconSprite(name, size, p = 1) {
   const key = name + size + ':' + Math.round(p * 12);
   if (cache.has(key)) return cache.get(key);
   const els = ICONOS[name] || ICONOS.bombilla, n = els.length, S = size;
-  const cv = new OffscreenCanvas(S, S), g = cv.getContext('2d');
+  const cv = new OffscreenCanvas(S, S), g = cv.getContext('2d', { willReadFrequently: true });
   const d = new Uint8Array(S * S).fill(T);
   const k = S / 440;
   els.forEach((e, i) => {
@@ -64,7 +64,7 @@ function nearestIdx(r, g, b) {
 export function photoSprite(name, w, h, pos = .5, zoom = 1) {
   const key = `${name}:${w}x${h}:${pos}:${zoom.toFixed(3)}`;
   if (cache.has(key)) return cache.get(key);
-  const img = fotos[name]; const cv = new OffscreenCanvas(w, h), g = cv.getContext('2d');
+  const img = fotos[name]; const cv = new OffscreenCanvas(w, h), g = cv.getContext('2d', { willReadFrequently: true });
   g.imageSmoothingQuality = 'high';
   const sc = Math.max(w / img.width, h / img.height) * zoom, sw = w / sc, sh = h / sc;
   const sx = (img.width - sw) / 2, sy = (img.height - sh) * pos;

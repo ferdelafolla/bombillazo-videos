@@ -1,0 +1,68 @@
+{
+ "id": "2026-10-20_largo_reentrada",
+ "titulo": "¿Cómo vuelve algo del espacio sin quemarse?",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium F (gratuita)",
+ "tendencia": "Google Trends US 19/10/2026: «spacex launch today» (2000+), lanzamiento de Starfall en Bandwagon-5",
+ "fuentes": [
+  "Spaceflight Now: Starfall, cápsula de reentrada de SpaceX (3,1 m, unos 2.100 kg, hasta 1.000 kg de carga, paracaídas, recuperación en el Pacífico); titular del 19/10/2026 sobre Bandwagon-5",
+  "ETV Bharat (25/06/2026): Starfall, cápsula reutilizable para traer carga y productos fabricados en el espacio",
+  "CU Boulder Today (2022): el gas de delante se calienta por encima de la temperatura de la superficie del Sol; escudo ablativo que se deshace átomo a átomo y se lleva el calor",
+  "Wikipedia, Meteor: la mayoría de las estrellas fugaces son granos del tamaño de la arena; se ven a 75-120 km; calentamiento por presión del aire, no por rozamiento; millones al día",
+  "NASA: velocidad orbital baja de unos 28.000 km/h"
+ ],
+ "fotos": [],
+ "rpg": {
+  "gancho_lugar": "lanzamiento",
+  "partidas": [
+   { "lugar": "espacio", "era": "snes", "nombre": "EN ÓRBITA", "nota": "28.000 KM/H" },
+   { "lugar": "cielo", "era": "snes", "nombre": "LA REENTRADA", "nota": "AIRE APRETADO" },
+   { "lugar": "mirador", "era": "snes", "nombre": "ESTRELLAS FUGACES", "nota": "GRANOS DE ARENA" }
+  ]
+ },
+ "capitulos": [
+  { "id": "gancho", "lugar": "lanzamiento", "escenas": [
+   { "texto": "Esta semana, SpaceX lanza Starfall: una cápsula que trae cosas del espacio a la Tierra.", "tipo": "titulo", "icono": "capsula", "texto_grande": "¡VUELVE DEL ESPACIO!", "destacar": ["Starfall:", "Tierra."] },
+   { "texto": "Para volver, entra en el aire a unos veintiocho mil kilómetros por hora.", "tipo": "cifra", "valor": "28.000 KM/H", "etiqueta": "AL ENTRAR EN EL AIRE", "icono": "cohete", "destacar": ["veintiocho", "mil"] },
+   { "texto": "Y el aire que la rodea se pone más caliente que la superficie del Sol.", "tipo": "comparar", "izq": "SOL", "der": "AIRE", "destacar": ["caliente", "Sol."] },
+   { "texto": "¿Cómo no se quema? Y ojo, que no es por el rozamiento.", "tipo": "titulo", "icono": "fuego", "texto_grande": "¿NO ES EL ROZAMIENTO?", "destacar": ["quema?", "rozamiento."] }
+  ]},
+  { "id": "starfall", "lugar": "espacio", "escenas": [
+   { "texto": "Starfall parece un platillo volante de unos tres metros.", "tipo": "tarjetas", "items": ["3,1 M DE ANCHO", "2.100 KG", "1.000 KG DE CARGA"], "icono": "capsula", "destacar": ["platillo", "metros."] },
+   { "texto": "Sirve para traer de vuelta experimentos y cosas fabricadas en el espacio.", "tipo": "icono", "icono": "caja", "destacar": ["experimentos", "fabricadas"] },
+   { "texto": "No lleva motor para frenar: cae, y se orienta con chorritos de gas.", "tipo": "icono", "icono": "capsula", "destacar": ["motor", "chorritos"] }
+  ]},
+  { "id": "aire", "lugar": "cielo", "escenas": [
+   { "texto": "Vamos a mirarlo al microscopio. Allí arriba casi no hay aire: solo unas pocas moléculas.", "tipo": "microscopio", "modo": "aire", "transicion": "minimo", "destacar": ["microscopio.", "moléculas."] },
+   { "texto": "Pero la cápsula va tan rápido que las moléculas no tienen tiempo de apartarse.", "tipo": "microscopio", "modo": "choque", "transicion": "corte", "destacar": ["rápido", "apartarse."] },
+   { "texto": "Se amontonan delante, se aprietan unas contra otras… y al apretarse, se calientan.", "tipo": "microscopio", "modo": "aprieta", "transicion": "corte", "destacar": ["amontonan", "calientan."] },
+   { "texto": "Tanto, que las moléculas se rompen en átomos sueltos, y el aire brilla.", "tipo": "microscopio", "modo": "plasma", "transicion": "corte", "destacar": ["rompen", "brilla."] },
+   { "texto": "Es como cuando inflas una rueda y la bomba se calienta: no es rozamiento, es aire apretado.", "tipo": "icono", "icono": "bomba", "transicion": "maximo", "destacar": ["bomba", "apretado."] }
+  ]},
+  { "id": "escudo", "lugar": "cielo", "escenas": [
+   { "texto": "Para aguantarlo, la cápsula lleva debajo un escudo de calor.", "tipo": "icono", "icono": "escudo", "destacar": ["escudo"] },
+   { "texto": "Y al microscopio se ve su truco: el escudo se va deshaciendo, átomo a átomo.", "tipo": "microscopio", "modo": "ablacion", "transicion": "minimo", "destacar": ["truco:", "átomo"] },
+   { "texto": "Cada trocito que se suelta se lleva el calor con él, y lo de dentro queda a salvo.", "tipo": "microscopio", "modo": "ablacion2", "transicion": "corte", "destacar": ["calor", "salvo."] }
+  ]},
+  { "id": "curiosidad", "lugar": "mirador", "escenas": [
+   { "texto": "Curiosidad: las estrellas fugaces son exactamente lo mismo.", "tipo": "titulo", "icono": "estrella", "texto_grande": "¡ESTRELLAS FUGACES!", "transicion": "maximo", "destacar": ["Curiosidad:", "fugaces"] },
+   { "texto": "Casi todas son granitos del tamaño de un grano de arena.", "tipo": "cifra", "valor": "1 MM", "etiqueta": "COMO UN GRANO DE ARENA", "icono": "estrella", "destacar": ["grano", "arena."] },
+   { "texto": "Brillan a unos cien kilómetros de altura, y cada día caen millones.", "tipo": "tarjetas", "items": ["A 100 KM DE ALTURA", "MILLONES CADA DÍA"], "destacar": ["cien", "millones."] }
+  ]},
+  { "id": "vuelta", "lugar": "playa", "escenas": [
+   { "texto": "Cuando ya ha frenado, Starfall abre sus paracaídas.", "tipo": "icono", "icono": "paracaidas", "destacar": ["paracaídas."] },
+   { "texto": "Y cae al océano Pacífico, donde la recogen y sacan su carga.", "tipo": "icono", "icono": "barco", "destacar": ["Pacífico,", "carga."] }
+  ]},
+  { "id": "cierre", "lugar": "puerta", "escenas": [
+   { "texto": "Así que, cuando veas una estrella fugaz, ya sabes: no es rozamiento, es aire muy apretado.", "tipo": "icono", "icono": "estrella", "destacar": ["rozamiento,", "apretado."] },
+   { "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.", "tipo": "suscribete", "destacar": ["Suscríbete"] }
+  ]}
+ ],
+ "shorts": [
+  { "capitulos": ["aire"], "titulo": "No es el rozamiento: así se calienta una nave 🔥 #Shorts", "remate": "¿CÓMO SE SALVA LA CÁPSULA?", "escenas": [2, 3],
+    "gancho": { "texto": "Lo que quema a una nave al volver del espacio no es el rozamiento.", "tipo": "titulo", "icono": "fuego", "texto_grande": "¡NO ES EL ROZAMIENTO!", "destacar": ["quema", "rozamiento."] } },
+  { "capitulos": ["curiosidad"], "titulo": "Esa estrella fugaz era un grano de arena ✨ #Shorts", "remate": "¿CÓMO VUELVE UNA NAVE SIN QUEMARSE?", "escenas": [1, 2],
+    "gancho": { "texto": "Esa estrella fugaz que viste… era del tamaño de un grano de arena.", "tipo": "titulo", "icono": "estrella", "texto_grande": "¡UN GRANO DE ARENA!", "destacar": ["fugaz", "arena."] } }
+ ]
+}
