@@ -15,18 +15,18 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="19.068" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20.729" data-width="1080" data-height="1920">
       <canvas id="c" data-layout-allow-overflow width="1080" height="1920"></canvas>
-      <audio id="musica" src="audio/musica_y_efectos.wav" data-start="0" data-duration="19.068" data-track-index="1" data-volume="1"></audio>
-      <audio id="voz-00" src="audio/2026-10-20_largo_reentrada_short2_gancho.mp3" data-start="0.600" data-duration="3.683" data-media-start="0.000" data-track-index="2" data-volume="1"></audio>
-      <audio id="voz-01" src="audio/2026-10-20_largo_reentrada_curiosidad.mp3" data-start="4.483" data-duration="3.876" data-media-start="4.089" data-track-index="3" data-volume="1"></audio>
-      <audio id="voz-02" src="audio/2026-10-20_largo_reentrada_curiosidad.mp3" data-start="8.609" data-duration="4.548" data-media-start="7.965" data-track-index="2" data-volume="1"></audio>
-      <audio id="voz-03" src="audio/final_es.mp3" data-start="14.357" data-duration="3.161" data-media-start="0.000" data-track-index="3" data-volume="1"></audio>
+      <audio id="musica" src="audio/musica_y_efectos.wav" data-start="0" data-duration="20.729" data-track-index="1" data-volume="1"></audio>
+      <audio id="voz-00" src="audio/2026-10-20_largo_reentrada_short2_gancho.mp3" data-start="0.600" data-duration="4.362" data-media-start="0.000" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-01" src="audio/2026-10-20_largo_reentrada_curiosidad.mp3" data-start="5.162" data-duration="3.652" data-media-start="5.144" data-track-index="3" data-volume="1"></audio>
+      <audio id="voz-02" src="audio/2026-10-20_largo_reentrada_curiosidad.mp3" data-start="9.064" data-duration="5.597" data-media-start="8.796" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-03" src="audio/final_es.mp3" data-start="15.861" data-duration="3.318" data-media-start="0.000" data-track-index="3" data-volume="1"></audio>
     </div>
     <script type="module">
       // El motor Pixel RPG pinta el fotograma del instante pedido; GSAP lleva el tiempo y HyperFrames lo busca fotograma a fotograma.
       import "./engine.js";
-      const DUR = 19.068;
+      const DUR = 20.729;
       const tl = gsap.timeline({ paused: true });
       const reloj = { t: 0 };
       tl.to(reloj, { t: DUR, duration: DUR, ease: "none", onUpdate: () => window.RPG_FRAME(reloj.t) }, 0);
