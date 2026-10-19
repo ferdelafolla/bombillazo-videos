@@ -37,8 +37,8 @@ export function head(fb, cx, cy, r, { talk = 0, blink = false, surprise = 0 } = 
 // o: { talk 0..1, t (s), wave 0..1, hop 0..1 (salto al andar), dir }
 export function chispa(fb, x, floor, o = {}) {
   const t = o.t || 0, s = o.s || 1;
-  const bob = Math.floor(t * 2.4) % 2 === 0 ? 0 : 1;
-  const hop = Math.round((o.hop || 0) * 4);
+  const bob = o.bob !== undefined ? o.bob : (Math.floor(t * 2.4) % 2 === 0 ? 0 : 1);
+  const hop = Math.round((o.hop || 0) * 6);
   const y0 = floor - hop * s;
   const R = (dx, dy, w, h, c) => fb.rect(x + dx * s, y0 + dy * s, w * s, h * s, c);
   // sombra en el suelo

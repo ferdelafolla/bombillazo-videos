@@ -20,14 +20,13 @@ const png = opt('--png');
 if (png) {   // fotogramas sueltos para revisar
   for (const t of png.split(',').map(Number)) {
     const b = Buffer.from(await page.evaluate(t => window.grab(t), t), 'base64');
-    const f = outPath.replace(/\.mp4$/, '') + `_${t.toFixed(1)}.png`;
-    await new Promise(res => { const p = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-i', '-', '-vf', 'scale=iw*3:ih*3:flags=neighbor', f]); p.stdin.end(b); p.on('close', res); });
+    fs.writeFileSync(outPath.replace(/\.mp4$/, '') + `_${t.toFixed(1)}.jpg`, b);
   }
   await browser.close(); srv.close(); process.exit(0);
 }
 const FPS = 24, t0 = +(opt('--desde') || 0), t1 = +(opt('--hasta') || DUR), N = Math.round((t1 - t0) * FPS);
-const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${H}`, '-r', String(FPS), '-i', '-',
-  '-vf', 'scale=iw*6:ih*6:flags=neighbor', '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', outPath], { stdio: ['pipe', 'inherit', 'inherit'] });
+const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-c:v', 'mjpeg', '-r', String(FPS), '-i', '-',
+  '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', outPath], { stdio: ['pipe', 'inherit', 'inherit'] });
 const t00 = Date.now();
 for (let i = 0; i < N; i++) {
   const b = Buffer.from(await page.evaluate(t => window.grab(t), t0 + i / FPS), 'base64');

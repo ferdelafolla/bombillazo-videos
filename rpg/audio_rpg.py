@@ -118,6 +118,13 @@ SFX = {
     'tr_door': lambda: np.concatenate([lp(noise(.3), 300) * .5, sweep(110, 50, .25, .5, .6)]),
     'tr_swirl': lambda: arp(list(range(60, 96, 3)), .025, .05, .5, .35) + np.pad(nburst(.3, 8000, .3, 6), (int(.3 * SR), 0))[:int((12 * .025 + .05) * SR)],
     'tr_whip': lambda: hp(noise(.3), 2000) * np.sin(np.linspace(0, np.pi, int(.3 * SR))) ** 2 * .5,
+    'rise': lambda: sweep(300, 1200, .4, .25, .28, steps=16),
+    'letters': lambda e=None: np.concatenate([np.concatenate([pulse(hz(84 + (i % 3) * 2), .02, .5, .22), np.zeros(int(.01 * SR))]) for i in range((e or {}).get('n', 8))]),
+    'slots': lambda e=None: np.concatenate([np.concatenate([pulse(hz(88 + (i % 2) * 5), .015, .5, .2), np.zeros(int(.03 * SR))]) for i in range(max(3, int((e or {}).get('d', .5) / .045)))]),
+    'whoosh': lambda: lp(noise(.25), 3500) * np.sin(np.linspace(0, np.pi, int(.25 * SR))) ** 2 * .4,
+    'flash': lambda: np.concatenate([nburst(.08, 7000, .4, 40), arp([91, 96], .04, .06, .5, .2)]),
+    'tr_zoomin': lambda: sweep(200, 2400, .6, .5, .3, steps=40) + np.pad(lp(noise(.2), 1200) * .3, (int(.4 * SR), 0))[:int(.6 * SR)],
+    'tr_zoomout': lambda: sweep(2000, 180, .6, .25, .3, steps=40),
     'tr_era': lambda: np.concatenate([pulse(hz(m), .1, .5, .35) for m in (84, 79, 76, 72)]),
 }
 
@@ -158,7 +165,7 @@ def main(tl_path, ev_path, vdir, salida):
     fx = np.zeros(n)
     for e in evj['ev']:
         f = SFX.get(e['type'])
-        if f: add(fx, f(), e['t'], .4)
+        if f: add(fx, f(e) if e['type'] in ('letters', 'slots') else f(), e['t'], .4)
     fx = np.tanh(fx * 1.5) / 1.5
     mix = np.stack([voz + musL + fx, voz + musR + fx], 1)
     mix = np.tanh(mix * 1.2) / 1.2

@@ -170,5 +170,28 @@ function puerta(fb, cam, t) {
   fb.rect(0, FLOOR, W, H - FLOOR, C.dslate); fb.hline(0, W - 1, FLOOR, C.slate);
 }
 
-export const LUGARES = { hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta };
+// —— vida ambiente: cada sitio tiene algo que se mueve ——
+const fr = (t, k) => ((t * k) % 1 + 1) % 1;
+function pajaro(fb, x, y, t, col) { const a = Math.floor(t * 6) % 2; fb.px(x, y, col); fb.px(x - 1, y - a, col); fb.px(x - 2, y - 1 + a, col); fb.px(x + 1, y - a, col); fb.px(x + 2, y - 1 + a, col); }
+const AMB = {
+  hoy(fb, t) {   // avión con luz parpadeante y coches por la calle
+    const x = Math.round(fr(t, 1 / 14) * (W + 40)) - 20, y = Math.round(FLOOR * .2);
+    fb.hline(x - 4, x + 4, y, C.silver); fb.px(x - 4, y - 1, C.silver); if (Math.floor(t * 3) % 2) fb.px(x + 4, y, C.red);
+    for (let i = 0; i < 3; i++) { const cx = Math.round(fr(t + i * 3.1, i % 2 ? .09 : -.12) * (W + 30)) - 15, cy = FLOOR + 6 + (i % 2) * 6;
+      fb.rect(cx, cy, 12, 4, [C.red, C.cyan, C.yellow][i]); fb.rect(cx + 3, cy - 2, 6, 2, C.ink); fb.px(i % 2 ? cx + 11 : cx, cy + 1, C.yellow); }
+  },
+  mercado(fb, t) { for (let i = 0; i < 4; i++) pajaro(fb, Math.round(fr(t + i * 1.7, 1 / 11) * (W + 20)) - 10, Math.round(FLOOR * (.15 + .07 * i) + Math.sin(t * 2 + i) * 3), t + i * .3, C.ink); },
+  londres(fb, t) { for (let i = 0; i < 3; i++) pajaro(fb, W + 10 - Math.round(fr(t + i * 2.3, 1 / 9) * (W + 20)), Math.round(FLOOR * (.12 + .08 * i) + Math.sin(t * 1.5 + i) * 4), t + i * .4, C.ink); },
+  datos(fb, t) { for (let i = 0; i < 18; i++) { const x = Math.round(hashA(i) * W), y = Math.round(FLOOR - fr(t + i * .7, .08 + hashA(i + 9) * .06) * FLOOR); if (Math.floor(t * 4 + i) % 3) fb.px(x + Math.round(Math.sin(t + i) * 3), y, C.cyan); } },
+  nasdaq(fb, t) {   // focos que barren el cielo
+    for (let k = 0; k < 2; k++) { const bx = Math.round(W * (.2 + .6 * k)), a = -Math.PI / 2 + Math.sin(t * .7 + k * 2) * .5;
+      for (let r = 0; r < FLOOR; r += 2) for (let w = -1; w <= 1; w++) { const x = Math.round(bx + Math.cos(a) * r + w * r * .05), y = Math.round(FLOOR - Math.sin(-a) * r); if ((x + y) % 3 === 0) fb.px(x, y, C.silver); } }
+  },
+  cruce(fb, t) { for (let i = 0; i < 5; i++) { const x = Math.round(fr(t + i * 2.1, .05) * W + Math.sin(t * 2 + i) * 8), y = Math.round(FLOOR - 8 - Math.abs(Math.sin(t * 1.3 + i)) * 30), a = Math.floor(t * 10 + i) % 2, c = [C.pink, C.yellow, C.orange, C.white, C.lime][i]; fb.px(x, y, c); fb.px(x - 1, y - a, c); fb.px(x + 1, y - a, c); } },
+  mirador(fb, t) { const p = fr(t, 1 / 5); if (p < .25) { const u = p / .25, x = Math.round(W * (.8 - .5 * u)), y = Math.round(FLOOR * (.08 + .2 * u)); for (let i = 0; i < 8; i++) fb.px(x + i, y - Math.round(i * .4), i < 2 ? C.white : C.cyan); } },
+  puerta(fb, t) { for (let i = 0; i < 14; i++) { const x = Math.round(W * hashA(i) + Math.sin(t * 2 + i) * 4), y = Math.round(FLOOR - fr(t + i * .9, .12 + hashA(i + 3) * .1) * FLOOR * .8); if (Math.floor(t * 6 + i) % 4) fb.px(x, y, i % 3 ? C.orange : C.yellow); } },
+};
+function hashA(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+const BASE = { hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta };
+export const LUGARES = Object.fromEntries(Object.entries(BASE).map(([k, f]) => [k, (fb, cam, t) => { f(fb, cam, t); AMB[k] && AMB[k](fb, t); }]));
 export const NOMBRE = { hoy: 'HOY', mercado: 'EL MERCADO', londres: 'LONDRES · 1720', datos: 'CENTRO DE DATOS', nasdaq: 'NUEVA YORK · 2000', cruce: 'EL CRUCE', mirador: 'EL MIRADOR', puerta: 'LA ÚLTIMA PUERTA' };
