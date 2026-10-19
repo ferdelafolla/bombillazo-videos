@@ -23,3 +23,16 @@ El vídeo se cuenta como un juego de rol, con las mismas voces y cortes que la v
    - `--png t1,t2` saca fotogramas sueltos para revisar.
 3. Audio: `python3 audio_rpg.py page/data/Largo.json out/largo_mudo.ev.json <voces> out/largo.wav` (música chiptune por época + efectos + voz con ducking).
 4. Unir: `sh remotion/audio/unir.sh out/largo_mudo.mp4 out/largo.wav out/largo.mp4` (−14 LUFS).
+
+## Receta completa de un vídeo nuevo (desde el 19/10/2026: estilo Pixel RPG, voz gratis, subida por GitHub)
+Ejemplo de referencia: `guiones/2026-10-20_largo_mar_salado.json` (¿Por qué el mar es salado?).
+
+1. **Guion** en `remotion/guiones/<fecha>_largo_<tema>.json` (formato de remotion/LEEME.md) más:
+   - en cada capítulo `lugar` (un escenario de `rpg/page/lugares.js`: playa, montana, fondo, desierto, hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta; si hace falta uno nuevo, añádelo allí con su vida ambiente en `AMB` y su nombre en `NOMBRE`) y, opcional, `era` (`gb` 4 tonos, `nes` 8 bits; por defecto 16 bits);
+   - `rpg.gancho_lugar` y `rpg.partidas` (3 entradas {lugar, era, nombre, nota} para la pantalla de partidas guardadas del cierre);
+   - iconos que falten: añádelos a `rpg/page/iconos_data.js` (caja -200..200, rellenos de colores).
+2. **Voces gratis** (sin créditos): modelos piper en `voces/modelo_sharvard_onnx.mp3` y `voces/modelo_sharvard_json.mp3` → cópialos a `/home/claude/piper/es_ES-sharvard-medium.onnx(.json)`; `pip install --break-system-packages piper-tts`; `python3 herramientas/voz_gratis.py <guion> <carpeta_voces>` (crea capítulos, ganchos de Short, sub_es y final_es).
+3. **Tiempos**: copia las voces a `remotion/public/voces/`, `python3 remotion/scripts/preparar.py <guion>` y `node --experimental-strip-types remotion/scripts/exportar_rpg.ts rpg/page/data/<carpeta>`.
+4. **Fotos** (relevo de GitHub) a `rpg/page/fotos/<nombre>.jpg` (800 px de ancho), con `credito` en la escena.
+5. **Render**: `node render.mjs <Largo|Short1|Short2> out/x_mudo.mp4 --d <carpeta> [--v]` → `python3 audio_rpg.py page/data/<carpeta>/<Id>.json out/x_mudo.ev.json <carpeta_voces> out/x.wav` → `sh remotion/audio/unir.sh out/x_mudo.mp4 out/x.wav out/x.mp4`. Largo para GitHub: `-b:v 3300k`. Revisa fotogramas con `--png t1,t2`.
+6. **Subida**: MP4 a `videos/`, miniatura a `miniaturas/`, y un JSON por vídeo en `publicar/youtube/` (formato en `.github/scripts/subir_youtube.py`). La Action sube y programa con `publicar`; si faltan las claves los deja pendientes y reintenta cada 2 horas.
