@@ -1,0 +1,8 @@
+{
+ "error": "faltan los secretos YT_CLIENT_ID, YT_CLIENT_SECRET y YT_REFRESH_TOKEN",
+ "pendientes": [
+  "publicar/youtube/2026-10-20_reentrada.json",
+  "publicar/youtube/2026-10-20_reentrada_short1.json",
+  "publicar/youtube/2026-10-20_reentrada_short2.json"
+ ]
+}
