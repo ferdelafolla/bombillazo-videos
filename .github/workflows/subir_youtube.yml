@@ -5,6 +5,8 @@ on:
   push:
     paths: ['publicar/youtube/*.json', 'publicar/youtube/comprobar']
   workflow_dispatch:
+  schedule:
+    - cron: '17 */2 * * *'   # cada 2 horas: si hay vídeos pendientes (por ejemplo, porque aún faltaban las claves), los sube
 permissions:
   contents: write
 concurrency: subir-youtube

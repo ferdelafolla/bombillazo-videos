@@ -125,6 +125,8 @@ SFX = {
     'flash': lambda: np.concatenate([nburst(.08, 7000, .4, 40), arp([91, 96], .04, .06, .5, .2)]),
     'tr_zoomin': lambda: sweep(200, 2400, .6, .5, .3, steps=40) + np.pad(lp(noise(.2), 1200) * .3, (int(.4 * SR), 0))[:int(.6 * SR)],
     'tr_zoomout': lambda: sweep(2000, 180, .6, .25, .3, steps=40),
+    'tr_minimo': lambda: sweep(180, 2600, 1.0, .5, .28, steps=60) + np.pad(arp([96, 100, 103], .05, .08, .125, .25), (int(.85 * SR), 0))[:int(1.0 * SR)],
+    'tr_maximo': lambda: sweep(2400, 140, 1.0, .25, .28, steps=60) + np.pad(lp(noise(.3), 600) * .4, (int(.7 * SR), 0))[:int(1.0 * SR)],
     'tr_era': lambda: np.concatenate([pulse(hz(m), .1, .5, .35) for m in (84, 79, 76, 72)]),
 }
 

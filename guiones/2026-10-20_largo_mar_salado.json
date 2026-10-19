@@ -1,0 +1,395 @@
+{
+ "id": "2026-10-20_largo_mar_salado",
+ "titulo": "¿Por qué el mar es salado?",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (gratuita)",
+ "fuentes": [
+  "USGS, Why is the ocean salty? (lluvia ácida, rocas, ríos; 35 por mil; capa de más de 166 m sobre la tierra)",
+  "UNESCO Ocean Literacy, The reason why the Ocean is salty (fuentes hidrotermales, hierro, zinc, cobre; mar Muerto)",
+  "Mar Muerto: salinidad en torno al 34 %, casi diez veces la del océano (dato muy citado)"
+ ],
+ "fotos": [
+  "Chimney-hires.jpg — NOAA Vents Program, dominio público, Wikimedia Commons",
+  "Dead Sea floating (Unsplash).jpg — Rob Bye, CC0, Wikimedia Commons",
+  "Marakkanam Salt Pans.JPG — Dey.sandip, CC BY 3.0, Wikimedia Commons"
+ ],
+ "rpg": {
+  "gancho_lugar": "playa",
+  "partidas": [
+   {
+    "lugar": "montana",
+    "era": "snes",
+    "nombre": "LA MONTAÑA",
+    "nota": "LLUVIA Y ROCAS"
+   },
+   {
+    "lugar": "fondo",
+    "era": "nes",
+    "nombre": "EL FONDO DEL MAR",
+    "nota": "CHIMENEAS"
+   },
+   {
+    "lugar": "desierto",
+    "era": "snes",
+    "nombre": "EL MAR MUERTO",
+    "nota": "AQUÍ SE FLOTA"
+   }
+  ]
+ },
+ "miniatura": {
+  "arriba": "¿POR QUÉ EL MAR",
+  "abajo": "ES SALADO?",
+  "icono": "sal"
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "playa",
+   "escenas": [
+    {
+     "texto": "¿Por qué el mar es salado, si los ríos que llegan a él son de agua dulce?",
+     "tipo": "titulo",
+     "icono": "ola",
+     "texto_grande": "¿POR QUÉ ES SALADO?",
+     "destacar": [
+      "salado,",
+      "dulce?"
+     ]
+    },
+    {
+     "texto": "Cada litro de agua de mar lleva unos treinta y cinco gramos de sal.",
+     "tipo": "cifra",
+     "valor": "35 G",
+     "etiqueta": "DE SAL EN CADA LITRO",
+     "icono": "sal",
+     "destacar": [
+      "treinta",
+      "cinco",
+      "gramos"
+     ]
+    },
+    {
+     "texto": "Es como echar una cucharadita y media de sal en cada vaso de agua.",
+     "tipo": "icono",
+     "icono": "vaso",
+     "destacar": [
+      "cucharadita",
+      "media"
+     ]
+    },
+    {
+     "texto": "Vamos a seguir el viaje de un grano de sal, desde lo alto de una montaña hasta el océano.",
+     "tipo": "tarjetas",
+     "items": [
+      "MONTAÑA",
+      "RÍO",
+      "OCÉANO"
+     ],
+     "icono": "montana",
+     "destacar": [
+      "viaje",
+      "grano"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lluvia",
+   "lugar": "montana",
+   "escenas": [
+    {
+     "texto": "¿De dónde sale toda esa sal?",
+     "tipo": "titulo",
+     "icono": "nube",
+     "destacar": [
+      "sal?"
+     ]
+    },
+    {
+     "texto": "Todo empieza con la lluvia, que es un poquito ácida.",
+     "tipo": "icono",
+     "icono": "nube",
+     "destacar": [
+      "lluvia,",
+      "ácida."
+     ]
+    },
+    {
+     "texto": "Gota a gota, va desgastando las rocas y les arranca minerales, como la sal.",
+     "tipo": "icono",
+     "icono": "montana",
+     "destacar": [
+      "rocas",
+      "minerales,"
+     ]
+    },
+    {
+     "texto": "Y los ríos se llevan esos minerales disueltos, muy despacio, hasta el mar.",
+     "tipo": "tarjetas",
+     "items": [
+      "LLUVIA",
+      "ROCAS",
+      "RÍOS",
+      "MAR"
+     ],
+     "icono": "gota",
+     "destacar": [
+      "ríos",
+      "mar."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "trampa",
+   "lugar": "playa",
+   "escenas": [
+    {
+     "texto": "Entonces, ¿por qué los ríos no saben salados?",
+     "tipo": "titulo",
+     "icono": "gota",
+     "destacar": [
+      "ríos",
+      "salados?"
+     ]
+    },
+    {
+     "texto": "Porque llevan muy poquita sal, y su agua se renueva sin parar.",
+     "tipo": "comparar",
+     "izq": "RÍO",
+     "der": "MAR",
+     "destacar": [
+      "poquita",
+      "renueva"
+     ]
+    },
+    {
+     "texto": "En el mar, el sol evapora el agua, pero la sal no se va con ella: se queda.",
+     "tipo": "icono",
+     "icono": "sol",
+     "destacar": [
+      "evapora",
+      "queda."
+     ]
+    },
+    {
+     "texto": "Y así, durante millones de años, la sal se ha ido acumulando.",
+     "tipo": "grafica",
+     "forma": "sube",
+     "etiquetas": [
+      "SAL"
+     ],
+     "destacar": [
+      "millones",
+      "acumulando."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fondo",
+   "lugar": "fondo",
+   "era": "nes",
+   "escenas": [
+    {
+     "texto": "Pero hay otra fuente de sal, escondida en el fondo del mar.",
+     "tipo": "titulo",
+     "icono": "pez",
+     "destacar": [
+      "escondida",
+      "fondo"
+     ]
+    },
+    {
+     "texto": "Son chimeneas submarinas que expulsan agua muy caliente, cargada de minerales.",
+     "tipo": "foto",
+     "foto": "fumarola",
+     "etiqueta": "CHIMENEA SUBMARINA",
+     "destacar": [
+      "chimeneas",
+      "caliente,"
+     ],
+     "credito": "Foto: NOAA Vents Program, dominio público"
+    },
+    {
+     "texto": "Así llegan al mar metales como el hierro, el cinc o el cobre.",
+     "tipo": "tarjetas",
+     "items": [
+      "HIERRO",
+      "CINC",
+      "COBRE"
+     ],
+     "destacar": [
+      "hierro,",
+      "cobre."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "playa",
+   "escenas": [
+    {
+     "texto": "Curiosidad: ¿y si sacáramos toda la sal del mar?",
+     "tipo": "titulo",
+     "icono": "sal",
+     "texto_grande": "¿Y SI LA SACAMOS?",
+     "destacar": [
+      "Curiosidad:",
+      "toda"
+     ]
+    },
+    {
+     "texto": "Repartida por todos los continentes, formaría una capa de más de ciento sesenta metros.",
+     "tipo": "cifra",
+     "valor": "+166 M",
+     "etiqueta": "DE SAL SOBRE LA TIERRA",
+     "icono": "montana",
+     "destacar": [
+      "capa",
+      "sesenta"
+     ]
+    },
+    {
+     "texto": "Tan alta como un edificio de unas cuarenta plantas.",
+     "tipo": "icono",
+     "icono": "edificio",
+     "destacar": [
+      "cuarenta",
+      "plantas."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mar_muerto",
+   "lugar": "desierto",
+   "escenas": [
+    {
+     "texto": "Y hay sitios todavía más salados que el océano.",
+     "tipo": "titulo",
+     "icono": "sal",
+     "destacar": [
+      "más",
+      "salados"
+     ]
+    },
+    {
+     "texto": "En el mar Muerto, el agua es casi diez veces más salada.",
+     "tipo": "comparar",
+     "izq": "OCÉANO",
+     "der": "MAR MUERTO",
+     "destacar": [
+      "Muerto,",
+      "diez"
+     ]
+    },
+    {
+     "texto": "Tanta sal hace el agua tan densa que la gente flota sin hacer nada.",
+     "tipo": "foto",
+     "foto": "mar_muerto",
+     "etiqueta": "MAR MUERTO",
+     "destacar": [
+      "densa",
+      "flota"
+     ],
+     "credito": "Foto: Rob Bye, CC0"
+    }
+   ]
+  },
+  {
+   "id": "salinas",
+   "lugar": "playa",
+   "escenas": [
+    {
+     "texto": "Y la sal de tu cocina puede venir del mar.",
+     "tipo": "icono",
+     "icono": "sal",
+     "destacar": [
+      "cocina",
+      "mar."
+     ]
+    },
+    {
+     "texto": "En las salinas se deja que el sol evapore el agua, y queda la sal.",
+     "tipo": "foto",
+     "foto": "salinas",
+     "etiqueta": "SALINAS",
+     "destacar": [
+      "salinas",
+      "sol"
+     ],
+     "credito": "Foto: Dey.sandip, CC BY 3.0"
+    }
+   ]
+  },
+  {
+   "id": "cierre",
+   "lugar": "puerta",
+   "escenas": [
+    {
+     "texto": "Así que, cuando el mar te sepa a sal, recuerda su viaje: lluvia, rocas, ríos y millones de años.",
+     "tipo": "icono",
+     "icono": "ola",
+     "destacar": [
+      "viaje:",
+      "años."
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ],
+ "shorts": [
+  {
+   "capitulos": [
+    "curiosidad"
+   ],
+   "titulo": "¿Y si sacáramos toda la sal del mar? 🧂",
+   "remate": "¿POR QUÉ ES SALADO EL MAR?",
+   "escenas": [
+    1,
+    2
+   ],
+   "gancho": {
+    "texto": "Si sacáramos toda la sal del mar, cubriría los continentes.",
+    "tipo": "titulo",
+    "icono": "sal",
+    "texto_grande": "¡UNA MONTAÑA DE SAL!",
+    "destacar": [
+     "sal",
+     "continentes."
+    ]
+   }
+  },
+  {
+   "capitulos": [
+    "mar_muerto"
+   ],
+   "titulo": "El mar donde flotas sin hacer nada 🌊",
+   "remate": "¿DE DÓNDE SALE TANTA SAL?",
+   "escenas": [
+    1,
+    2
+   ],
+   "gancho": {
+    "texto": "Hay un mar en el que flotas sin mover ni un dedo.",
+    "tipo": "titulo",
+    "icono": "ola",
+    "texto_grande": "¡AQUÍ NO TE HUNDES!",
+    "destacar": [
+     "flotas",
+     "dedo."
+    ]
+   }
+  }
+ ]
+}

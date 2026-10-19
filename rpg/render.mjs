@@ -11,7 +11,7 @@ const port = srv.address().port;
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
 const page = await browser.newPage();
 page.on('pageerror', e => console.error('PAGE', e));
-await page.goto(`http://localhost:${port}/index.html?id=${id}${V ? '&v=1' : ''}`);
+await page.goto(`http://localhost:${port}/index.html?id=${id}${V ? "&v=1" : ""}${opt("--d") ? "&d=" + opt("--d") : ""}`);
 await page.waitForFunction(() => window.READY || window.ERR, null, { timeout: 60000 });
 const err = await page.evaluate(() => window.ERR); if (err) { console.error(err); process.exit(1); }
 const [W, H] = await page.evaluate(() => window.SIZE), DUR = await page.evaluate(() => window.DUR);

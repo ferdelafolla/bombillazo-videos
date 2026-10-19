@@ -12,9 +12,11 @@ import { LUGARES, NOMBRE, FLOOR, VERT } from './lugares.js';
 
 const q = new URLSearchParams(location.search);
 const ID = q.get('id') || 'Largo';
-const D = await (await fetch(`./data/${ID}.json`)).json();
-const AMP = await (await fetch('./data/amp.json')).json();
-await loadPhotos(['servidores', 'nasdaq', 'newton', 'tierra_noche']);
+const DIR = q.get('d') ? `./data/${q.get('d')}` : './data';
+const D = await (await fetch(`${DIR}/${ID}.json`)).json();
+const AMP = await (await fetch(`${DIR}/amp.json`)).json();
+const RPG = D.rpg || null;   // lugares, épocas, fotos y partidas guardadas vienen del guion
+await loadPhotos(RPG ? RPG.fotos : ['servidores', 'nasdaq', 'newton', 'tierra_noche']);
 const fb = new FB(), fbO = new FB(), out = makeOut(document.getElementById('c'));
 const bufA = new Uint32Array(W * H), bufB = new Uint32Array(W * H);
 // salida grande: el mundo se puede acercar/alejar (zoom de cámara) y el diálogo + HUD van encima sin zoom
@@ -35,13 +37,13 @@ const qa = (s, at) => Math.max(.04, Math.round((s.start + at) / HB) * HB - s.sta
 const beatP = t => { const ph = ((t % BEAT) + BEAT) % BEAT / BEAT; return Math.max(0, 1 - ph * 3.5); };
 
 // —— capítulo → lugar y época ——
-const LUGAR = { gancho: 'hoy', gancho_short: 'hoy', que_es: 'mercado', curiosidad: 'londres', gasto: 'datos', quien: 'datos', si_burbuja: 'hoy', no_burbuja: 'hoy', puntocom: 'nasdaq', escenarios: 'cruce', senales: 'mirador', cierre: 'puerta' };
-const ERA = { curiosidad: 'gb', puntocom: 'nes' };
+const LUGAR = RPG ? { ...RPG.lugar, gancho_short: RPG.gancho_lugar } : { gancho: 'hoy', gancho_short: 'hoy', que_es: 'mercado', curiosidad: 'londres', gasto: 'datos', quien: 'datos', si_burbuja: 'hoy', no_burbuja: 'hoy', puntocom: 'nasdaq', escenarios: 'cruce', senales: 'mirador', cierre: 'puerta' };
+const ERA = RPG ? RPG.era : { curiosidad: 'gb', puntocom: 'nes' };
 const segs = D.segs;
 // en los Shorts el gancho va en la época de su fragmento
 const capReal = s => s.cap === 'gancho_short' ? (segs.find(x => x.cap && x.cap !== 'gancho_short') || {}).cap : s.cap;
 const eraOf = s => s.kind !== 'escena' || s.cap === 'gancho_short' ? 'snes' : (ERA[capReal(s)] || 'snes');
-const lugarOf = s => s.kind !== 'escena' ? 'puerta' : (s.cap === 'gancho_short' ? 'hoy' : (LUGAR[s.cap] || 'hoy'));
+const lugarOf = s => s.kind !== 'escena' ? 'puerta' : (LUGAR[s.cap] || 'hoy');
 const LUTOF = { snes: LUT.full, nes: LUT.nes, gb: LUT.gb4 };
 const TEMA = {
   snes: { skin: 'snes', txt: C.white, sh: C.night, hi: C.yellow, dim: C.steel },
@@ -51,13 +53,17 @@ const TEMA = {
 
 // —— disposición ——
 const L = VERT
-  ? { area: { x: 8, y: 56, w: 164, h: 128 }, chx: 152, hud: 44, dlg: { x: 6, y: 202, w: 168, h: 40 }, maxc: 22 }
+  ? { area: { x: 8, y: 66, w: 164, h: 122 }, chx: 152, hud: 44, dlg: { x: 6, y: 202, w: 168, h: 40 }, maxc: 22 }
   : { area: { x: 102, y: 22, w: 212, h: 106 }, chx: 54, hud: 4, dlg: { x: 4, y: 134, w: 312, h: 42 }, maxc: 46 };
 
 // —— transiciones: cuál toca en cada corte ——
-const TR = 0.6;   // duración (s), centrada en el corte
-const DENTRO = ['zoomin', 'walk', 'slide', 'zoomout', 'mosaic', 'iris', 'walk', 'thumb'];
-const ENTRE = ['swirl', 'zoomin', 'door', 'whip', 'zoomout', 'thumb', 'iris', 'mosaic'];
+const TR0 = 0.6, TRD = 1.1;   // duración (s), centrada en el corte; los viajes pequeño↔grande duran más
+// minimo: la cámara se mete en algo diminuto de la escena y dentro aparece la siguiente
+// maximo: la cámara se aleja y la escena anterior resulta ser algo diminuto dentro de la siguiente
+const DENTRO = ['minimo', 'walk', 'maximo', 'zoomin', 'minimo', 'slide', 'maximo', 'iris'];
+const ENTRE = ['maximo', 'swirl', 'minimo', 'door', 'maximo', 'whip', 'minimo', 'zoomout'];
+const DIVE = new Set(['minimo', 'maximo']);
+const TRk = k => DIVE.has(trans[k]) ? TRD : TR0;
 const trans = [];
 { let a = 0, b = 0, last = '';
   for (let k = 1; k < segs.length; k++) {
@@ -96,9 +102,9 @@ function cues(k) {
 // zoom de cámara: alterna acercarse / alejarse en cada escena, con golpes de zoom en los momentos fuertes
 function camZoom(k, lt) {
   const s = segs[k], c = cues(k), u = clamp(lt / Math.max(1, s.dur), 0, 1), dir = k % 2 ? -1 : 1;
-  let z = dir > 0 ? 1 + .14 * eio(u) : 1.14 - .14 * eio(u);
-  for (const a of c.acc) { const d = lt - a; if (d > -.06 && d < .7) z += .16 * (d < 0 ? (1 + d / .06) : Math.exp(-d * 7)); }
-  const A = L.area, fx = VERT ? W / 2 : W / 2 * .4 + (A.x + A.w / 2) * .6, fy = VERT ? 168 : H / 2 * .45 + (A.y + A.h / 2) * .55;
+  const za = VERT ? .08 : .14; let z = dir > 0 ? 1 + za * eio(u) : 1 + za - za * eio(u);
+  for (const a of c.acc) { const d = lt - a; if (d > -.06 && d < .7) z += (VERT ? .1 : .16) * (d < 0 ? (1 + d / .06) : Math.exp(-d * 7)); }
+  const A = L.area, fx = VERT ? W / 2 : W / 2 * .4 + (A.x + A.w / 2) * .6, fy = VERT ? 150 : H / 2 * .45 + (A.y + A.h / 2) * .55;
   return { z, fx, fy };
 }
 // saltitos de Chispa en los acentos, y balanceo al compás
@@ -198,7 +204,8 @@ function contenido(k, s, lt, th) {
   const e = s.escena, A = L.area, cx = A.x + A.w / 2, c = cues(k), bp = beatP(s.start + lt);
   switch (e.tipo) {
     case 'titulo': {
-      const sz = VERT ? 60 : 52, p = clamp((lt - c.icon) / .45, 0, 1);
+      const tt0 = e.texto_grande || limpiar((e.destacar || [''])[0]), dos = wrap(tt0, (A.w - 16) / 2).length > 1;
+      const sz = VERT ? 60 : (dos ? 38 : 52), p = clamp((lt - c.icon) / .45, 0, 1);
       const ic = iconSprite(e.icono || 'bombilla', sz, clamp((lt - .1) / 1.0, 0, 1));
       const iy = A.y + 4 + Math.round((1 - backOut(p, 1.8)) * 30) - Math.round(bp * 2);
       if (p > 0) fb.blit(ic, Math.round(cx - ic.w / 2), iy);
@@ -344,7 +351,7 @@ function thumb(lugar, era, w, h) {
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) d[y * w + x] = m[big.d[Math.floor(y / h * H) * W + Math.floor(x / w * W)]];
   return (thumbs[key] = { w, h, d });
 }
-const PARTIDAS = [
+const PARTIDAS = RPG ? RPG.partidas : [
   { lugar: 'londres', era: 'gb', nombre: 'LONDRES · 1720', nota: 'MARES DEL SUR' },
   { lugar: 'nasdaq', era: 'nes', nombre: 'NUEVA YORK · 2000', nota: 'NASDAQ -78 %' },
   { lugar: 'hoy', era: 'snes', nombre: 'HOY', nota: '¿LA IA ES UNA BURBUJA?' },
@@ -385,7 +392,7 @@ function renderSeg(k, t, sep = false) {
     if (winA(A.x, A.y + 36, w, hh, th.skin, lt, c.big - .1)) { dropTitle(t2, A.x + w / 2, A.y + 43, w - 10, titleCol(th), lt, c.big); if (lt > c.big + .5) centerText(t3, A.y + 36 + hh - 14, C.cyan, th.sh, 1, A.x, w); }
     if (lt > c.big + .7) { const op = lt > c.tap ? 'SUSCRITO ✓' : '▶ CONTINUAR'; centerText(op, A.y + 44 + hh - (beatP(t) > .6 && lt < c.tap ? 1 : 0), C.yellow, th.sh, 1, A.x, w); }
     burst(A.x + w / 2, A.y + 50 + hh, lt - c.tap, C.yellow, 12, 90);
-    chispa(fb, VERT ? 90 : L.chx, CHF, { t, wave: 1, talk: ampAt(s, lt), bob, hop });
+    chispa(fb, VERT ? 148 : L.chx, CHF, { t, wave: 1, talk: ampAt(s, lt), bob, hop });
     return LUT.full;
   }
   LUGARES[lugarOf(s)](fb, camOf(k) + Math.round(lt * 6), t);
@@ -437,8 +444,8 @@ function compose(ty, p, k) {
 function frame(t) {
   let k = 0; for (let i = 0; i < segs.length; i++) if (segs[i].start <= t) k = i;
   let a = -1, b = -1, p = 0;
-  if (k > 0 && t < segs[k].start + TR / 2) { a = k - 1; b = k; p = (t - (segs[k].start - TR / 2)) / TR; }
-  else if (k + 1 < segs.length && t > segs[k + 1].start - TR / 2) { a = k; b = k + 1; p = (t - (segs[k + 1].start - TR / 2)) / TR; }
+  if (k > 0 && t < segs[k].start + TRk(k) / 2) { a = k - 1; b = k; p = (t - (segs[k].start - TRk(k) / 2)) / TRk(k); }
+  else if (k + 1 < segs.length && t > segs[k + 1].start - TRk(k + 1) / 2) { a = k; b = k + 1; p = (t - (segs[k + 1].start - TRk(k + 1) / 2)) / TRk(k + 1); }
   if (a < 0) {
     fb.clear(C.ink); const lut = renderSeg(k, t, true);
     let Lx = lut; if (t < .3) Lx = darken(lut, 1 - t / .3); if (t > D.dur - .4) Lx = darken(lut, (t - (D.dur - .4)) / .4);
@@ -450,6 +457,7 @@ function frame(t) {
     const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t);
     out.present(fb, darken(lut, p < .5 ? p * 2 : (1 - p) * 2)); show(1 + .5 * Math.sin(p * Math.PI), L.chx, FLOOR - 20); return;
   }
+  if (DIVE.has(ty)) { dive(ty, a, b, p, t); return; }
   if (ty === 'zoomin' || ty === 'zoomout') {
     // zoomin: la cámara se zambulle en Chispa y sale ya en la escena nueva; zoomout: la nueva escena se revela alejándose
     const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t); out.present(fb, lut);
@@ -463,11 +471,47 @@ function frame(t) {
   out.post(() => compose(ty, p, b)); show();
 }
 
+// —— viaje de lo pequeño a lo grande ——
+const cA = document.createElement('canvas'), cB = document.createElement('canvas');
+for (const c of [cA, cB]) { c.width = W; c.height = H; }
+const gA = cA.getContext('2d'), gB = cB.getContext('2d'), imA = gA.createImageData(W, H), imB = gB.createImageData(W, H);
+const K = 56;   // cuánto más pequeña es una escena dentro de la otra
+// punto diminuto en el que se entra / del que se sale, distinto cada vez
+function detalle(k, i) {
+  const ops = [[L.chx - 4, CHF - 24], [L.area.x + L.area.w * .5, L.area.y + L.area.h * .35], [W * (.15 + .7 * hash(k, 3)), H * (.08 + .1 * hash(k, 5))]];
+  return ops[(k + i) % ops.length];
+}
+// dibuja `big` acercada Z veces alrededor del punto d (sin dejar huecos) y `small` (1/K) metida en ese punto
+function drawDive(big, small, d, Z) {
+  const S6 = 6, px = d[0] * S6, py = d[1] * S6;
+  const Px = clamp(BW / 2, BW - (W - d[0]) * Z * S6, d[0] * Z * S6), Py = clamp(BH / 2, BH - (H - d[1]) * Z * S6, d[1] * Z * S6);
+  g2.imageSmoothingEnabled = false;
+  g2.drawImage(big, Px - d[0] * Z * S6, Py - d[1] * Z * S6, W * Z * S6, H * Z * S6);
+  const z2 = Z / K, w2 = W * z2 * S6, h2 = H * z2 * S6;
+  if (w2 > 3) {
+    const bd = Math.max(2, Math.min(6, z2 * 6));
+    g2.fillStyle = '#16161d'; g2.fillRect(Px - w2 / 2 - bd, Py - h2 / 2 - bd, w2 + 2 * bd, h2 + 2 * bd);
+    g2.drawImage(small, Px - w2 / 2, Py - h2 / 2, w2, h2);
+  }
+}
+function dive(ty, a, b, p, t) {
+  // primero la escena que no lleva capa de texto, luego la que sí (su diálogo queda en fbO)
+  const conTexto = p < .5 ? a : b, sin = p < .5 ? b : a;
+  fb.clear(C.ink); out.present(fb, renderSeg(sin, t, true)); (sin === a ? imA : imB).data.set(new Uint8Array(out.u32.buffer));
+  fb.clear(C.ink); const lut = renderSeg(conTexto, t, true); out.present(fb, lut); (conTexto === a ? imA : imB).data.set(new Uint8Array(out.u32.buffer));
+  gA.putImageData(imA, 0, 0); gB.putImageData(imB, 0, 0);
+  const e = eio(p), Z = ty === 'minimo' ? Math.pow(K, e) : Math.pow(K, 1 - e);
+  if (ty === 'minimo') drawDive(cA, cB, detalle(b, 0), Z);
+  else drawDive(cB, cA, detalle(b, 1), Z);
+  // la capa de texto solo cuando la escena está casi a tamaño normal
+  if (p < .12 || p > .88) { const d = fbO.d; for (let i = 0; i < d.length; i++) u32O[i] = d[i] === T ? 0 : lut[d[i]]; gO.putImageData(imgO, 0, 0); g2.drawImage(loO, 0, 0, BW, BH); }
+}
+
 // —— eventos de sonido (para la mezcla): transiciones, ventanas, cursores, fanfarrias, golpes ——
 const EV = [];
 const ev = (t, type, o = {}) => { if (t >= 0 && t <= D.dur) EV.push({ t: +t.toFixed(3), type, ...o }); };
 segs.forEach((s, k) => {
-  if (k > 0) { const ty = trans[k], t0 = s.start - TR / 2; ev(t0, 'tr_' + ty); if (ty === 'walk') for (let i = 0; i < 4; i++) ev(t0 + i * .15, 'step'); }
+  if (k > 0) { const ty = trans[k], t0 = s.start - TRk(k) / 2; ev(t0, 'tr_' + ty); if (ty === 'walk') for (let i = 0; i < 4; i++) ev(t0 + i * .15, 'step'); }
   const st = s.start, c = cues(k);
   if (s.kind === 'sub') { ev(st + c.win, 'open'); ev(st + c.win + .3, 'cursor'); ev(st + c.tap, 'select'); ev(st + c.tap + .05, 'save'); return; }
   if (s.kind === 'final') { ev(st + c.win, 'open'); ev(st + c.big, 'fanfare'); ev(st + c.tap, 'select'); return; }

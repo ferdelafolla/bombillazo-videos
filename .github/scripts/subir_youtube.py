@@ -8,6 +8,14 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
+pend = [f for f in sorted(glob.glob('publicar/youtube/*.json')) if not f.endswith('.hecho.json') and not os.path.exists(f[:-5] + '.hecho.json')]
+if not all(os.environ.get(k) for k in ('YT_CLIENT_ID', 'YT_CLIENT_SECRET', 'YT_REFRESH_TOKEN')):
+    # sin claves no se marca nada como hecho: los vídeos siguen pendientes y se suben en cuanto estén
+    print('FALTAN LAS CLAVES de YouTube en los secretos del repositorio. Pendientes:', pend)
+    if os.path.exists('publicar/youtube/comprobar'):
+        json.dump({'error': 'faltan los secretos YT_CLIENT_ID, YT_CLIENT_SECRET y YT_REFRESH_TOKEN', 'pendientes': pend}, open('publicar/youtube/comprobar.hecho.json', 'w'), ensure_ascii=False, indent=1)
+        os.remove('publicar/youtube/comprobar')
+    sys.exit(0)
 cred = Credentials(None, refresh_token=os.environ['YT_REFRESH_TOKEN'], token_uri='https://oauth2.googleapis.com/token',
                    client_id=os.environ['YT_CLIENT_ID'], client_secret=os.environ['YT_CLIENT_SECRET'],
                    scopes=['https://www.googleapis.com/auth/youtube.upload', 'https://www.googleapis.com/auth/youtube'])
