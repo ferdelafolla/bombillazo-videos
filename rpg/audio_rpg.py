@@ -127,6 +127,8 @@ SFX = {
     'tr_zoomout': lambda: sweep(2000, 180, .6, .25, .3, steps=40),
     'tr_minimo': lambda: sweep(180, 2600, 1.0, .5, .28, steps=60) + np.pad(arp([96, 100, 103], .05, .08, .125, .25), (int(.85 * SR), 0))[:int(1.0 * SR)],
     'tr_maximo': lambda: sweep(2400, 140, 1.0, .25, .28, steps=60) + np.pad(lp(noise(.3), 600) * .4, (int(.7 * SR), 0))[:int(1.0 * SR)],
+    'tr_micro': lambda: np.concatenate([sweep(150, 1800, 0.7, .5, .26, steps=40), np.concatenate([np.concatenate([pulse(hz(96 + (i % 2) * 7), .02, .5, .16), np.zeros(int(.09 * SR))]) for i in range(12)]), sweep(1800, 200, .6, .25, .22, steps=30)]),
+    'tr_micro_agua': lambda: np.concatenate([sweep(150, 1800, 0.7, .5, .26, steps=40), lp(noise(1.3), 900) * np.sin(np.linspace(0, np.pi, int(1.3 * SR))) * .35, sweep(1800, 200, .6, .25, .22, steps=30)]),
     'tr_era': lambda: np.concatenate([pulse(hz(m), .1, .5, .35) for m in (84, 79, 76, 72)]),
 }
 

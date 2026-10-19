@@ -36,3 +36,6 @@ Ejemplo de referencia: `guiones/2026-10-20_largo_mar_salado.json` (¿Por qué el
 4. **Fotos** (relevo de GitHub) a `rpg/page/fotos/<nombre>.jpg` (800 px de ancho), con `credito` en la escena.
 5. **Render**: `node render.mjs <Largo|Short1|Short2> out/x_mudo.mp4 --d <carpeta> [--v]` → `python3 audio_rpg.py page/data/<carpeta>/<Id>.json out/x_mudo.ev.json <carpeta_voces> out/x.wav` → `sh remotion/audio/unir.sh out/x_mudo.mp4 out/x.wav out/x.mp4`. Largo para GitHub: `-b:v 3300k`. Revisa fotogramas con `--png t1,t2`.
 6. **Subida**: MP4 a `videos/`, miniatura a `miniaturas/`, y un JSON por vídeo en `publicar/youtube/` (formato en `.github/scripts/subir_youtube.py`). La Action sube y programa con `publicar`; si faltan las claves los deja pendientes y reintenta cada 2 horas.
+
+### Vista de microscopio (19/10/2026)
+En cualquier escena del guion, `"transicion": "micro"` (granos de sal → cristal → red de iones Na+ y Cl-) o `"micro_agua"` (iones sueltos entre moléculas de agua) hace que se entre en esa escena con un viaje al microscopio de unos 2,8 s: la cámara se mete en la ventana de la escena anterior, baja de ×100 a ×10.000.000 con el aumento en pantalla y sale por la ventana de la escena nueva. Los subtítulos siguen encima. Código en `rpg/page/micro.js`; se puede reutilizar para otros temas cambiando los granos y los iones.

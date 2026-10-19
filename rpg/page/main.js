@@ -9,6 +9,7 @@ import { win, hand } from './ui.js';
 import { chispa, portrait } from './chispa.js';
 import { iconSprite, photoSprite, loadPhotos } from './raster.js';
 import { LUGARES, NOMBRE, FLOOR, VERT } from './lugares.js';
+import { micro } from './micro.js';
 
 const q = new URLSearchParams(location.search);
 const ID = q.get('id') || 'Largo';
@@ -64,6 +65,9 @@ const DENTRO = ['minimo', 'walk', 'maximo', 'zoomin', 'minimo', 'slide', 'maximo
 const ENTRE = ['maximo', 'swirl', 'minimo', 'door', 'maximo', 'whip', 'minimo', 'zoomout'];
 const DIVE = new Set(['minimo', 'maximo']);
 const TRk = k => DIVE.has(trans[k]) ? TRD : TR0;
+// la vista de microscopio dura más y cae casi toda dentro de la escena nueva (mientras la voz sigue)
+const MICRO = new Set(['micro', 'micro_agua']), MPRE = .5, MPOST = 2.3;
+const PRE = k => MICRO.has(trans[k]) ? MPRE : TRk(k) / 2, POST = k => MICRO.has(trans[k]) ? MPOST : TRk(k) / 2;
 const trans = [];
 { let a = 0, b = 0, last = '';
   for (let k = 1; k < segs.length; k++) {
@@ -74,6 +78,7 @@ const trans = [];
     else if (A.cap === B.cap) ty = DENTRO[a++ % DENTRO.length];
     else ty = ENTRE[b++ % ENTRE.length];
     if (ty === last && ty !== 'era') ty = ty === 'mosaic' ? 'iris' : 'mosaic';
+    if (B.escena && B.escena.transicion) ty = B.escena.transicion;
     trans[k] = ty; last = ty;
   }
 }
@@ -444,8 +449,8 @@ function compose(ty, p, k) {
 function frame(t) {
   let k = 0; for (let i = 0; i < segs.length; i++) if (segs[i].start <= t) k = i;
   let a = -1, b = -1, p = 0;
-  if (k > 0 && t < segs[k].start + TRk(k) / 2) { a = k - 1; b = k; p = (t - (segs[k].start - TRk(k) / 2)) / TRk(k); }
-  else if (k + 1 < segs.length && t > segs[k + 1].start - TRk(k + 1) / 2) { a = k; b = k + 1; p = (t - (segs[k + 1].start - TRk(k + 1) / 2)) / TRk(k + 1); }
+  if (k > 0 && t < segs[k].start + POST(k)) { a = k - 1; b = k; p = (t - (segs[k].start - PRE(k))) / (PRE(k) + POST(k)); }
+  else if (k + 1 < segs.length && t > segs[k + 1].start - PRE(k + 1)) { a = k; b = k + 1; p = (t - (segs[k + 1].start - PRE(k + 1))) / (PRE(k + 1) + POST(k + 1)); }
   if (a < 0) {
     fb.clear(C.ink); const lut = renderSeg(k, t, true);
     let Lx = lut; if (t < .3) Lx = darken(lut, 1 - t / .3); if (t > D.dur - .4) Lx = darken(lut, (t - (D.dur - .4)) / .4);
@@ -458,6 +463,7 @@ function frame(t) {
     out.present(fb, darken(lut, p < .5 ? p * 2 : (1 - p) * 2)); show(1 + .5 * Math.sin(p * Math.PI), L.chx, FLOOR - 20); return;
   }
   if (DIVE.has(ty)) { dive(ty, a, b, p, t); return; }
+  if (MICRO.has(ty)) { microT(ty === 'micro_agua', a, b, p, t); return; }
   if (ty === 'zoomin' || ty === 'zoomout') {
     // zoomin: la cámara se zambulle en Chispa y sale ya en la escena nueva; zoomout: la nueva escena se revela alejándose
     const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t); out.present(fb, lut);
@@ -507,11 +513,33 @@ function dive(ty, a, b, p, t) {
   if (p < .12 || p > .88) { const d = fbO.d; for (let i = 0; i < d.length; i++) u32O[i] = d[i] === T ? 0 : lut[d[i]]; gO.putImageData(imgO, 0, 0); g2.drawImage(loO, 0, 0, BW, BH); }
 }
 
+// —— vista de microscopio: entrar en un detalle, bajar hasta los átomos y salir a la escena nueva ——
+const cM = document.createElement('canvas'); cM.width = W; cM.height = H;
+const gM = cM.getContext('2d'), imM = gM.createImageData(W, H);
+const P1 = .26, P2 = .72;   // fases: entrar · microscopio · salir
+const SMAX = 420;
+const CENTRO = [L.area.x + L.area.w / 2, L.area.y + L.area.h * .4];   // se entra y se sale por el objeto o la ventana de la escena
+function microT(conAgua, a, b, p, t) {
+  const sM = p < P1 ? 1 : p > P2 ? SMAX : Math.pow(SMAX, eio((p - P1) / (P2 - P1)));
+  fb.clear(C.ink); micro(fb, sM, t, conAgua, L.dlg.y); out.present(fb, LUT.full); imM.data.set(new Uint8Array(out.u32.buffer)); gM.putImageData(imM, 0, 0);
+  const seg = t < segs[b].start ? a : b;   // el diálogo (subtítulos) sigue encima todo el rato
+  if (p < P1) {
+    const q = p / P1; fb.clear(C.ink); out.present(fb, renderSeg(a, t)); imA.data.set(new Uint8Array(out.u32.buffer)); gA.putImageData(imA, 0, 0);
+    drawDive(cA, cM, CENTRO, Math.pow(K, eio(q)));
+  } else if (p > P2) {
+    const q = (p - P2) / (1 - P2); fb.clear(C.ink); out.present(fb, renderSeg(b, t)); imB.data.set(new Uint8Array(out.u32.buffer)); gB.putImageData(imB, 0, 0);
+    drawDive(cB, cM, CENTRO, Math.pow(K, 1 - eio(q)));
+  } else { g2.imageSmoothingEnabled = false; g2.drawImage(cM, 0, 0, BW, BH); }
+  fb.clear(C.ink); const lut = renderSeg(seg, t, true);
+  if (p > .05 && p < .97) { const L0 = L.dlg; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = y * W + x; if (!(y >= L0.y && y < L0.y + L0.h && x >= L0.x && x < L0.x + L0.w)) fbO.d[i] = T; } }   // en el microscopio solo el subtítulo
+  const d = fbO.d; for (let i = 0; i < d.length; i++) u32O[i] = d[i] === T ? 0 : lut[d[i]]; gO.putImageData(imgO, 0, 0); g2.drawImage(loO, 0, 0, BW, BH);
+}
+
 // —— eventos de sonido (para la mezcla): transiciones, ventanas, cursores, fanfarrias, golpes ——
 const EV = [];
 const ev = (t, type, o = {}) => { if (t >= 0 && t <= D.dur) EV.push({ t: +t.toFixed(3), type, ...o }); };
 segs.forEach((s, k) => {
-  if (k > 0) { const ty = trans[k], t0 = s.start - TRk(k) / 2; ev(t0, 'tr_' + ty); if (ty === 'walk') for (let i = 0; i < 4; i++) ev(t0 + i * .15, 'step'); }
+  if (k > 0) { const ty = trans[k], t0 = s.start - PRE(k); ev(t0, 'tr_' + ty); if (ty === 'walk') for (let i = 0; i < 4; i++) ev(t0 + i * .15, 'step'); }
   const st = s.start, c = cues(k);
   if (s.kind === 'sub') { ev(st + c.win, 'open'); ev(st + c.win + .3, 'cursor'); ev(st + c.tap, 'select'); ev(st + c.tap + .05, 'save'); return; }
   if (s.kind === 'final') { ev(st + c.win, 'open'); ev(st + c.big, 'fanfare'); ev(st + c.tap, 'select'); return; }

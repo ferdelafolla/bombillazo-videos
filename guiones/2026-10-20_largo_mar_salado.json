@@ -67,7 +67,8 @@
       "treinta",
       "cinco",
       "gramos"
-     ]
+     ],
+     "transicion": "micro"
     },
     {
      "texto": "Es como echar una cucharadita y media de sal en cada vaso de agua.",
@@ -137,7 +138,8 @@
      "destacar": [
       "ríos",
       "mar."
-     ]
+     ],
+     "transicion": "micro_agua"
     }
    ]
   },
@@ -171,7 +173,8 @@
      "destacar": [
       "evapora",
       "queda."
-     ]
+     ],
+     "transicion": "micro_agua"
     },
     {
      "texto": "Y así, durante millones de años, la sal se ha ido acumulando.",
@@ -250,7 +253,8 @@
      "destacar": [
       "capa",
       "sesenta"
-     ]
+     ],
+     "transicion": "micro"
     },
     {
      "texto": "Tan alta como un edificio de unas cuarenta plantas.",
@@ -295,7 +299,8 @@
       "densa",
       "flota"
      ],
-     "credito": "Foto: Rob Bye, CC0"
+     "credito": "Foto: Rob Bye, CC0",
+     "transicion": "micro_agua"
     }
    ]
   },
@@ -321,7 +326,8 @@
       "salinas",
       "sol"
      ],
-     "credito": "Foto: Dey.sandip, CC BY 3.0"
+     "credito": "Foto: Dey.sandip, CC BY 3.0",
+     "transicion": "micro"
     }
    ]
   },
