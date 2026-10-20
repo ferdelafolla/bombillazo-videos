@@ -35,8 +35,7 @@ subprocess.check_call(['python3', f'{R}/audio_rpg.py', f'{R}/page/data/{dat}/{co
 voces = []
 for i, s in enumerate(D['segs']):
     v = s['voz']
-    if not os.path.exists(f'{out}/audio/{v}.mp3'):
-        shutil.copy(f'{vdir}/{v}.mp3', f'{out}/audio/{v}.mp3')
+    shutil.copy(f'{vdir}/{v}.mp3', f'{out}/audio/{v}.mp3')   # siempre: si cambia la voz, se sustituye
     voces.append(f'''      <audio id="voz-{i:02d}" src="audio/{v}.mp3" data-start="{s['start']:.3f}" data-duration="{s['vozDur']:.3f}" data-media-start="{s['vozDesde']:.3f}" data-track-index="{2 + i % 2}" data-volume="1"></audio>''')
 
 html = f'''<!doctype html>

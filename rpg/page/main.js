@@ -10,6 +10,12 @@ import { chispa, portrait } from './chispa.js';
 import { iconSprite, photoSprite, loadPhotos } from './raster.js';
 import { LUGARES, NOMBRE, FLOOR, VERT } from './lugares.js';
 import { micro, microEscena } from './micro.js';
+import { icono3D, tiene3D } from './three3d.js';
+// icono: en 3D (Three.js) si hay modelo, si no el dibujo 2D
+function icono(nombre, sz, x, y, t, p, dibujo = 1) {
+  if (tiene3D(nombre)) return icono3D(fb, nombre, x + sz / 2, y + sz / 2, Math.round(sz * 1.25), t, p);
+  fb.blit(iconSprite(nombre, sz, dibujo), Math.round(x), Math.round(y)); return true;
+}
 
 const q = new URLSearchParams(location.search);
 const ID = q.get('id') || 'Largo';
@@ -195,7 +201,7 @@ function dropTitle(s, cx, y, maxW, col, lt, at) {
   let sc = 2, lines = wrap(s, maxW / 2);
   if (lines.length > 2 || lines.some(l => textW(l, 2) > maxW)) { sc = 1; lines = wrap(s, maxW); }
   let n = 0;
-  lines.forEach((ln, li) => { let x = Math.round(cx - textW(ln, sc) / 2); for (const ch of ln) { const p = clamp((lt - at - n * .055) / .4, 0, 1); n++; if (p > 0) textOutlined(fb, ch, x, y + li * sc * 10 - Math.round((1 - backOut(p, 1.3)) * 9), col, C.ink, sc); x += textW(ch + ' ', sc) - textW(' ', sc) + sc; } });
+  lines.forEach((ln, li) => { let x = Math.round(cx - textW(ln, sc) / 2); for (const ch of ln) { const p = clamp((lt - at - n * .055) / .4, 0, 1); n++; if (p > 0) textOutlined(fb, ch, x, y + li * sc * 10 - Math.round((1 - backOut(p, 1.3)) * 9), col, C.ink, sc); x += textW(ch, sc) + sc; } });   // mismo avance que textW: el título queda centrado de verdad
   return lines.length * sc * 10;
 }
 
@@ -216,9 +222,8 @@ function contenido(k, s, lt, th) {
     case 'titulo': {
       const tt0 = e.texto_grande || limpiar((e.destacar || [''])[0]), dos = wrap(tt0, (A.w - 16) / 2).length > 1;
       const sz = VERT ? 60 : (dos ? 38 : 52), p = clamp((lt - c.icon) / .45, 0, 1);
-      const ic = iconSprite(e.icono || 'bombilla', sz, clamp((lt - .1) / 1.0, 0, 1));
-      const iy = A.y + 4 + Math.round((1 - backOut(p, 1.8)) * 30) - Math.round(bp * 2);
-      if (p > 0) fb.blit(ic, Math.round(cx - ic.w / 2), iy);
+      const iy = A.y + 4 + Math.round((1 - backOut(p, 1.4)) * 30) - Math.round(bp * 2);
+      if (p > 0) icono(e.icono || 'bombilla', sz, Math.round(cx - sz / 2), iy, s.start + lt, p, clamp((lt - .1) / 1.0, 0, 1));
       burst(cx, A.y + 4 + sz / 2, lt - c.land, th.skin === 'gb' ? GBI[3] : C.yellow, 12);
       const tt = e.texto_grande || limpiar((e.destacar || [''])[0]);
       const two = wrap(tt, (A.w - 16) / 2).length > 1, w = two ? A.w : Math.min(A.w, textW(tt, 2) + 20);
@@ -238,15 +243,15 @@ function contenido(k, s, lt, th) {
         fb.clip = [x + 4, y, x + w - 4, y + h]; text(fb, s2, x + 20 + off, y + 9 + i * rowH, th.skin === 'snes' ? TARJ[i % TARJ.length] : th.txt, th.sh); fb.clip = [0, 0, W, H];
       });
       if (cur >= 0) { const at = c.items[cur], from = cur > 0 ? cur - 1 : cur, f = eo(clamp((lt - at) / .12, 0, 1)); hand(fb, x + 5, Math.round(y + 9 + (from + (cur - from) * f) * rowH), lt, true); }
-      if (e.icono) { const ic = iconSprite(e.icono, 26, clamp(lt / .8, 0, 1)); fb.blit(ic, x + w - 14, y - 14 - Math.round(bp * 2)); }
+      if (e.icono) icono(e.icono, 26, x + w - 14, y - 14 - Math.round(bp * 2), s.start + lt, clamp(lt / .5, 0, 1), clamp(lt / .8, 0, 1));
       break;
     }
     case 'cifra': {
       const val = e.valor || '', sc = textW(val, 3) < A.w - 20 ? 3 : textW(val, 2) < A.w - 20 ? 2 : 1;
-      const ic = e.icono ? iconSprite(e.icono, 30, clamp(lt / .8, 0, 1)) : null;
+      const ic = !!e.icono;
       const w = Math.min(A.w, Math.max(textW(val, sc), textW(e.etiqueta || '')) + 24), h = 22 + sc * 8 + (e.etiqueta ? 14 : 0);
       const x = Math.round(cx - w / 2), y = A.y + (ic ? 30 : 16);
-      if (ic) { const p = clamp((lt - c.icon) / .4, 0, 1); if (p > 0) fb.blit(ic, Math.round(cx - 15), y - 32 + Math.round((1 - backOut(p)) * 20) - Math.round(bp * 2)); }
+      if (ic) { const p = clamp((lt - c.icon) / .4, 0, 1); if (p > 0) icono(e.icono, 30, Math.round(cx - 15), y - 32 + Math.round((1 - backOut(p, 1.4)) * 20) - Math.round(bp * 2), s.start + lt, p, clamp(lt / .8, 0, 1)); }
       const shake = lt - c.settle > 0 && lt - c.settle < .2 ? [2, -2, 1, -1, 0][Math.floor((lt - c.settle) * 24)] || 0 : 0;
       if (!winA(x + shake, y, w, h, th.skin, lt, c.win)) break;
       if (lt > c.val) {
@@ -322,11 +327,11 @@ function contenido(k, s, lt, th) {
     }
     default: {   // icono: objeto que sube como "objeto obtenido", aterriza y flota al compás
       if (s.cap === 'cierre') { guardado(lt, th); break; }
-      const sz = VERT ? 76 : 70, ic = iconSprite(e.icono || 'bombilla', sz, clamp((lt - .1) / 1.0, 0, 1));
+      const sz = VERT ? 76 : 70;
       const p = clamp((lt - c.icon) / .45, 0, 1); if (p <= 0) break;
       const y = A.y + 2 + Math.round((1 - backOut(p, 1.8)) * 40) - Math.round(bp * 2);
       fb.rect(Math.round(cx - 24), A.y + A.h - 10, 48, 6, th.skin === 'gb' ? GBI[1] : C.slate); fb.hline(Math.round(cx - 24), Math.round(cx + 23), A.y + A.h - 10, th.skin === 'gb' ? GBI[0] : C.ink);
-      fb.blit(ic, Math.round(cx - sz / 2), y);
+      icono(e.icono || 'bombilla', sz, Math.round(cx - sz / 2), y, s.start + lt, p, clamp((lt - .1) / 1.0, 0, 1));
       burst(cx, y + sz / 2, lt - c.land, th.skin === 'gb' ? GBI[3] : C.yellow, 12, 80);
       for (let i = 0; i < 4; i++) { const ph = ((s.start + lt) / BEAT + i * .25) % 1; if (ph < .35) { const sx = Math.round(cx + (hash(i, Math.floor((s.start + lt) / BEAT)) - .5) * sz * 1.2), sy = Math.round(y + hash(i, 2) * sz); fb.px(sx, sy - 1, C.white); fb.px(sx - 1, sy, C.white); fb.px(sx + 1, sy, C.white); fb.px(sx, sy + 1, C.white); } }
     }

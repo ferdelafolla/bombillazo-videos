@@ -15,18 +15,18 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="25.795" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24.695" data-width="1080" data-height="1920">
       <canvas id="c" data-layout-allow-overflow width="1080" height="1920"></canvas>
-      <audio id="musica" src="audio/musica_y_efectos.wav" data-start="0" data-duration="25.795" data-track-index="1" data-volume="1"></audio>
+      <audio id="musica" src="audio/musica_y_efectos.wav" data-start="0" data-duration="24.695" data-track-index="1" data-volume="1"></audio>
       <audio id="voz-00" src="audio/2026-10-20_largo_reentrada_short1_gancho.mp3" data-start="0.600" data-duration="3.553" data-media-start="0.000" data-track-index="2" data-volume="1"></audio>
-      <audio id="voz-01" src="audio/2026-10-20_largo_reentrada_aire.mp3" data-start="4.353" data-duration="8.295" data-media-start="12.366" data-track-index="3" data-volume="1"></audio>
-      <audio id="voz-02" src="audio/2026-10-20_largo_reentrada_aire.mp3" data-start="12.898" data-duration="6.830" data-media-start="20.661" data-track-index="2" data-volume="1"></audio>
-      <audio id="voz-03" src="audio/final_es.mp3" data-start="20.928" data-duration="3.318" data-media-start="0.000" data-track-index="3" data-volume="1"></audio>
+      <audio id="voz-01" src="audio/2026-10-20_largo_reentrada_aire.mp3" data-start="4.353" data-duration="7.745" data-media-start="12.366" data-track-index="3" data-volume="1"></audio>
+      <audio id="voz-02" src="audio/2026-10-20_largo_reentrada_aire.mp3" data-start="12.348" data-duration="6.280" data-media-start="20.111" data-track-index="2" data-volume="1"></audio>
+      <audio id="voz-03" src="audio/final_es.mp3" data-start="19.828" data-duration="3.318" data-media-start="0.000" data-track-index="3" data-volume="1"></audio>
     </div>
     <script type="module">
       // El motor Pixel RPG pinta el fotograma del instante pedido; GSAP lleva el tiempo y HyperFrames lo busca fotograma a fotograma.
       import "./engine.js";
-      const DUR = 25.795;
+      const DUR = 24.695;
       const tl = gsap.timeline({ paused: true });
       const reloj = { t: 0 };
       tl.to(reloj, { t: DUR, duration: DUR, ease: "none", onUpdate: () => window.RPG_FRAME(reloj.t) }, 0);

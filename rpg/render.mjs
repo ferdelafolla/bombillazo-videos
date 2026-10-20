@@ -8,7 +8,7 @@ const ROOT = path.resolve('page');
 const MIME = { '.js': 'text/javascript', '.json': 'application/json', '.html': 'text/html', '.jpg': 'image/jpeg' };
 const srv = http.createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0])); fs.readFile(f, (e, d) => { if (e) { r.writeHead(404); r.end(); return; } r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' }); r.end(d); }); }).listen(0);
 const port = srv.address().port;
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell' });
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const page = await browser.newPage();
 page.on('pageerror', e => console.error('PAGE', e));
 await page.goto(`http://localhost:${port}/index.html?id=${id}${V ? "&v=1" : ""}${opt("--d") ? "&d=" + opt("--d") : ""}`);

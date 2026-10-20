@@ -278,6 +278,40 @@ function cielo(fb, cam, t) {
   fb.rect(0, FLOOR + 10, W, H, C.dslate);
 }
 
+// —— LA TORMENTA: pueblo blanco andaluz bajo nubarrones, lluvia, granizo que rebota y relámpagos ——
+function tormenta(fb, cam, t) {
+  const rayo = (t % 5.3) < .12 || ((t + 1.7) % 7.1) < .08;
+  sky(fb, rayo ? [C.white, C.silver, C.steel] : [C.ink, C.night, C.dslate, C.slate]);
+  slots(cam, .1, 90, (i, x) => { const y = 6 + Math.floor(hash(i, 2) * 26); for (const [dx, r] of [[0, 14], [16, 18], [34, 13], [48, 10]]) fb.disc(x + dx + Math.round(t * 4) % 90, y, r, hash(i, dx) > .5 ? C.dslate : C.slate); });
+  if (rayo) { let x = Math.round(W * (.3 + .4 * hash(Math.floor(t / 5.3), 1))), y = 20; while (y < FLOOR - 50) { const nx = x + Math.round((hash(x, y) - .5) * 10); fb.line(x, y, nx, y + 8, C.white); x = nx; y += 8; } }
+  slots(cam, .45, 46, (i, x) => {   // casas blancas con tejado de teja
+    const h = 26 + Math.floor(hash(i, 3) * 18);
+    fb.rect(x + 2, FLOOR - h, 40, h, C.white); fb.rect(x + 2, FLOOR - h, 40, 1, C.silver);
+    for (let k = 0; k < 6; k++) fb.hline(x + k, x + 43 - k, FLOOR - h - k, k < 1 ? C.ink : C.clay);
+    fb.rect(x + 8, FLOOR - h + 8, 6, 7, C.dbrown); fb.rect(x + 28, FLOOR - h + 8, 6, 7, C.dbrown); fb.rect(x + 18, FLOOR - 13, 8, 13, C.brown);
+    if (hash(i, 9) > .5) for (let k = 0; k < 3; k++) fb.disc(x + 10 + k * 9, FLOOR - h + 18, 2, [C.red, C.pink, C.lime][k]);   // macetas
+  });
+  for (let i = 0; i < 90; i++) { const x0 = Math.floor(hash(i, 3) * (W + 40)), y = Math.floor(((hash(i, 5) * FLOOR + t * 210) % FLOOR)); const x = (x0 - Math.floor(y * .15)) % W; fb.vline(x, y, y + 3, C.steel); }
+  for (let i = 0; i < 24; i++) {   // granizo: cae y rebota en el suelo
+    const ph = (t * .9 + hash(i, 7)) % 1, x = Math.round(hash(i, 8) * W);
+    const y = ph < .8 ? Math.round(ph / .8 * FLOOR) : Math.round(FLOOR - Math.sin((ph - .8) / .2 * Math.PI) * 6);
+    fb.rect(x, y, 2, 2, C.white); fb.px(x, y, C.cyan);
+  }
+  fb.rect(0, FLOOR, W, H - FLOOR, C.slate); fb.hline(0, W - 1, FLOOR, C.ink);
+  for (let i = 0; i < 40; i++) fb.rect(Math.floor(hash(i, 11) * W), FLOOR + 2 + Math.floor(hash(i, 12) * (H - FLOOR - 4)), 2, 1, C.white);   // bolitas en el suelo
+}
+
+// —— DENTRO DE LA NUBE: algodón gris y blanco, flechas de viento hacia arriba, gotas y granizos subiendo ——
+function nube(fb, cam, t) {
+  fb.gradV(0, 0, W, H, [C.steel, C.silver, C.slate, C.dslate]);
+  slots(cam, .2, 70, (i, x) => { for (let k = 0; k < 5; k++) fb.disc(x + k * 14 + Math.round(Math.sin(t * .5 + i + k) * 3), Math.round(H * (.15 + .7 * hash(i, k))), 10 + Math.floor(hash(i, k + 3) * 10), k % 2 ? C.white : C.silver); });
+  for (let i = 0; i < 6; i++) {   // corrientes de viento hacia arriba
+    const x = Math.round(W * (.1 + .16 * i) - layer(cam, .3) % 40), off = (t * 70 + i * 37) % (H + 40);
+    for (let k = 0; k < 4; k++) { const y = Math.round(H + 20 - ((off + k * 45) % (H + 40))); fb.vline(x, y, y + 10, C.cyan); fb.px(x - 1, y + 1, C.cyan); fb.px(x + 1, y + 1, C.cyan); fb.px(x - 2, y + 2, C.cyan); fb.px(x + 2, y + 2, C.cyan); }
+  }
+  for (let i = 0; i < 30; i++) { const x = Math.round(hash(i, 4) * W + Math.sin(t * 2 + i) * 4), y = Math.round(H - ((t * (30 + 40 * hash(i, 6)) + hash(i, 5) * H) % H)); if (i % 4) fb.px(x, y, C.blue); else { fb.rect(x, y, 2, 2, C.white); } }
+}
+
 // —— vida ambiente: cada sitio tiene algo que se mueve ——
 const fr = (t, k) => ((t * k) % 1 + 1) % 1;
 function pajaro(fb, x, y, t, col) { const a = Math.floor(t * 6) % 2; fb.px(x, y, col); fb.px(x - 1, y - a, col); fb.px(x - 2, y - 1 + a, col); fb.px(x + 1, y - a, col); fb.px(x + 2, y - 1 + a, col); }
@@ -309,6 +343,6 @@ const AMB = {
   puerta(fb, t) { for (let i = 0; i < 14; i++) { const x = Math.round(W * hashA(i) + Math.sin(t * 2 + i) * 4), y = Math.round(FLOOR - fr(t + i * .9, .12 + hashA(i + 3) * .1) * FLOOR * .8); if (Math.floor(t * 6 + i) % 4) fb.px(x, y, i % 3 ? C.orange : C.yellow); } },
 };
 function hashA(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
-const BASE = { hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta, playa, montana, fondo, desierto, lanzamiento, espacio, cielo };
+const BASE = { hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta, playa, montana, fondo, desierto, lanzamiento, espacio, cielo, tormenta, nube };
 export const LUGARES = Object.fromEntries(Object.entries(BASE).map(([k, f]) => [k, (fb, cam, t) => { f(fb, cam, t); AMB[k] && AMB[k](fb, t); }]));
-export const NOMBRE = { hoy: 'HOY', mercado: 'EL MERCADO', londres: 'LONDRES · 1720', datos: 'CENTRO DE DATOS', nasdaq: 'NUEVA YORK · 2000', cruce: 'EL CRUCE', mirador: 'EL MIRADOR', puerta: 'LA ÚLTIMA PUERTA', playa: 'LA PLAYA', montana: 'LA MONTAÑA', fondo: 'EL FONDO DEL MAR', desierto: 'EL MAR MUERTO', lanzamiento: 'CABO CAÑAVERAL', espacio: 'EN ÓRBITA', cielo: 'LA REENTRADA' };
+export const NOMBRE = { hoy: 'HOY', mercado: 'EL MERCADO', londres: 'LONDRES · 1720', datos: 'CENTRO DE DATOS', nasdaq: 'NUEVA YORK · 2000', cruce: 'EL CRUCE', mirador: 'EL MIRADOR', puerta: 'LA ÚLTIMA PUERTA', playa: 'LA PLAYA', montana: 'LA MONTAÑA', fondo: 'EL FONDO DEL MAR', desierto: 'EL MAR MUERTO', lanzamiento: 'CABO CAÑAVERAL', espacio: 'EN ÓRBITA', cielo: 'LA REENTRADA', tormenta: 'MÁLAGA', nube: 'DENTRO DE LA NUBE' };

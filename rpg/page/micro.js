@@ -3,6 +3,10 @@
 // agua = true: iones de sodio y cloro sueltos entre moléculas de agua (la sal disuelta).
 import { W, H, C, T, hash, bayer, clamp } from './px.js';
 import { text, textW, textOutlined } from './font.js';
+import { atomos3D, HAY3D } from './three3d.js';
+// en las escenas de microscopio los átomos se recogen aquí y se pintan como esferas 3D (Three.js)
+let COL = null;
+const CALIENTES = new Set([C.orange, C.amber, C.yellow, C.white]);
 
 const A = 0.06;            // distancia entre iones en el mundo (unidades del mundo)
 const VERT = H > W;
@@ -129,10 +133,14 @@ function leyenda(fb, items, dlgY, R) {
 // mezcla de color "calor": de su color frío a naranja y luego blanco
 const CAL = [C.orange, C.amber, C.yellow, C.white];
 function calCol(base, h) { if (h < .2) return base; return CAL[Math.min(3, Math.floor((h - .2) / .8 * 4))]; }
-function atomo(fb, x, y, r, c) { fb.disc(x, y, r + 1, C.ink); fb.disc(x, y, r, c); if (r > 2) fb.px(x - 1, y - 1, C.white); }
+function atomo(fb, x, y, r, c, z = 0) {
+  if (COL) { COL.push({ x, y, z, r: r + .6, c, emis: CALIENTES.has(c) ? .55 : 0 }); return; }
+  fb.disc(x, y, r + 1, C.ink); fb.disc(x, y, r, c); if (r > 2) fb.px(x - 1, y - 1, C.white);
+}
 function molecula(fb, x, y, ang, r, c, sep) {   // N2 / O2: dos átomos unidos; sep > 0 los separa (se rompen)
-  const d = r * (1.1 + sep), dx = Math.cos(ang) * d, dy = Math.sin(ang) * d;
-  if (sep < .3) fb.line(Math.round(x - dx), Math.round(y - dy), Math.round(x + dx), Math.round(y + dy), C.ink);
+  const d = r * (1.1 + sep), dx = Math.cos(ang) * d, dy = Math.sin(ang) * d * .6, dz = Math.sin(ang) * .5;
+  if (sep < .3 && !COL) fb.line(Math.round(x - dx), Math.round(y - dy), Math.round(x + dx), Math.round(y + dy), C.ink);
+  if (COL) { COL.push({ x: x - dx, y: y - dy, z: -dz, r: r + .6, c, emis: CALIENTES.has(c) ? .55 : 0 }, { x: x + dx, y: y + dy, z: dz, r: r + .6, c, emis: CALIENTES.has(c) ? .55 : 0 }); return; }
   atomo(fb, Math.round(x - dx), Math.round(y - dy), r, c); atomo(fb, Math.round(x + dx), Math.round(y + dy), r, c);
 }
 
@@ -146,6 +154,7 @@ function secAire(fb, g, t, R, dlgY) {
   const xw = g < 1 ? CX - RX * 1.6 + (xw0 - (CX - RX * 1.6)) * ease(cl01(g * 1.4 - .4)) : xw0;
   // el escudo: bloque gris oscuro de átomos de carbono a la izquierda
   if (xw > CX - RX - 2) { for (let y = Math.round(CY - RY); y < CY + RY; y++) for (let x = Math.round(CX - RX); x < xw; x++) fb.px(x, y, ((x >> 2) + (y >> 2)) % 2 ? C.dslate : C.slate); fb.vline(Math.round(xw), Math.round(CY - RY), Math.round(CY + RY), heat > .3 ? CAL[Math.min(3, Math.floor(heat * 3))] : C.steel); }
+  if (HAY3D) COL = [];
   const N = 34, rows = 9, cols = 4, comp = 1 - .35 * cl01(g - 2);   // en "aprieta" el montón se comprime
   for (let i = 0; i < N; i++) {
     const hy = hash(i, 11), hx = hash(i, 12), N2 = hash(i, 13) < .78;   // el aire es casi 4/5 nitrógeno
@@ -168,6 +177,7 @@ function secAire(fb, g, t, R, dlgY) {
     molecula(fb, Math.round(x), Math.round(y), sep > 0 ? ang * .2 + i : ang, r, calCol(base, h), sep);
     if (sep > 1 && Math.floor(t * 10 + i) % 3 === 0) fb.px(Math.round(x), Math.round(y - 4), C.white);
   }
+  if (COL) { atomos3D(fb, COL, W, H); COL = null; }
   // termómetro cuando aprieta
   if (g > 1.8) { const hx = CX + RX - (VERT ? 22 : 44), top = CY - RY * .6, hh = RY * 1.2, lvl = cl01((g - 1.8) / 1.8);
     fb.rect(hx - 1, top - 1, 6, hh + 2, C.ink); fb.rect(hx, top + hh * (1 - lvl), 4, hh * lvl, lvl > .7 ? C.white : lvl > .4 ? C.yellow : C.orange); fb.disc(hx + 2, top + hh + 4, 4, C.red); text(fb, 'CALOR', hx - 26, top - 2, C.yellow, C.ink); }
@@ -182,6 +192,7 @@ function secEscudo(fb, g, t, R, dlgY) {
   fb.rect(0, 0, W, H, C.night); fb.dither(0, 0, W, H, (x, y) => .55 * cl01((x - CX + RX * .2) / (RX * 1.2)), C.night, C.orange);
   const sp = 8, cols = 9, rows = Math.ceil(2 * RY / sp) + 1, x0 = CX - RX * .55, y0 = CY - RY;
   const quita = g * 3.2;                                        // cuántas columnas se han ido
+  if (HAY3D) COL = [];
   for (let c = 0; c < cols; c++) for (let r = 0; r < rows; r++) {
     const bx = x0 + c * sp, by = y0 + r * sp + (c % 2) * sp / 2, front = cols - 1 - c;   // front 0 = la capa de fuera
     const tsuelta = (front + hash(c, r, 3) * .9) / 3.2;          // cuándo se suelta este átomo
@@ -193,11 +204,69 @@ function secEscudo(fb, g, t, R, dlgY) {
     }
   }
   // átomos de aire calientes golpeando la superficie
-  for (let i = 0; i < 26; i++) { const x = CX + RX - ((hash(i, 21) * RX * 1.2 + t * 60) % (RX * 1.2)), y = CY + (hash(i, 22) - .5) * 1.8 * RY; atomo(fb, Math.round(x), Math.round(y), 2, Math.floor(t * 8 + i) % 2 ? C.white : C.yellow); }
+  for (let i = 0; i < 26; i++) { const x = CX + RX - ((hash(i, 21) * RX * 1.2 + t * 60) % (RX * 1.2)), y = CY + (hash(i, 22) - .5) * 1.8 * RY; atomo(fb, Math.round(x), Math.round(y), 2, Math.floor(t * 8 + i) % 2 ? C.white : C.yellow, hash(i, 23) - .5); }
+  if (COL) { atomos3D(fb, COL, W, H); COL = null; }
   // lo de dentro, a salvo: termómetro interior que se queda bajo
   const tx = CX - RX * .55 - 14, top = CY - RY * .5, hh = RY; fb.rect(tx - 1, top - 1, 6, hh + 2, C.ink); fb.rect(tx, top + hh * .8, 4, hh * .2, C.cyan); fb.disc(tx + 2, top + hh + 4, 4, C.blue);
   text(fb, 'DENTRO', tx - 6, top - 12, C.cyan, C.ink);
   marco(fb, R, '×10.000.000', g < .5 ? 'EL ESCUDO SE DESHACE' : 'CADA TROCITO SE LLEVA EL CALOR', dlgY);
+}
+
+
+// —— granizo: gotas superenfriadas → se congelan sobre un granito de hielo → capas como una cebolla ——
+//   gotas 0→1 · congela 1→2 · capas 2→3     (y "corte": la piedra partida para contar sus capas)
+const GRAN = { gotas: 0, congela: 1, capas: 2 };
+function fondoFrio(fb, t) {
+  fb.rect(0, 0, W, H, C.navy); fb.dither(0, 0, W, H, (x, y) => .25 + .15 * Math.sin((x * .05 + y * .03) + t * .3), C.navy, C.dslate);
+  for (let i = 0; i < 30; i++) { if (Math.floor(t * 3 + i) % 4) continue; const x = Math.round(hash(i, 31) * W), y = Math.round(hash(i, 32) * H); fb.px(x, y, C.white); fb.px(x - 1, y, C.cyan); fb.px(x + 1, y, C.cyan); }
+}
+function anillos(fb, cx, cy, R, n, t, nuevo) {
+  // corte de la piedra: anillos alternos opacos (blanco) y transparentes (azul hielo), del centro hacia fuera
+  for (let k = n; k >= 1; k--) { const r = Math.round(R * k / Math.max(n, 1)); fb.disc(cx, cy, r + 1, C.ink); fb.disc(cx, cy, r, k % 2 ? C.white : C.cyan); if (k % 2 === 0) fb.dither(cx - r, cy - r, 2 * r, 2 * r, (x, y) => ((x - cx) ** 2 + (y - cy) ** 2 < r * r && (x - cx) ** 2 + (y - cy) ** 2 > (R * (k - 1) / n) ** 2) ? .25 : 0, T, C.white); }
+  fb.disc(cx, cy, Math.max(2, Math.round(R / Math.max(n, 1) * .6)), C.silver);   // el granito de hielo del principio
+  if (nuevo > 0 && nuevo < 1) for (let a = 0; a < 6.283; a += .35) fb.px(Math.round(cx + Math.cos(a) * (R + 3 + nuevo * 6)), Math.round(cy + Math.sin(a) * (R + 3 + nuevo * 6)), C.white);
+  fb.px(cx - Math.round(R * .5), cy - Math.round(R * .5), C.white);
+}
+function secGranizo(fb, g, t, R, dlgY) {
+  fondoFrio(fb, t);
+  if (HAY3D) COL = [];
+  const Rg = 4 + 9 * cl01(g - 1);                                   // radio del granizo que crece
+  const capas = g >= 2;
+  const by = capas ? Math.sin((g - 2) * Math.PI * 6) * RY * .18 : 0;   // sube y baja con el viento
+  const gx = CX, gy = CY + by;
+  for (let i = 0; i < 40; i++) {
+    const hy = hash(i, 41), hx = hash(i, 42), ci = 1 + hash(i, 43) * .9, a = hash(i, 44) * 6.283;
+    let x = CX + (hx - .5) * 1.8 * RX + Math.sin(t * 1.3 + i) * 3, y = CY + RY - ((hy * 2 * RY + t * 14) % (2 * RY));
+    let c = C.blue, r = 2.2;
+    if (!capas && g > ci - .15) {   // va hacia el granito y se congela al tocarlo
+      const k = ease(cl01((g - (ci - .15)) / .15)), tx = gx + Math.cos(a) * Rg, ty = gy + Math.sin(a) * Rg;
+      x = x + (tx - x) * k; y = y + (ty - y) * k; if (g >= ci) { x = tx; y = ty; c = C.white; r = 2.6; }
+    } else if (capas && i % 3 === 0) { x = gx + Math.cos(a + t) * (RY * .62 + 6); y = gy + Math.sin(a + t) * (RY * .62 + 6) * .7; }
+    if (!capas || i % 3 === 0) atomo(fb, Math.round(x), Math.round(y), r, c, hash(i, 45) - .5);
+  }
+  if (!capas) atomo(fb, Math.round(gx), Math.round(gy), Math.round(Rg), g < 1 ? C.silver : C.white, 0);
+  if (COL) { atomos3D(fb, COL, W, H); COL = null; }
+  if (capas) {
+    const n = 1 + Math.floor((g - 2) * 7), nuevo = ((g - 2) * 7) % 1;
+    anillos(fb, Math.round(gx), Math.round(gy), Math.round(RY * .55), n, t, nuevo);
+    const flecha = Math.cos((g - 2) * Math.PI * 6) > 0 ? '↑' : '↓';   // hacia dónde lo lleva el viento
+    textOutlined(fb, Math.cos((g - 2) * Math.PI * 6) > 0 ? 'SUBE' : 'BAJA', Math.round(gx + RY * .7), Math.round(gy - 4), C.cyan, C.ink, 1);
+  }
+  if (g < 1) { const s2 = 'AGUA LÍQUIDA A -15 °C'; textOutlined(fb, s2, Math.round(CX - textW(s2) / 2), Math.round(CY - RY + 12), C.cyan, C.ink, 1); }
+  const et = g < 1 ? 'GOTAS SIN CONGELAR' : g < 2 ? 'AL TOCAR EL HIELO, SE CONGELAN' : 'UNA CAPA EN CADA VIAJE';
+  marco(fb, R, '×100', et, dlgY);
+  if (g < 1.2) leyenda(fb, [['AGUA', C.blue], ['HIELO', C.white]], dlgY, R);
+}
+function secCorte(fb, u, t, R, dlgY) {
+  fondoFrio(fb, t);
+  const n = 9, Rr = Math.round(RY * .62), cx = Math.round(CX - RX * .15), cy = Math.round(CY);
+  anillos(fb, cx, cy, Rr, n, t, 0);
+  // se cuentan los anillos uno a uno, como los de un árbol
+  const cuenta = Math.min(n, Math.floor(u * (n + 3)));
+  for (let k = 1; k <= cuenta; k++) { const r = Math.round(Rr * (k - .5) / n), x = cx + r, y = cy; fb.px(x, y, C.red); }
+  if (cuenta > 0) { const s2 = String(cuenta); textOutlined(fb, s2, Math.round(cx + Rr + 12), Math.round(cy - 8), C.yellow, C.ink, 2); text(fb, cuenta === 1 ? 'CAPA' : 'CAPAS', Math.round(cx + Rr + 12), Math.round(cy + 10), C.white, C.ink); }
+  fb.line(cx, cy, cx + Rr + 8, cy, C.red);
+  marco(fb, R, '×2', 'SE PUEDEN CONTAR SUS CAPAS', dlgY);
 }
 
 export function microEscena(fb, modo, u, t, dlgY = H) {
@@ -205,6 +274,8 @@ export function microEscena(fb, modo, u, t, dlgY = H) {
   const R = VERT ? 80 : Math.round(Math.min(W, dlgY) * .46);
   RX = VERT ? 80 : Math.round(W * .47); RY = VERT ? 80 : Math.round(dlgY * .47);
   if (modo in ETAPA) secAire(fb, ETAPA[modo] + u, t, R, dlgY);
+  else if (modo in GRAN) secGranizo(fb, GRAN[modo] + u, t, R, dlgY);
+  else if (modo === 'corte') secCorte(fb, u, t, R, dlgY);
   else if (modo === 'ablacion' || modo === 'ablacion2') secEscudo(fb, (modo === 'ablacion' ? 0 : .5) + u * .5, t, R, dlgY);
   else micro(fb, 400, t, false, dlgY);
 }
