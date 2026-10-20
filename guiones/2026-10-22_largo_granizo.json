@@ -1,0 +1,292 @@
+{
+ "id": "2026-10-22_largo_granizo",
+ "titulo": "¿Por qué cae hielo del cielo si hace calor?",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs Lucía (s4NXWwstm4IwAI2dMQ6M, eleven_v4)",
+ "tendencia": "Google Trends ES 19/10/2026: «alhaurín de la torre» (1000+), tormenta con granizo en Málaga",
+ "fuentes": [
+  "Google Trends ES 19/10/2026 y prensa: tormenta con aguaceros y granizo en varios puntos de Málaga",
+  "NOAA / NSSL Severe Weather 101 (granizo): corrientes ascendentes, gotas superenfriadas, crecimiento por capas",
+  "National Weather Service: granizo récord de Vivian, Dakota del Sur, 23/07/2010, 20 cm de diámetro y 0,88 kg",
+  "Clima.com y The Weather Network: cómo se forma el granizo y por qué cae en épocas cálidas"
+ ],
+ "fotos": [],
+ "rpg": {
+  "gancho_lugar": "tormenta",
+  "partidas": [
+   {
+    "lugar": "tormenta",
+    "era": "snes",
+    "nombre": "LO RARO",
+    "nota": "HIELO SIN FRÍO"
+   },
+   {
+    "lugar": "nube",
+    "era": "snes",
+    "nombre": "LAS PISTAS",
+    "nota": "10 KM · -50 °C"
+   },
+   {
+    "lugar": "nube",
+    "era": "snes",
+    "nombre": "LA RESPUESTA",
+    "nota": "SE HACE ARRIBA"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "tormenta",
+   "escenas": [
+    {
+     "texto": "¿Hielo cayendo del cielo… sin hacer frío?",
+     "tipo": "titulo",
+     "icono": "granizo",
+     "texto_grande": "¿HIELO SIN FRÍO?",
+     "destacar": [
+      "Hielo",
+      "frío?"
+     ]
+    },
+    {
+     "texto": "Pasó esta semana en Málaga: granizo en pleno octubre.",
+     "tipo": "icono",
+     "icono": "granizo",
+     "destacar": [
+      "Málaga:",
+      "octubre."
+     ]
+    },
+    {
+     "texto": "Y no es tan raro. La explicación está muy arriba.",
+     "tipo": "icono",
+     "icono": "nube",
+     "destacar": [
+      "raro.",
+      "arriba."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pistas",
+   "lugar": "nube",
+   "escenas": [
+    {
+     "texto": "Primera pista: las nubes de tormenta miden más de diez kilómetros de alto.",
+     "tipo": "cifra",
+     "valor": "+10 KM",
+     "etiqueta": "DE ALTO",
+     "icono": "nube",
+     "destacar": [
+      "Primera",
+      "diez"
+     ]
+    },
+    {
+     "texto": "Segunda pista: arriba del todo hay unos cincuenta grados bajo cero.",
+     "tipo": "cifra",
+     "valor": "-50 °C",
+     "etiqueta": "EN LO ALTO DE LA NUBE",
+     "icono": "granizo",
+     "destacar": [
+      "Segunda",
+      "cincuenta"
+     ]
+    },
+    {
+     "texto": "Tercera pista: dentro sopla un viento hacia arriba que sujeta las gotas en el aire.",
+     "tipo": "tarjetas",
+     "items": [
+      "VIENTO HACIA ARRIBA",
+      "GOTAS FLOTANDO"
+     ],
+     "icono": "nube",
+     "destacar": [
+      "Tercera",
+      "viento"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "micro",
+   "lugar": "nube",
+   "escenas": [
+    {
+     "texto": "Al microscopio, ahí arriba hay gotas de agua a quince grados bajo cero… que siguen líquidas.",
+     "tipo": "microscopio",
+     "modo": "gotas",
+     "transicion": "minimo",
+     "destacar": [
+      "microscopio,",
+      "líquidas."
+     ]
+    },
+    {
+     "texto": "Si tocan un granito de hielo, se congelan de golpe y se le quedan pegadas.",
+     "tipo": "microscopio",
+     "modo": "congela",
+     "transicion": "corte",
+     "destacar": [
+      "congelan",
+      "pegadas."
+     ]
+    },
+    {
+     "texto": "El viento lo sube y lo baja, y en cada viaje gana una capa nueva, como una cebolla.",
+     "tipo": "microscopio",
+     "modo": "capas",
+     "transicion": "corte",
+     "destacar": [
+      "capa",
+      "cebolla."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "tormenta",
+   "escenas": [
+    {
+     "texto": "Curiosidad: el granizo más grande que se ha medido cayó en Estados Unidos, en dos mil diez.",
+     "tipo": "titulo",
+     "icono": "granizo",
+     "texto_grande": "¡EL MÁS GRANDE!",
+     "transicion": "maximo",
+     "destacar": [
+      "Curiosidad:",
+      "grande"
+     ]
+    },
+    {
+     "texto": "Medía veinte centímetros y pesaba casi un kilo.",
+     "tipo": "cifra",
+     "valor": "20 CM",
+     "etiqueta": "Y CASI 1 KG",
+     "icono": "granizo",
+     "destacar": [
+      "veinte",
+      "kilo."
+     ]
+    },
+    {
+     "texto": "Y si lo partes, puedes contar sus capas, como los anillos de un árbol.",
+     "tipo": "microscopio",
+     "modo": "corte",
+     "transicion": "minimo",
+     "destacar": [
+      "capas,",
+      "árbol."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "respuesta",
+   "lugar": "nube",
+   "escenas": [
+    {
+     "texto": "Entonces, ¿por qué cae hielo sin hacer frío?",
+     "tipo": "titulo",
+     "icono": "granizo",
+     "texto_grande": "LA RESPUESTA",
+     "transicion": "maximo",
+     "destacar": [
+      "hielo",
+      "frío?"
+     ]
+    },
+    {
+     "texto": "Porque el hielo no se hace aquí abajo: se hace arriba, a cincuenta grados bajo cero.",
+     "tipo": "comparar",
+     "izq": "ABAJO",
+     "der": "ARRIBA",
+     "destacar": [
+      "arriba,",
+      "cincuenta"
+     ]
+    },
+    {
+     "texto": "Y cae tan deprisa, que no le da tiempo a derretirse.",
+     "tipo": "icono",
+     "icono": "granizo",
+     "destacar": [
+      "deprisa,",
+      "derretirse."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cierre",
+   "lugar": "puerta",
+   "escenas": [
+    {
+     "texto": "La próxima vez que caiga granizo, ya sabes de dónde viene.",
+     "tipo": "icono",
+     "icono": "granizo",
+     "destacar": [
+      "granizo,",
+      "viene."
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ],
+ "shorts": [
+  {
+   "capitulos": [
+    "micro"
+   ],
+   "titulo": "El granizo tiene capas, como una cebolla 🧊 #Shorts",
+   "remate": "¿POR QUÉ CAE HIELO SIN HACER FRÍO?",
+   "escenas": [
+    1,
+    2
+   ],
+   "gancho": {
+    "texto": "¿Sabías que el granizo tiene capas, como una cebolla?",
+    "tipo": "titulo",
+    "icono": "granizo",
+    "texto_grande": "¿TIENE CAPAS?",
+    "destacar": [
+     "capas,",
+     "cebolla?"
+    ]
+   }
+  },
+  {
+   "capitulos": [
+    "curiosidad"
+   ],
+   "titulo": "Cayó del cielo una piedra de hielo de casi un kilo 😮 #Shorts",
+   "remate": "¿POR QUÉ CAE HIELO SIN HACER FRÍO?",
+   "escenas": [
+    1,
+    2
+   ],
+   "gancho": {
+    "texto": "¿Una piedra de hielo de casi un kilo… cayendo del cielo?",
+    "tipo": "titulo",
+    "icono": "granizo",
+    "texto_grande": "¿CASI UN KILO?",
+    "destacar": [
+     "hielo",
+     "kilo…"
+    ]
+   }
+  }
+ ],
+ "estructura": "reels-explicativos: 1) lo raro, en el primer segundo; 2) cada frase, cuando se oye; 3) la respuesta, al final"
+}

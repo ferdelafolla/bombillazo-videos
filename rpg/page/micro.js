@@ -250,7 +250,7 @@ function secGranizo(fb, g, t, R, dlgY) {
     const n = 1 + Math.floor((g - 2) * 7), nuevo = ((g - 2) * 7) % 1;
     anillos(fb, Math.round(gx), Math.round(gy), Math.round(RY * .55), n, t, nuevo);
     const flecha = Math.cos((g - 2) * Math.PI * 6) > 0 ? '↑' : '↓';   // hacia dónde lo lleva el viento
-    textOutlined(fb, Math.cos((g - 2) * Math.PI * 6) > 0 ? 'SUBE' : 'BAJA', Math.round(gx + RY * .7), Math.round(gy - 4), C.cyan, C.ink, 1);
+    { const sb = Math.cos((g - 2) * Math.PI * 6) > 0 ? 'SUBE' : 'BAJA'; textOutlined(fb, sb, Math.round(Math.min(gx + RY * .7, CX + RX - textW(sb) - 8)), Math.round(gy - 4), C.cyan, C.ink, 1); }
   }
   if (g < 1) { const s2 = 'AGUA LÍQUIDA A -15 °C'; textOutlined(fb, s2, Math.round(CX - textW(s2) / 2), Math.round(CY - RY + 12), C.cyan, C.ink, 1); }
   const et = g < 1 ? 'GOTAS SIN CONGELAR' : g < 2 ? 'AL TOCAR EL HIELO, SE CONGELAN' : 'UNA CAPA EN CADA VIAJE';
@@ -259,7 +259,7 @@ function secGranizo(fb, g, t, R, dlgY) {
 }
 function secCorte(fb, u, t, R, dlgY) {
   fondoFrio(fb, t);
-  const n = 9, Rr = Math.round(RY * .62), cx = Math.round(CX - RX * .15), cy = Math.round(CY);
+  const n = 9, Rr = Math.round(Math.min(RY * .62, RX * .55)), cx = Math.round(Math.min(CX - RX * .15, CX + RX - Rr - 44)), cy = Math.round(CY);
   anillos(fb, cx, cy, Rr, n, t, 0);
   // se cuentan los anillos uno a uno, como los de un árbol
   const cuenta = Math.min(n, Math.floor(u * (n + 3)));

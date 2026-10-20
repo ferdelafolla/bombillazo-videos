@@ -113,7 +113,54 @@ function cues(k) {
       default: c.icon = qa(s, .05); c.land = c.icon + .45; c.acc = [c.land];
     }
   }
+  if (s.kind === 'escena') sincroniza(k, s, c);
   return (CUES[k] = c);
+}
+// —— «cada frase, cuando se oye»: cada cosa aparece justo cuando la voz dice su palabra ——
+const sinAcento = w => w.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function tiempoPalabra(s, claves) {
+  const ks = claves.filter(Boolean).map(c => sinAcento(norm(String(c).split(/\s+/)[0]))).filter(c => c.length > 1);
+  if (!ks.length) return null;
+  const words = s.escena.texto.split(/\s+/), syl = words.map(silabas), tot = syl.reduce((a, b) => a + b, 0), habla = s.vozDur * .92;
+  let acc = 0;
+  for (let i = 0; i < words.length; i++) {
+    const w = sinAcento(norm(words[i])), at = .05 + acc / tot * habla;
+    if (w.length > 1 && ks.some(c => w.startsWith(c) || (c.startsWith(w) && w.length > 3))) return at;
+    acc += syl[i];
+  }
+  return null;
+}
+function sincroniza(k, s, c) {
+  const e = s.escena, primera = !segs.slice(0, k).some(x => x.kind === 'escena');
+  const dest = e.destacar || [];
+  switch (e.tipo) {
+    case 'titulo': {
+      if (primera) { c.icon = -.5; c.land = .05; c.title = .02; c.rapido = true; }   // lo raro, en el primer segundo
+      else { const t = tiempoPalabra(s, dest); if (t !== null) { c.title = Math.max(.25, t - .1); c.icon = Math.max(0, c.title - .5); c.land = c.icon + .45; } }
+      c.acc = [c.title]; break;
+    }
+    case 'tarjetas': {
+      let prev = c.items[0] || .4;
+      c.items = (e.items || []).map((it, i) => { const t = tiempoPalabra(s, [it]); const v = t !== null ? Math.max(prev, t - .05) : prev + (i ? .8 : 0); prev = v + .15; return v; });
+      c.win = Math.min(c.win, Math.max(0, c.items[0] - .4)); c.acc = c.items.slice(-1); break;
+    }
+    case 'cifra': {   // la cifra salta cuando se dice el número
+      const NUM = /^(un|uno|una|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|quince|veinte|treinta|cuarenta|cincuenta|sesenta|setenta|ochenta|noventa|cien|mil|millon)/;
+      const dn = dest.find(d => NUM.test(sinAcento(norm(d)))) || dest[0];
+      const t = tiempoPalabra(s, [dn]); if (t !== null) { c.val = Math.max(.35, t - .1); c.win = Math.max(.1, c.val - .3); c.icon = Math.max(0, c.win - .2); c.settle = c.val + .07 * (e.valor || '').length + .2; c.lab = c.settle + .3; c.acc = [c.settle]; }
+      break;
+    }
+    case 'comparar': {
+      const tl = tiempoPalabra(s, [e.izq]), tr = tiempoPalabra(s, [e.der]);
+      if (tl !== null) c.L = Math.max(.3, tl - .1);
+      if (tr !== null) c.R = Math.max(c.L + .3, tr - .1); else c.R = Math.max(c.R, c.L + .3);
+      c.h1 = c.R + .9; c.h2 = c.h1 + .9; c.acc = [c.h1, c.h2]; break;
+    }
+    case 'icono': {
+      const t = tiempoPalabra(s, [e.icono, ...dest]); if (t !== null && t > .2) { c.icon = Math.max(0, t - .35); c.land = c.icon + .45; c.acc = [c.land]; }
+      break;
+    }
+  }
 }
 // zoom de cámara: alterna acercarse / alejarse en cada escena, con golpes de zoom en los momentos fuertes
 function camZoom(k, lt) {
@@ -197,11 +244,11 @@ function burst(cx, cy, dt, col, n = 10, sp = 70) {
 // número de daño que sube y parpadea
 function dmg(x, y, dt, s2, col) { if (dt <= 0 || dt > .9 || (dt > .6 && Math.floor(dt * 16) % 2)) return; textOutlined(fb, s2, Math.round(x - textW(s2) / 2), Math.round(y - dt * 22), col, C.ink, 1); }
 // título cuyas letras caen una a una con rebote
-function dropTitle(s, cx, y, maxW, col, lt, at) {
+function dropTitle(s, cx, y, maxW, col, lt, at, rapido = false) {
   let sc = 2, lines = wrap(s, maxW / 2);
   if (lines.length > 2 || lines.some(l => textW(l, 2) > maxW)) { sc = 1; lines = wrap(s, maxW); }
   let n = 0;
-  lines.forEach((ln, li) => { let x = Math.round(cx - textW(ln, sc) / 2); for (const ch of ln) { const p = clamp((lt - at - n * .055) / .4, 0, 1); n++; if (p > 0) textOutlined(fb, ch, x, y + li * sc * 10 - Math.round((1 - backOut(p, 1.3)) * 9), col, C.ink, sc); x += textW(ch, sc) + sc; } });   // mismo avance que textW: el título queda centrado de verdad
+  lines.forEach((ln, li) => { let x = Math.round(cx - textW(ln, sc) / 2); for (const ch of ln) { const p = rapido ? 1 : clamp((lt - at - n * .055) / .4, 0, 1); n++; if (p > 0) textOutlined(fb, ch, x, y + li * sc * 10 - Math.round((1 - backOut(p, 1.3)) * 9), col, C.ink, sc); x += textW(ch, sc) + sc; } });   // mismo avance que textW: el título queda centrado de verdad
   return lines.length * sc * 10;
 }
 
@@ -227,7 +274,7 @@ function contenido(k, s, lt, th) {
       burst(cx, A.y + 4 + sz / 2, lt - c.land, th.skin === 'gb' ? GBI[3] : C.yellow, 12);
       const tt = e.texto_grande || limpiar((e.destacar || [''])[0]);
       const two = wrap(tt, (A.w - 16) / 2).length > 1, w = two ? A.w : Math.min(A.w, textW(tt, 2) + 20);
-      if (winA(Math.round(cx - w / 2), A.y + sz + 10, w, two ? 50 : 30, th.skin, lt, c.title - .1)) dropTitle(tt, cx, A.y + sz + 18, A.w - 16, titleCol(th), lt, c.title);
+      if (c.rapido ? true : winA(Math.round(cx - w / 2), A.y + sz + 10, w, two ? 50 : 30, th.skin, lt, c.title - .1)) { if (c.rapido) win(fb, Math.round(cx - w / 2), A.y + sz + 10, w, two ? 50 : 30, th.skin); dropTitle(tt, cx, A.y + sz + 18, A.w - 16, titleCol(th), lt, c.title, c.rapido); }
       break;
     }
     case 'tarjetas': {
@@ -421,6 +468,10 @@ function renderSeg(k, t, sep = false) {
   let lunge = 0; if (e.tipo === 'comparar') for (const a of [c.h1, c.h2]) { const d = lt - a; if (d > 0 && d < .2) lunge = Math.round(Math.sin(d / .2 * Math.PI) * 6); }
   chispa(fb, (sub ? (VERT ? 90 : 56) : L.chx) + lunge, CHF, { t, s: sub ? 2 : 1, talk: ampAt(s, lt), wave: sub || (e.tipo === 'tarjetas' && c.items && c.items.some(a => lt - a > 0 && lt - a < .3)) ? 1 : 0, bob, hop, surprise: e.tipo === 'cifra' && lt > c.settle && lt < c.settle + .8 ? 1 : 0 });
   contenido(k, s, lt, th);
+  // pistas numeradas: la etiqueta sale desde el primer instante («Primera pista: …»)
+  const mp = /^(primera|segunda|tercera|cuarta|quinta) pista/i.exec(e.texto || '');
+  if (mp) { const n = { primera: 1, segunda: 2, tercera: 3, cuarta: 4, quinta: 5 }[mp[1].toLowerCase()], et = 'PISTA ' + n, w = textW(et, 2) + 16, x = Math.round(L.area.x + L.area.w / 2 - w / 2), p = clamp(lt / .25, 0, 1);
+    if (p > 0) { win(fb, x, L.area.y - 2 - Math.round((1 - eo(p)) * 10), w, 22, th.skin); textOutlined(fb, et, x + 8, L.area.y + 4 - Math.round((1 - eo(p)) * 10), C.yellow, C.ink, 2); } }
   dialogo(s, lt, th, top);
   hud(s, th, top);
   return LUTOF[eraOf(s)];
@@ -468,7 +519,7 @@ function frame(t) {
   else if (k + 1 < segs.length && t > segs[k + 1].start - PRE(k + 1)) { a = k; b = k + 1; p = (t - (segs[k + 1].start - PRE(k + 1))) / (PRE(k + 1) + POST(k + 1)); }
   if (a < 0) {
     fb.clear(C.ink); const lut = renderSeg(k, t, true);
-    let Lx = lut; if (t < .3) Lx = darken(lut, 1 - t / .3); if (t > D.dur - .4) Lx = darken(lut, (t - (D.dur - .4)) / .4);
+    let Lx = lut; if (t > D.dur - .4) Lx = darken(lut, (t - (D.dur - .4)) / .4);
     out.present(fb, Lx); const cz = segs[k].kind === 'escena' && segs[k].escena.tipo === 'microscopio' ? { z: 1, fx: W / 2, fy: H / 2 } : segs[k].kind === 'escena' ? camZoom(k, t - segs[k].start) : { z: 1 + .06 * Math.sin((t - segs[k].start) * 1.5) ** 2, fx: W / 2, fy: H / 2 };
     show(cz.z, cz.fx, cz.fy, true, Lx); return;
   }

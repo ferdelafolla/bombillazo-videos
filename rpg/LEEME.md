@@ -47,3 +47,11 @@ Escenas `"tipo": "microscopio"` con `modo` (aire, choque, aprieta, plasma, ablac
 
 ## Voz (19/10/2026, tarde)
 El usuario permite ElevenLabs: voz de Lucía (s4NXWwstm4IwAI2dMQ6M, eleven_v4, flow iCDihYNOXi9OepCkoz8S, 1 generación por capítulo). Descarga por el relevo (`descargas/el_<id>_<capítulo>.url`). Para el ritmo pausado, `python3 rpg/respirar.py entrada.mp3 salida.mp3` alarga cada pausa +0,55 s antes de calcular los tiempos. `sub_es`/`final_es` de Lucía: `remotion/public/voces_lucia/` (o `voces/sub_es.mp3`, `voces/final_es.mp3`).
+
+## Estructura «reel explicativo» (20/10/2026)
+Todos los vídeos siguen esta fórmula (campo `estructura` del guion):
+1. **Lo raro, en el primer segundo**: la primera escena es un `titulo` con la pregunta rara (p. ej. «¿HIELO SIN FRÍO?»); el motor lo muestra al instante, sin animación de entrada.
+2. **Cada frase, cuando se oye**: `sincroniza()` en `page/main.js` hace que cada tarjeta, cifra, lado de `comparar` o icono aparezca justo cuando la voz dice su palabra (`destacar`). Las pistas numeradas («Primera pista: …») llevan la etiqueta PISTA N desde el principio.
+3. **La respuesta, al final**: capítulos gancho → pistas → microscopio → curiosidad → respuesta («Entonces, ¿por qué…?») → cierre. Los Shorts acaban con un `remate` que es la pregunta, para llevar al vídeo largo.
+
+Temas: cosas del día a día ligadas a UNA sola tendencia de Google Trends. Iconos en 3D (three.js, `page/three3d.js`) y textos siempre centrados.
