@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "historyId": "fd83f101-0d72-4711-89c8-6d28fd70b9c9",
+  "currentRevision": "80bb5ec5-7d07-466b-9c79-6d04cc4d9713",
+  "pendingChanges": false,
+  "files": {
+    "audio/2026-10-22_largo_granizo_curiosidad.mp3": {
+      "hash": "5cb6d3e1ab159fdd730f032d6987482724db3a6469ec0fc76e4527f0cf47bc29",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/5c/5cb6d3e1ab159fdd730f032d6987482724db3a6469ec0fc76e4527f0cf47bc29"
+    },
+    "audio/2026-10-22_largo_granizo_short2_gancho.mp3": {
+      "hash": "034f6cf6bfded78e8dfaccea9514fb92dbc72ca8f3482d23619fb38f2f72f2b0",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/03/034f6cf6bfded78e8dfaccea9514fb92dbc72ca8f3482d23619fb38f2f72f2b0"
+    },
+    "audio/final_es.mp3": {
+      "hash": "335f509b243204b7b69b68dd3d0cacaee49efd3d9847c44ed3dfdaee4fc3fac2",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/33/335f509b243204b7b69b68dd3d0cacaee49efd3d9847c44ed3dfdaee4fc3fac2"
+    },
+    "data.js": {
+      "hash": "d85f0f63d239fb7cf34061809b6a363350ce38ec4a5d9493015e8129d2149d15",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/d8/d85f0f63d239fb7cf34061809b6a363350ce38ec4a5d9493015e8129d2149d15"
+    },
+    "engine.js": {
+      "hash": "36a7d887a6ea083261b05168f6c04f3f6ecf7e9c82a9928af8a521ed481a032a",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/36/36a7d887a6ea083261b05168f6c04f3f6ecf7e9c82a9928af8a521ed481a032a"
+    },
+    "fotos/fumarola.jpg": {
+      "hash": "3a46fe04a3444acfcd2c81b9c466465f2cb7678cdc0853e9340ee22f5035932f",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/3a/3a46fe04a3444acfcd2c81b9c466465f2cb7678cdc0853e9340ee22f5035932f"
+    },
+    "fotos/mar_muerto.jpg": {
+      "hash": "e16cf4e7ad2668fc867e196faeb36f1001ab6cf2115d11107c0c7bfc8b7c3a74",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/e1/e16cf4e7ad2668fc867e196faeb36f1001ab6cf2115d11107c0c7bfc8b7c3a74"
+    },
+    "fotos/nasdaq.jpg": {
+      "hash": "637fcc4e61e23d843db9691c8017187316361a06d7f84e64329cf04158688dbf",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/63/637fcc4e61e23d843db9691c8017187316361a06d7f84e64329cf04158688dbf"
+    },
+    "fotos/newton.jpg": {
+      "hash": "277b3081fdab84e01252dd6763b36106e0ad3d3f175e99dfeed24651de3a0a8b",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/27/277b3081fdab84e01252dd6763b36106e0ad3d3f175e99dfeed24651de3a0a8b"
+    },
+    "fotos/salinas.jpg": {
+      "hash": "74c6bf59547ff1a15a0781fd6e7f0968899e8cd82ad8196851a39e38958db0e7",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/74/74c6bf59547ff1a15a0781fd6e7f0968899e8cd82ad8196851a39e38958db0e7"
+    },
+    "fotos/servidores.jpg": {
+      "hash": "69bae53d2a3934e4abae40ba5fe0974996c0db1808f38bb28029c3ad8bad5a63",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/69/69bae53d2a3934e4abae40ba5fe0974996c0db1808f38bb28029c3ad8bad5a63"
+    },
+    "fotos/tierra_noche.jpg": {
+      "hash": "a01926ecca028f7a74e6c2548924dbe9e851eee4f182cd65b6f11a57f9a65792",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/a0/a01926ecca028f7a74e6c2548924dbe9e851eee4f182cd65b6f11a57f9a65792"
+    },
+    "gsap.min.js": {
+      "hash": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/c1/c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+    },
+    "hyperframes.json": {
+      "hash": "53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
+    },
+    "index.html": {
+      "hash": "662b1e077fd7f31ddd44ce0ba8d37ab845bce91da62d8b73657fb96dec075225",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/66/662b1e077fd7f31ddd44ce0ba8d37ab845bce91da62d8b73657fb96dec075225"
+    },
+    "meta.json": {
+      "hash": "ea355d4870d8322c6cdd3f2986f4d97a6363420e58ee6594a1033f66a37b65e3",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/ea/ea355d4870d8322c6cdd3f2986f4d97a6363420e58ee6594a1033f66a37b65e3"
+    },
+    "package.json": {
+      "hash": "69c72587c527a1121eb790758dd8606d8bd49f31dacee8cc9eb755c31817f5dd",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/69/69c72587c527a1121eb790758dd8606d8bd49f31dacee8cc9eb755c31817f5dd"
+    },
+    "render.log": {
+      "hash": "f850f03f43d86a509efa5dfc5f0d88cd080fcbee90828343c22e12573590578e",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/f8/f850f03f43d86a509efa5dfc5f0d88cd080fcbee90828343c22e12573590578e"
+    },
+    "audio/musica_y_efectos.wav": {
+      "hash": "c6912f0a7e43a64e2ac1f420550c4d3ba0d776b163a59e2de2f13df81caf1de4",
+      "content": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/c6/c6912f0a7e43a64e2ac1f420550c4d3ba0d776b163a59e2de2f13df81caf1de4"
+    }
+  },
+  "revisions": {
+    "80bb5ec5-7d07-466b-9c79-6d04cc4d9713": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1792504440474,
+      "endedAt": 1792504440530,
+      "files": {
+        "engine.js": {
+          "before": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/e8/e8147985746a2aa907824f01fea4888c7c544bcc81879fcf5d16a8e1043f697a",
+          "after": "/root/.cache/hyperframes/history/fd83f101-0d72-4711-89c8-6d28fd70b9c9/blobs/36/36a7d887a6ea083261b05168f6c04f3f6ecf7e9c82a9928af8a521ed481a032a"
+        }
+      }
+    }
+  },
+  "checks": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "snapshots": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "f189f314-7947-47e4-82b7-f189ee224143",
+      "completedAt": 1792504494437,
+      "output": "/home/claude/hf/granizo_Short2/renders/x.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}

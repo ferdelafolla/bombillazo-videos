@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "historyId": "c39f1177-9f96-41e5-a3b1-ef9db7738c5b",
+  "currentRevision": null,
+  "pendingChanges": false,
+  "files": {
+    "audio/2026-10-22_largo_granizo_cierre.mp3": {
+      "hash": "79ae55b9be3b88efd20c2a9cedaa53b0e11afd2b5e8c2ebef7156fe45967b446",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/79/79ae55b9be3b88efd20c2a9cedaa53b0e11afd2b5e8c2ebef7156fe45967b446"
+    },
+    "audio/2026-10-22_largo_granizo_curiosidad.mp3": {
+      "hash": "5cb6d3e1ab159fdd730f032d6987482724db3a6469ec0fc76e4527f0cf47bc29",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/5c/5cb6d3e1ab159fdd730f032d6987482724db3a6469ec0fc76e4527f0cf47bc29"
+    },
+    "audio/2026-10-22_largo_granizo_gancho.mp3": {
+      "hash": "bcb673b8713674556c4a974bd4097a24922c64c8e5f980042ec762cfb556fec2",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/bc/bcb673b8713674556c4a974bd4097a24922c64c8e5f980042ec762cfb556fec2"
+    },
+    "audio/2026-10-22_largo_granizo_micro.mp3": {
+      "hash": "9152651860f505f84c446c2a314947cbd6037caa6d4dd5b991607bdcf6a5467a",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/91/9152651860f505f84c446c2a314947cbd6037caa6d4dd5b991607bdcf6a5467a"
+    },
+    "audio/2026-10-22_largo_granizo_pistas.mp3": {
+      "hash": "b44d74abde96c4a1503ff62fcd06bccbbd1ef11f350a41644d069cce8d0db882",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/b4/b44d74abde96c4a1503ff62fcd06bccbbd1ef11f350a41644d069cce8d0db882"
+    },
+    "audio/2026-10-22_largo_granizo_respuesta.mp3": {
+      "hash": "ac101bb3489b63a4338bcb58d75920ead41625cb429c86d013b8cf90f0427921",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/ac/ac101bb3489b63a4338bcb58d75920ead41625cb429c86d013b8cf90f0427921"
+    },
+    "audio/sub_es.mp3": {
+      "hash": "3570cf78220089bca6ef4e672ca3cb8369c4f96c1d85b2c95da2be910ad0c4a2",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/35/3570cf78220089bca6ef4e672ca3cb8369c4f96c1d85b2c95da2be910ad0c4a2"
+    },
+    "data.js": {
+      "hash": "1a143477f41c9eba814e6c9242703f7e993dd911900dad878d31740bec06f796",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/1a/1a143477f41c9eba814e6c9242703f7e993dd911900dad878d31740bec06f796"
+    },
+    "engine.js": {
+      "hash": "e8147985746a2aa907824f01fea4888c7c544bcc81879fcf5d16a8e1043f697a",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/e8/e8147985746a2aa907824f01fea4888c7c544bcc81879fcf5d16a8e1043f697a"
+    },
+    "fotos/fumarola.jpg": {
+      "hash": "3a46fe04a3444acfcd2c81b9c466465f2cb7678cdc0853e9340ee22f5035932f",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/3a/3a46fe04a3444acfcd2c81b9c466465f2cb7678cdc0853e9340ee22f5035932f"
+    },
+    "fotos/mar_muerto.jpg": {
+      "hash": "e16cf4e7ad2668fc867e196faeb36f1001ab6cf2115d11107c0c7bfc8b7c3a74",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/e1/e16cf4e7ad2668fc867e196faeb36f1001ab6cf2115d11107c0c7bfc8b7c3a74"
+    },
+    "fotos/nasdaq.jpg": {
+      "hash": "637fcc4e61e23d843db9691c8017187316361a06d7f84e64329cf04158688dbf",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/63/637fcc4e61e23d843db9691c8017187316361a06d7f84e64329cf04158688dbf"
+    },
+    "fotos/newton.jpg": {
+      "hash": "277b3081fdab84e01252dd6763b36106e0ad3d3f175e99dfeed24651de3a0a8b",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/27/277b3081fdab84e01252dd6763b36106e0ad3d3f175e99dfeed24651de3a0a8b"
+    },
+    "fotos/salinas.jpg": {
+      "hash": "74c6bf59547ff1a15a0781fd6e7f0968899e8cd82ad8196851a39e38958db0e7",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/74/74c6bf59547ff1a15a0781fd6e7f0968899e8cd82ad8196851a39e38958db0e7"
+    },
+    "fotos/servidores.jpg": {
+      "hash": "69bae53d2a3934e4abae40ba5fe0974996c0db1808f38bb28029c3ad8bad5a63",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/69/69bae53d2a3934e4abae40ba5fe0974996c0db1808f38bb28029c3ad8bad5a63"
+    },
+    "fotos/tierra_noche.jpg": {
+      "hash": "a01926ecca028f7a74e6c2548924dbe9e851eee4f182cd65b6f11a57f9a65792",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/a0/a01926ecca028f7a74e6c2548924dbe9e851eee4f182cd65b6f11a57f9a65792"
+    },
+    "gsap.min.js": {
+      "hash": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/c1/c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280"
+    },
+    "hyperframes.json": {
+      "hash": "53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/53/53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
+    },
+    "index.html": {
+      "hash": "a347386af82d45e30979a387850fe4e1fb4a4d7abb04a3e19131804c54472c23",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/a3/a347386af82d45e30979a387850fe4e1fb4a4d7abb04a3e19131804c54472c23"
+    },
+    "meta.json": {
+      "hash": "ba9abd7468d3dca1ae004a9f8f615d0450f61216d875f68e89bec8abd9074420",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/ba/ba9abd7468d3dca1ae004a9f8f615d0450f61216d875f68e89bec8abd9074420"
+    },
+    "package.json": {
+      "hash": "a93f20cf90e5a6438bb3b1c874769c2698df99d317821f3a5b26be93896d3d75",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/a9/a93f20cf90e5a6438bb3b1c874769c2698df99d317821f3a5b26be93896d3d75"
+    },
+    "render.log": {
+      "hash": "69274bd9e6889157069755a9b6b4353d4757d7a36656cca44fafd42421954427",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/69/69274bd9e6889157069755a9b6b4353d4757d7a36656cca44fafd42421954427"
+    },
+    "audio/musica_y_efectos.wav": {
+      "hash": "08da060274cde4caf27ec2ed57376c5597eab6ef7313458f2e0a5936279d6069",
+      "content": "/root/.cache/hyperframes/history/c39f1177-9f96-41e5-a3b1-ef9db7738c5b/blobs/08/08da060274cde4caf27ec2ed57376c5597eab6ef7313458f2e0a5936279d6069"
+    }
+  },
+  "revisions": {},
+  "checks": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "snapshots": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "2244e817-6d8d-466b-8111-db0cdcf0b549",
+      "completedAt": 1792494748258,
+      "output": "/home/claude/hf/granizo_Largo/renders/x.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}
