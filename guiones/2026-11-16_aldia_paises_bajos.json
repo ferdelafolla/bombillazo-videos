@@ -35,7 +35,10 @@
     "nombre": "LA CASA DE ORANGE",
     "nota": "EL NARANJA"
    }
-  ]
+  ],
+  "nombres": {
+   "naranja": "LA CASA DE ORANGE"
+  }
  },
  "capitulos": [
   {

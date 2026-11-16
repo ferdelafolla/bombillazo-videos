@@ -49,6 +49,6 @@ run('node', 'render.mjs', 'Short1', f'{o}_mudo.mp4', '--d', gid, '--v', cwd=f'{R
 run('python3', 'audio_rpg.py', f'page/data/{gid}/Short1.json', f'{o}_mudo.ev.json', VD, f'{o}.wav', cwd=f'{R}/rpg')
 run('sh', f'{R}/remotion/audio/unir.sh', f'{o}_mudo.mp4', f'{o}.wav', f'{o}_mix.mp4')
 os.makedirs(f'{R}/videos', exist_ok=True)
-run('ffmpeg', '-v', 'error', '-y', '-i', f'{o}_mix.mp4', '-vf', 'scale=1080:1920:flags=neighbor', '-c:v', 'libx264', '-preset', 'slow', '-crf', '17',
+run('ffmpeg', '-v', 'error', '-y', '-i', f'{o}_mix.mp4', '-vf', ('fps=12,fps=24,' if '--doce' in sys.argv else '') + 'scale=1080:1920:flags=neighbor', '-c:v', 'libx264', '-preset', 'slow', '-crf', '17',
     '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-c:a', 'copy', '-movflags', '+faststart', f'{R}/videos/{gid}.mp4')
 print('OK', f'videos/{gid}.mp4', dur(f'{R}/videos/{gid}.mp4'))

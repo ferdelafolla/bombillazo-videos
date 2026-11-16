@@ -23,7 +23,7 @@
     "nota": "NOCHE DESPEJADA"
    },
    {
-    "lugar": "cielo",
+    "lugar": "nube",
     "era": "snes",
     "nombre": "EL CIELO",
     "nota": "LAS NUBES, MANTA"
@@ -77,7 +77,7 @@
   },
   {
    "id": "manta",
-   "lugar": "cielo",
+   "lugar": "nube",
    "escenas": [
     {
      "texto": "Las nubes hacen de manta.",

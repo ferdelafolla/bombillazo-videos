@@ -222,7 +222,7 @@ function dialogo(s, lt, th, fb) {
 
 // —— HUD: chapa de la marca + lugar ——
 function hud(s, th, fb) {
-  const lug = NOMBRE[lugarOf(s)], a = 'CHISPAZO', w = textW(a) + textW(lug) + 22;
+  const lug = (RPG && RPG.nombres && RPG.nombres[s.cap]) || NOMBRE[lugarOf(s)], a = 'CHISPAZO', w = textW(a) + textW(lug) + 22;
   win(fb, 4, L.hud, w, 15, th.skin);
   text(fb, a, 10, L.hud + 4, th.skin === 'gb' ? GBI[0] : C.yellow, th.sh);
   text(fb, lug, 16 + textW(a), L.hud + 4, th.skin === 'gb' ? GBI[1] : C.silver, th.sh);
