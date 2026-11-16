@@ -1,0 +1,163 @@
+{
+ "id": "2026-11-16_curiosidades_heladas",
+ "titulo": "¿Por qué hiela más sin nubes? ❄️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "tendencia": "Google Trends ES «el tiempo madrid», 200+ búsquedas (GB «weather», 20.000+)",
+ "fuentes": [
+  "Met Office: How does frost form?",
+  "Maldita Ciencia: por qué hiela más con cielos despejados"
+ ],
+ "remate": "¿POR QUÉ HIELA SIN NUBES?",
+ "rpg": {
+  "gancho_lugar": "hoy",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "hoy",
+    "era": "snes",
+    "nombre": "MADRID",
+    "nota": "NOCHE DESPEJADA"
+   },
+   {
+    "lugar": "cielo",
+    "era": "snes",
+    "nombre": "EL CIELO",
+    "nota": "LAS NUBES, MANTA"
+   },
+   {
+    "lugar": "montana",
+    "era": "nes",
+    "nombre": "EL AMANECER",
+    "nota": "ESCARCHA"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "hoy",
+   "escenas": [
+    {
+     "texto": "Todo el mundo mira el tiempo en Madrid… ¿pero sabes por qué hiela más cuando no hay nubes?",
+     "tipo": "titulo",
+     "icono": "termometro",
+     "texto_grande": "¿HIELA SIN NUBES?",
+     "destacar": [
+      "hiela",
+      "nubes?"
+     ]
+    },
+    {
+     "texto": "Por la noche, el suelo suelta el calor que guardó durante el día.",
+     "tipo": "icono",
+     "icono": "sol",
+     "destacar": [
+      "suelo",
+      "calor"
+     ]
+    },
+    {
+     "texto": "Lo suelta hacia arriba, como una luz invisible: radiación infrarroja.",
+     "tipo": "tarjetas",
+     "items": [
+      "RADIACIÓN",
+      "INFRARROJA"
+     ],
+     "icono": "rayo",
+     "destacar": [
+      "invisible:",
+      "infrarroja."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "manta",
+   "lugar": "cielo",
+   "escenas": [
+    {
+     "texto": "Las nubes hacen de manta.",
+     "tipo": "icono",
+     "icono": "nube",
+     "destacar": [
+      "manta."
+     ]
+    },
+    {
+     "texto": "Devuelven parte de ese calor hacia el suelo.",
+     "tipo": "grafica",
+     "forma": "suave",
+     "etiquetas": [
+      "CALOR"
+     ],
+     "destacar": [
+      "Devuelven",
+      "suelo."
+     ]
+    },
+    {
+     "texto": "Sin nubes, el calor se escapa hacia el espacio, y el suelo se enfría cada vez más.",
+     "tipo": "comparar",
+     "izq": "CON NUBES",
+     "der": "SIN NUBES",
+     "destacar": [
+      "escapa",
+      "enfría"
+     ]
+    },
+    {
+     "texto": "Por eso, el momento más frío suele llegar justo al amanecer.",
+     "tipo": "grafica",
+     "forma": "cae",
+     "etiquetas": [
+      "TEMPERATURA"
+     ],
+     "destacar": [
+      "frío",
+      "amanecer."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "escarcha",
+   "lugar": "montana",
+   "era": "nes",
+   "escenas": [
+    {
+     "texto": "Curiosidad: en la escarcha, el vapor de agua del aire se convierte en hielo directamente, sin pasar por agua líquida.",
+     "tipo": "tarjetas",
+     "items": [
+      "VAPOR",
+      "→ HIELO"
+     ],
+     "icono": "copo",
+     "destacar": [
+      "Curiosidad:",
+      "hielo"
+     ]
+    },
+    {
+     "texto": "Se llama deposición.",
+     "tipo": "titulo",
+     "icono": "copo",
+     "texto_grande": "DEPOSICIÓN",
+     "destacar": [
+      "deposición."
+     ]
+    },
+    {
+     "texto": "Suscríbete para más ciencia y curiosidades, y en el canal tienes muchas más.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

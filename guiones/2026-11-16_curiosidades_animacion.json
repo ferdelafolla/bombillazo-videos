@@ -1,0 +1,164 @@
+{
+ "id": "2026-11-16_curiosidades_animacion",
+ "titulo": "¿Cuántos dibujos hay en un segundo de animación? ✏️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "tendencia": "Google Trends US «florence pugh», 2000+ búsquedas (Governors Awards, 15/11/2026)",
+ "fuentes": [
+  "Academia: Governors Awards 2026",
+  "Outlook India: Floyd Norman",
+  "Wikipedia: Frame rate; Inbetweening (animar a dos)"
+ ],
+ "remate": "¿CUÁNTOS DIBUJOS POR SEGUNDO?",
+ "rpg": {
+  "gancho_lugar": "hoy",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "hoy",
+    "era": "snes",
+    "nombre": "HOLLYWOOD",
+    "nota": "ÓSCAR HONORÍFICO"
+   },
+   {
+    "lugar": "datos",
+    "era": "nes",
+    "nombre": "EL PROYECTOR",
+    "nota": "24 POR SEGUNDO"
+   },
+   {
+    "lugar": "mirador",
+    "era": "gb",
+    "nombre": "EL ESTUDIO",
+    "nota": "ANIMAR A DOS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "oscar",
+   "lugar": "hoy",
+   "escenas": [
+    {
+     "texto": "Hollywood acaba de entregar sus Óscar honoríficos… y uno es para un dibujante.",
+     "tipo": "titulo",
+     "icono": "copa",
+     "texto_grande": "¿UN ÓSCAR A UN DIBUJANTE?",
+     "destacar": [
+      "Óscar",
+      "dibujante."
+     ]
+    },
+    {
+     "texto": "Floyd Norman entró en Disney en mil novecientos cincuenta y seis. Fue el primer animador negro del estudio.",
+     "tipo": "cifra",
+     "valor": "1956",
+     "etiqueta": "FLOYD NORMAN ENTRA EN DISNEY",
+     "icono": "lapiz",
+     "destacar": [
+      "cincuenta",
+      "seis.",
+      "primer"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "segundo",
+   "lugar": "datos",
+   "era": "nes",
+   "escenas": [
+    {
+     "texto": "¿Pero cuántos dibujos hacen falta para un segundo de animación?",
+     "tipo": "titulo",
+     "icono": "lapiz",
+     "texto_grande": "¿CUÁNTOS POR SEGUNDO?",
+     "destacar": [
+      "dibujos",
+      "segundo"
+     ]
+    },
+    {
+     "texto": "El cine proyecta veinticuatro imágenes por segundo.",
+     "tipo": "cifra",
+     "valor": "24",
+     "etiqueta": "IMÁGENES POR SEGUNDO",
+     "icono": "pelicula",
+     "destacar": [
+      "veinticuatro"
+     ]
+    },
+    {
+     "texto": "Se eligió con la llegada del cine sonoro: el oído nota enseguida si la velocidad cambia.",
+     "tipo": "icono",
+     "icono": "pelicula",
+     "destacar": [
+      "sonoro:",
+      "oído"
+     ]
+    },
+    {
+     "texto": "Pero muchos dibujos animados repiten cada dibujo dos veces.",
+     "tipo": "tarjetas",
+     "items": [
+      "DIBUJO 1",
+      "DIBUJO 1",
+      "DIBUJO 2",
+      "DIBUJO 2"
+     ],
+     "icono": "lapiz",
+     "destacar": [
+      "repiten",
+      "dos"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dos",
+   "lugar": "mirador",
+   "escenas": [
+    {
+     "texto": "Doce dibujos por segundo.",
+     "tipo": "cifra",
+     "valor": "12",
+     "etiqueta": "DIBUJOS POR SEGUNDO",
+     "icono": "lapiz",
+     "destacar": [
+      "Doce"
+     ]
+    },
+    {
+     "texto": "Se llama animar a dos, y tu cerebro lo ve como un movimiento continuo.",
+     "tipo": "comparar",
+     "izq": "24 IMÁGENES",
+     "der": "12 DIBUJOS",
+     "destacar": [
+      "animar",
+      "continuo."
+     ]
+    },
+    {
+     "texto": "Curiosidad: este vídeo también está hecho así, a doce dibujos por segundo.",
+     "tipo": "titulo",
+     "icono": "pelicula",
+     "texto_grande": "ESTE VÍDEO: 12 POR SEGUNDO",
+     "destacar": [
+      "Curiosidad:",
+      "doce"
+     ]
+    },
+    {
+     "texto": "Suscríbete para más ciencia y curiosidades, y en el canal tienes muchas más.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

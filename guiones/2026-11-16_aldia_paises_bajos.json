@@ -1,0 +1,150 @@
+{
+ "id": "2026-11-16_aldia_paises_bajos",
+ "titulo": "¿Por qué Países Bajos juega de naranja? 🧡",
+ "serie": "HOY",
+ "lang": "es",
+ "tendencia": "Google Trends ES «selección de fútbol de los países bajos», 500+ búsquedas",
+ "fuentes": [
+  "Fotmob: Países Bajos 7-0 Grecia (13/11/2026)",
+  "Goal: iguala la mayor goleada de la Liga de Naciones",
+  "Flashscore: Xavi, seleccionador de Países Bajos"
+ ],
+ "remate": "¿POR QUÉ JUEGAN DE NARANJA?",
+ "rpg": {
+  "gancho_lugar": "hoy",
+  "fin": [
+   "MÁS DEPORTES",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "hoy",
+    "era": "snes",
+    "nombre": "EL ESTADIO",
+    "nota": "7 - 0"
+   },
+   {
+    "lugar": "cruce",
+    "era": "snes",
+    "nombre": "EL BANQUILLO",
+    "nota": "XAVI"
+   },
+   {
+    "lugar": "londres",
+    "era": "gb",
+    "nombre": "LA CASA DE ORANGE",
+    "nota": "EL NARANJA"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "partido",
+   "lugar": "hoy",
+   "escenas": [
+    {
+     "texto": "¡Siete a cero! Todo el mundo busca a la selección de los Países Bajos.",
+     "tipo": "titulo",
+     "icono": "balon",
+     "texto_grande": "¡7 A 0!",
+     "destacar": [
+      "Siete",
+      "cero!"
+     ]
+    },
+    {
+     "texto": "El viernes, en la Liga de Naciones, goleó a Grecia.",
+     "tipo": "comparar",
+     "izq": "PAÍSES BAJOS",
+     "der": "GRECIA",
+     "destacar": [
+      "goleó",
+      "Grecia."
+     ]
+    },
+    {
+     "texto": "Siete goles. Ninguno en contra.",
+     "tipo": "cifra",
+     "valor": "7 - 0",
+     "etiqueta": "SIN GOLES EN CONTRA",
+     "icono": "balon",
+     "destacar": [
+      "Siete",
+      "Ninguno"
+     ]
+    },
+    {
+     "texto": "Tijjani Reijnders marcó tres: un triplete.",
+     "tipo": "cifra",
+     "valor": "×3",
+     "etiqueta": "TRIPLETE DE REIJNDERS",
+     "icono": "balon",
+     "destacar": [
+      "tres:",
+      "triplete."
+     ]
+    },
+    {
+     "texto": "Con este siete a cero, Países Bajos iguala la mayor goleada de la historia de la Liga de Naciones.",
+     "tipo": "icono",
+     "icono": "copa",
+     "destacar": [
+      "iguala",
+      "goleada"
+     ]
+    },
+    {
+     "texto": "¿Y el entrenador? Es español: Xavi Hernández.",
+     "tipo": "tarjetas",
+     "items": [
+      "SELECCIONADOR",
+      "XAVI HERNÁNDEZ"
+     ],
+     "icono": "personas",
+     "destacar": [
+      "español:",
+      "Xavi"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "naranja",
+   "lugar": "londres",
+   "era": "nes",
+   "escenas": [
+    {
+     "texto": "Curiosidad: ¿por qué juegan de naranja, si su bandera es roja, blanca y azul?",
+     "tipo": "titulo",
+     "icono": "escudo",
+     "texto_grande": "¿POR QUÉ NARANJA?",
+     "destacar": [
+      "Curiosidad:",
+      "naranja,"
+     ]
+    },
+    {
+     "texto": "Por la familia real, la Casa de Orange. Y su primera bandera sí era naranja, blanca y azul.",
+     "tipo": "tarjetas",
+     "items": [
+      "NARANJA",
+      "BLANCO",
+      "AZUL"
+     ],
+     "icono": "escudo",
+     "destacar": [
+      "Orange.",
+      "naranja,"
+     ]
+    },
+    {
+     "texto": "Suscríbete para más deportes, y en el canal tienes muchas más historias como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

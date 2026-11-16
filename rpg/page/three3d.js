@@ -103,6 +103,59 @@ MODELOS.nube = r => {
   for (const [x, y, z, s] of [[0, .2, 0, 1], [-.9, -.1, .1, .75], [.9, -.1, 0, .8], [-.4, .7, -.1, .7], [.45, .65, .1, .65], [0, -.35, .3, .7]]) { const e = esfera(s, C.white, 14); e.position.set(x, y, z); r.add(e); }
   const base = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, .3, 20), mat(C.silver)); base.position.y = -.55; r.add(base);
 };
+
+// —— 16/11/2026: tren, vías, reloj, balón, copa, termómetro, copo, lápiz, película ——
+const caja3 = (w, h, d, ci) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat(ci));
+const cil = (rt, rb, h, ci, seg = 16) => new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat(ci));
+MODELOS.tren = r => {   // AVE: cuerpo blanco, morro afilado, franja roja y ventanillas
+  const b = caja3(2.2, .62, .7, C.white); r.add(b);
+  const m = new THREE.Mesh(new THREE.ConeGeometry(.42, 1.1, 4), mat(C.white)); m.rotation.z = -Math.PI / 2; m.rotation.x = Math.PI / 4; m.scale.set(1, 1, .8); m.position.x = 1.65; r.add(m);
+  const f = caja3(2.22, .1, .72, C.red); f.position.y = -.12; r.add(f);
+  for (let i = 0; i < 5; i++) { const v = caja3(.26, .16, .74, C.navy); v.position.set(-.85 + i * .38, .12, 0); r.add(v); }
+  for (const x of [-.8, .6]) for (const z of [-.3, .3]) { const w = cil(.13, .13, .08, C.ink, 12); w.rotation.x = Math.PI / 2; w.position.set(x, -.38, z); r.add(w); }
+  r.rotation.x = .25; r.scale.setScalar(.95);
+};
+MODELOS.vias = r => {   // dos raíles sobre traviesas (el ancho de vía)
+  for (let i = 0; i < 7; i++) { const t = caja3(1.8, .1, .22, C.brown); t.position.z = -1.5 + i * .5; r.add(t); }
+  for (const x of [-.62, .62]) { const ra = caja3(.1, .14, 3.4, C.silver); ra.position.set(x, .12, 0); r.add(ra); }
+  r.rotation.x = .7;
+};
+MODELOS.reloj = r => {
+  const c = cil(1.1, 1.1, .3, C.red, 28); c.rotation.x = Math.PI / 2; r.add(c);
+  const e = cil(.95, .95, .32, C.white, 28); e.rotation.x = Math.PI / 2; r.add(e);
+  const h = caja3(.1, .55, .05, C.ink); h.position.set(0, .25, .2); h.name = 'aguja'; r.add(h);
+  const m = caja3(.08, .75, .05, C.ink); m.position.set(.25, .12, .2); m.rotation.z = -1; r.add(m);
+};
+MODELOS.balon = r => {
+  r.add(esfera(1.05, C.white, 20));
+  for (const [x, y, z] of [[0, 0, 1], [.85, .3, .45], [-.85, .3, .45], [0, .95, .2], [.5, -.75, .45], [-.5, -.75, .45]]) { const p = esfera(.32, C.ink, 8); p.position.set(x * .88, y * .88, z * .88); r.add(p); }
+};
+MODELOS.copa = r => {
+  const c = cil(.75, .25, 1, C.amber, 20); c.position.y = .45; r.add(c);
+  const p = cil(.1, .1, .5, C.amber); p.position.y = -.3; r.add(p);
+  const b = caja3(.9, .3, .6, C.orange); b.position.y = -.65; r.add(b);
+  for (const x of [-.82, .82]) { const a = new THREE.Mesh(new THREE.TorusGeometry(.22, .06, 8, 16), mat(C.amber)); a.position.set(x, .55, 0); r.add(a); }
+};
+MODELOS.termometro = r => {
+  const t = cil(.18, .18, 2, C.white); t.position.y = .2; r.add(t);
+  const l = cil(.1, .1, .5, C.blue); l.position.y = -.6; l.position.z = .1; r.add(l);
+  const b = esfera(.35, C.blue, 14); b.position.y = -.9; r.add(b);
+};
+MODELOS.copo = r => {
+  for (let i = 0; i < 3; i++) { const a = caja3(2.2, .14, .14, C.cyan); a.rotation.z = i * Math.PI / 3; r.add(a);
+    for (const s of [-1, 1]) for (const k of [-1, 1]) { const ra = caja3(.5, .1, .1, C.white); const ang = i * Math.PI / 3; ra.position.set(Math.cos(ang) * .65 * s, Math.sin(ang) * .65 * s, 0); ra.rotation.z = ang + k * .8; r.add(ra); } }
+};
+MODELOS.lapiz = r => {
+  const c = cil(.25, .25, 2, C.yellow, 6); r.add(c);
+  const p = new THREE.Mesh(new THREE.ConeGeometry(.25, .55, 6), mat(C.tan)); p.position.y = -1.27; p.rotation.z = Math.PI; r.add(p);
+  const g = cil(.26, .26, .3, C.pink, 6); g.position.y = 1.15; r.add(g);
+  r.rotation.z = .7;
+};
+MODELOS.pelicula = r => {   // tira de película con fotogramas
+  const b = caja3(2.6, 1, .08, C.ink); r.add(b);
+  for (let i = 0; i < 4; i++) { const f = caja3(.5, .6, .1, [C.yellow, C.cyan, C.yellow, C.cyan][i]); f.position.set(-.93 + i * .62, 0, .01); r.add(f); }
+  r.rotation.x = -.2;
+};
 export const tiene3D = n => HAY3D && !!MODELOS[n];
 
 // pinta un objeto 3D en el framebuffer: centro (cx, cy), tamaño en px, aparición p (0..1)

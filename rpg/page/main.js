@@ -449,7 +449,7 @@ function renderSeg(k, t, sep = false) {
     LUGARES.puerta(fb, camOf(k), t);
     const A = L.area, rem = s.remate || '¿QUIERES VER MÁS?', w = A.w;
     if (winA(A.x, A.y, w, 30, th.skin, lt, c.win)) { const ls = wrap(rem, w - 12); ls.slice(0, 2).forEach((ln, i) => centerText(ln, A.y + 6 + i * 10, C.pink, th.sh, 1, A.x, w)); }
-    const t2 = 'VÍDEO COMPLETO', t3 = 'EN EL CANAL';
+    const [t2, t3] = (RPG && RPG.fin) || ['VÍDEO COMPLETO', 'EN EL CANAL'];
     const nl = wrap(t2, (w - 10) / 2).length, hh = nl * 20 + 22;
     if (winA(A.x, A.y + 36, w, hh, th.skin, lt, c.big - .1)) { dropTitle(t2, A.x + w / 2, A.y + 43, w - 10, titleCol(th), lt, c.big); if (lt > c.big + .5) centerText(t3, A.y + 36 + hh - 14, C.cyan, th.sh, 1, A.x, w); }
     if (lt > c.big + .7) { const op = lt > c.tap ? 'SUSCRITO ✓' : '▶ CONTINUAR'; centerText(op, A.y + 44 + hh - (beatP(t) > .6 && lt < c.tap ? 1 : 0), C.yellow, th.sh, 1, A.x, w); }
