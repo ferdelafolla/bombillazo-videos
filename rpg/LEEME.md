@@ -55,3 +55,16 @@ Todos los vídeos siguen esta fórmula (campo `estructura` del guion):
 3. **La respuesta, al final**: capítulos gancho → pistas → microscopio → curiosidad → respuesta («Entonces, ¿por qué…?») → cierre. Los Shorts acaban con un `remate` que es la pregunta, para llevar al vídeo largo.
 
 Temas: cosas del día a día ligadas a UNA sola tendencia de Google Trends. Iconos en 3D (three.js, `page/three3d.js`) y textos siempre centrados.
+
+## Shorts diarios automáticos (17/11/2026)
+Receta probada el 16/11 (Renfe, heladas, animación, Países Bajos), publicada bien en YouTube, TikTok e Instagram:
+1. Guion JSON en `guiones/<fecha>_<serie>_<tema>.json` (mira `guiones/2026-11-16_*.json`): capítulos con `lugar`, escenas con `tipo`, `destacar` y `remate`; gancho → pregunta → bucles de curiosidad → respuesta → «Curiosidad: …» → cierre sin promesas.
+2. UNA voz por Short (Lucía, ElevenLabs, eleven_v4), una frase por escena separadas por línea en blanco. Relevo: `descargas/<id>.url` → `voces/<id>.mp3`.
+3. `python3 herramientas/short_rpg.py guiones/<id>.json voces/<id>.mp3 [--png 0.1,5,12]` → `videos/<id>.mp4` (Pixel RPG 3D, sin efectos de sonido, -14 LUFS, crf 17).
+4. Miniatura: fotograma del título → `miniaturas/<id>.jpg`.
+5. Push y Metricool con la URL raw fijada al commit: YouTube (short) + TikTok (+8 min) + Instagram Reel (+15 min).
+
+Lecciones de la automatización:
+- Las tareas programadas arrancan sin permiso de escritura en el repo: lo PRIMERO es `add_repo` (owner ferdelafolla, repo bombillazo-videos, access push) y clonar con el comando que devuelve. Sin esto el push da 403 y la tarea se paraba en 2 minutos sin hacer nada.
+- Instagram no deja poner el primer comentario desde Metricool: en Instagram no mandes `firstCommentText` (mete la pregunta al final del texto).
+- Si Metricool responde «You have reached your Metricool account limit», para, no reintentes y avisa: es el cupo mensual del plan.
