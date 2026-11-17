@@ -315,6 +315,49 @@ function nube(fb, cam, t) {
 // —— vida ambiente: cada sitio tiene algo que se mueve ——
 const fr = (t, k) => ((t * k) % 1 + 1) % 1;
 function pajaro(fb, x, y, t, col) { const a = Math.floor(t * 6) % 2; fb.px(x, y, col); fb.px(x - 1, y - a, col); fb.px(x - 2, y - 1 + a, col); fb.px(x + 1, y - a, col); fb.px(x + 2, y - 1 + a, col); }
+
+// —— 18/11/2026 (aviones): aeropuerto de noche, sala de radar y aerovías ——
+function aeropuerto(fb, cam, t) {
+  sky(fb, [C.ink, C.night, C.navy, C.plum]);
+  stars(fb, t, 26, FLOOR * .5);
+  slots(cam, .2, 40, (i, x) => { const h = 10 + Math.floor(hash(i, 5) * 14); fb.rect(x, FLOOR - 22 - h, 36, h, C.night); });
+  // terminal con cristaleras
+  slots(cam, .45, 130, (i, x) => { fb.rect(x, FLOOR - 34, 100, 26, C.dslate); fb.rect(x, FLOOR - 36, 100, 3, C.slate);
+    for (let wx = x + 4; wx < x + 96; wx += 8) fb.rect(wx, FLOOR - 30, 5, 10, hash(i * 9 + wx, 2) > .3 ? C.amber : C.navy);
+    // torre de control
+    if (i % 2 === 0) { fb.rect(x + 108, FLOOR - 70, 6, 62, C.silver); fb.rect(x + 100, FLOOR - 82, 22, 12, C.dslate); fb.rect(x + 102, FLOOR - 80, 18, 5, C.cyan); if (Math.floor(t * 2) % 2) fb.px(x + 111, FLOOR - 85, C.red); } });
+  // aviones aparcados (silueta)
+  slots(cam, .75, 90, (i, x) => { if (hash(i, 8) > .45) { fb.rect(x, FLOOR - 14, 34, 6, C.silver); fb.rect(x + 30, FLOOR - 13, 6, 4, C.white); fb.rect(x + 2, FLOOR - 24, 5, 10, C.red); fb.rect(x + 12, FLOOR - 10, 14, 2, C.slate); } });
+  // pista con luces
+  fb.rect(0, FLOOR, W, H - FLOOR, C.dslate); fb.hline(0, W - 1, FLOOR, C.slate);
+  const o = layer(cam, 1);
+  for (let x = -((o % 20) + 20) % 20; x < W; x += 20) { fb.rect(x, FLOOR + 10, 10, 2, C.white); fb.px(x + 4, FLOOR + 2, Math.floor(t * 3 + x) % 3 ? C.cyan : C.white); fb.px(x + 4, FLOOR + 20, C.amber); }
+}
+function radar(fb, cam, t) {
+  fb.rect(0, 0, W, H, C.ink);
+  const cx = Math.round(W / 2 - layer(cam, .1)), cy = Math.round(FLOOR * .48), R = Math.round(Math.min(W, FLOOR) * .42);
+  for (let k = 1; k <= 4; k++) fb.circle ? fb.circle(cx, cy, Math.round(R * k / 4), C.dgreen) : null;
+  for (let a = 0; a < 360; a += 2) for (let k = 1; k <= 4; k++) { const rr = R * k / 4; fb.px(Math.round(cx + Math.cos(a * Math.PI / 180) * rr), Math.round(cy + Math.sin(a * Math.PI / 180) * rr), C.dgreen); }
+  fb.hline(cx - R, cx + R, cy, C.dgreen); fb.vline(cx, cy - R, cy + R, C.dgreen);
+  const ang = t * 1.6;
+  for (let d = 0; d < 26; d++) { const aa = ang - d * .02; for (let rr = 2; rr < R; rr += 1) { const x = Math.round(cx + Math.cos(aa) * rr), y = Math.round(cy + Math.sin(aa) * rr); if (bayer(x, y) < 1 - d / 26) fb.px(x, y, d < 3 ? C.lime : C.green); } }
+  for (let i = 0; i < 9; i++) { const a0 = hash(i, 4) * Math.PI * 2 + t * (hash(i, 6) - .5) * .2, rr = R * (.2 + .75 * hash(i, 5)); const x = Math.round(cx + Math.cos(a0) * rr), y = Math.round(cy + Math.sin(a0) * rr);
+    let da = ((ang - a0) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2); const brillo = da < 1.2; fb.rect(x - 1, y - 1, 3, 3, brillo ? C.lime : C.dgreen); if (brillo) text(fb, 'FL' + (300 + i * 10), x + 3, y - 3, C.green); }
+  // consola
+  fb.rect(0, FLOOR, W, H - FLOOR, C.dslate); fb.hline(0, W - 1, FLOOR, C.slate);
+  for (let x = 6; x < W; x += 14) fb.rect(x, FLOOR + 6, 6, 3, Math.floor(t * 2 + x) % 4 ? C.amber : C.red);
+}
+function aerovias(fb, cam, t) {
+  sky(fb, [C.navy, C.blue, C.cyan, C.white]);
+  slots(cam, .15, 60, (i, x) => { if (hash(i, 3) > .4) { const y = Math.round(FLOOR * (.55 + .3 * hash(i, 7))); for (let k = 0; k < 4; k++) fb.disc(x + k * 8, y - (k % 2) * 3, 6, C.white); } });
+  // carriles de altura: este (impar, naranja) y oeste (par, cian)
+  const nivel = n => Math.round(FLOOR * (.12 + n * .16));
+  for (let n = 0; n < 5; n++) { const y = nivel(n), c = n % 2 ? C.cyan : C.orange;
+    for (let x = 0; x < W; x += 6) if (bayer(x, y) < .6) fb.px(x, y, c);
+    const dir = n % 2 ? -1 : 1, px = Math.round(((t * 22 * dir + n * 70) % (W + 40) + W + 40) % (W + 40)) - 20;
+    fb.rect(px - 8, y - 2, 16, 3, C.white); fb.rect(px + (dir > 0 ? 6 : -9), y - 1, 3, 2, C.white); fb.rect(px - 2, y - 4, 4, 7, C.silver); fb.rect(px + (dir > 0 ? -8 : 6), y - 5, 2, 4, C.red); }
+  ground(fb, cam, FLOOR, C.green, C.dgreen, 1, 18);
+}
 const AMB = {
   mirador(fb, t) { for (let j = 0; j < 2; j++) { const p = ((t + j * 2.7) / 4) % 1; if (p < .3) { const u = p / .3, x = Math.round(W * (.85 - .55 * u) + j * 30), y = Math.round(FLOOR * (.06 + .25 * u) + j * 10); for (let i = 0; i < 10; i++) fb.px(x + i, y - Math.round(i * .45), i < 2 ? C.white : i < 5 ? C.yellow : C.cyan); } } },
   playa(fb, t) { for (let i = 0; i < 3; i++) pajaro(fb, Math.round(fr(t + i * 2.3, 1 / 10) * (W + 20)) - 10, Math.round(FLOOR * (.12 + .07 * i) + Math.sin(t * 1.5 + i) * 4), t + i * .4, C.ink);
@@ -343,6 +386,6 @@ const AMB = {
   puerta(fb, t) { for (let i = 0; i < 14; i++) { const x = Math.round(W * hashA(i) + Math.sin(t * 2 + i) * 4), y = Math.round(FLOOR - fr(t + i * .9, .12 + hashA(i + 3) * .1) * FLOOR * .8); if (Math.floor(t * 6 + i) % 4) fb.px(x, y, i % 3 ? C.orange : C.yellow); } },
 };
 function hashA(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
-const BASE = { hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta, playa, montana, fondo, desierto, lanzamiento, espacio, cielo, tormenta, nube };
+const BASE = { aeropuerto, radar, aerovias, hoy, mercado, londres, datos, nasdaq, cruce, mirador, puerta, playa, montana, fondo, desierto, lanzamiento, espacio, cielo, tormenta, nube };
 export const LUGARES = Object.fromEntries(Object.entries(BASE).map(([k, f]) => [k, (fb, cam, t) => { f(fb, cam, t); AMB[k] && AMB[k](fb, t); }]));
-export const NOMBRE = { hoy: 'HOY', mercado: 'EL MERCADO', londres: 'LONDRES · 1720', datos: 'CENTRO DE DATOS', nasdaq: 'NUEVA YORK · 2000', cruce: 'EL CRUCE', mirador: 'EL MIRADOR', puerta: 'LA ÚLTIMA PUERTA', playa: 'LA PLAYA', montana: 'LA MONTAÑA', fondo: 'EL FONDO DEL MAR', desierto: 'EL MAR MUERTO', lanzamiento: 'CABO CAÑAVERAL', espacio: 'EN ÓRBITA', cielo: 'LA REENTRADA', tormenta: 'MÁLAGA', nube: 'DENTRO DE LA NUBE' };
+export const NOMBRE = { aeropuerto: 'EL AEROPUERTO', radar: 'EL RADAR', aerovias: 'LAS AEROVÍAS', hoy: 'HOY', mercado: 'EL MERCADO', londres: 'LONDRES · 1720', datos: 'CENTRO DE DATOS', nasdaq: 'NUEVA YORK · 2000', cruce: 'EL CRUCE', mirador: 'EL MIRADOR', puerta: 'LA ÚLTIMA PUERTA', playa: 'LA PLAYA', montana: 'LA MONTAÑA', fondo: 'EL FONDO DEL MAR', desierto: 'EL MAR MUERTO', lanzamiento: 'CABO CAÑAVERAL', espacio: 'EN ÓRBITA', cielo: 'LA REENTRADA', tormenta: 'MÁLAGA', nube: 'DENTRO DE LA NUBE' };

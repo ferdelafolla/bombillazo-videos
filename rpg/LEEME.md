@@ -68,3 +68,11 @@ Lecciones de la automatización:
 - Las tareas programadas arrancan sin permiso de escritura en el repo: lo PRIMERO es `add_repo` (owner ferdelafolla, repo bombillazo-videos, access push) y clonar con el comando que devuelve. Sin esto el push da 403 y la tarea se paraba en 2 minutos sin hacer nada.
 - Instagram no deja poner el primer comentario desde Metricool: en Instagram no mandes `firstCommentText` (mete la pregunta al final del texto).
 - Si Metricool responde «You have reached your Metricool account limit», para, no reintentes y avisa: es el cupo mensual del plan.
+
+## Estilo desde el 18/11/2026 (decisión del usuario, «de ahora en adelante»)
+- 3D con textura de píxel: los objetos protagonistas son modelos de three.js (`page/three3d.js`) cuantizados a la paleta con trama Bayer.
+- Recursos AD HOC y sin repetir: cada vídeo añade sus propios modelos 3D (`MODELOS.<nombre>`) y sus propios escenarios (`lugares.js`: función + BASE + NOMBRE). Ejemplo 18/11 (aviones): modelos `avion`, `torre`, `radar` (antena que gira y balizas que parpadean: objetos con name 'antena'/'baliza') y lugares `aeropuerto`, `radar`, `aerovias`.
+- Estructura: gancho (titulo con texto_grande) → pregunta → bucles de curiosidad («Pero…») → respuesta → «Curiosidad: …» → cierre sin promesas.
+- `comparar` dibuja un «¡COMBATE!» con barras de vida: úsalo solo para enfrentamientos; para dos datos paralelos, `tarjetas`.
+- Datos (18/11): en Instagram ~50 % abandona en 3 s y el tiempo medio visto es 5-11 s → Shorts de 30-40 s, primera frase corta con el dato sorprendente.
+- Miniatura de un Short vertical: `ffmpeg -ss 0.3 … -vf "crop=1080:608:0:510,scale=1280:720:flags=neighbor"` (avión + rótulo del gancho).

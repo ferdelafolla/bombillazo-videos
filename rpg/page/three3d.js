@@ -156,6 +156,36 @@ MODELOS.pelicula = r => {   // tira de película con fotogramas
   for (let i = 0; i < 4; i++) { const f = caja3(.5, .6, .1, [C.yellow, C.cyan, C.yellow, C.cyan][i]); f.position.set(-.93 + i * .62, 0, .01); r.add(f); }
   r.rotation.x = -.2;
 };
+
+// —— 18/11/2026 (aviones): avión de línea, torre de control y radar ——
+MODELOS.avion = r => {
+  const f = cil(.32, .26, 2.8, C.white, 16); f.rotation.z = Math.PI / 2; r.add(f);
+  const m = new THREE.Mesh(new THREE.SphereGeometry(.32, 16, 10), mat(C.white)); m.scale.set(1.4, 1, 1); m.position.x = 1.4; r.add(m);
+  const cab = caja3(.25, .08, .5, C.navy); cab.position.set(1.5, .16, 0); r.add(cab);
+  const ala = caja3(.7, .06, 3.2, C.silver); ala.position.set(.05, -.08, 0); ala.rotation.y = .25; r.add(ala);
+  for (const z of [-.8, .8]) { const mo = cil(.14, .14, .5, C.slate, 12); mo.rotation.z = Math.PI / 2; mo.position.set(.25, -.28, z); r.add(mo); }
+  const cola = caja3(.6, .9, .06, C.red); cola.position.set(-1.25, .45, 0); cola.rotation.z = -.35; r.add(cola);
+  const est = caja3(.35, .05, 1.1, C.silver); est.position.set(-1.3, .05, 0); r.add(est);
+  const luz = esfera(.07, C.red, 6); luz.material = mat(C.red, 1); luz.position.set(.05, -.05, 1.6); luz.name = 'baliza'; r.add(luz);
+  r.rotation.set(.35, -.6, .1); r.scale.setScalar(.95);
+};
+MODELOS.torre = r => {
+  const fuste = cil(.3, .45, 2.2, C.silver, 12); fuste.position.y = -.4; r.add(fuste);
+  const cab = cil(.85, .6, .55, C.dslate, 10); cab.position.y = .95; r.add(cab);
+  const vid = cil(.86, .86, .28, C.cyan, 10); vid.material = mat(C.cyan, .5); vid.position.y = 1.0; r.add(vid);
+  const tejado = cil(.5, .9, .18, C.slate, 10); tejado.position.y = 1.3; r.add(tejado);
+  const ant = cil(.03, .03, .6, C.ink, 6); ant.position.y = 1.65; r.add(ant);
+  const b = esfera(.08, C.red, 6); b.material = mat(C.red, 1); b.position.y = 1.97; b.name = 'baliza'; r.add(b);
+  r.rotation.x = .15;
+};
+MODELOS.radar = r => {
+  const base = cil(.6, .8, .3, C.slate, 16); base.position.y = -1; r.add(base);
+  const pie = cil(.12, .12, .8, C.silver, 8); pie.position.y = -.5; r.add(pie);
+  const g = new THREE.Group(); g.name = 'antena'; g.position.y = -.05; r.add(g);
+  const plato = new THREE.Mesh(new THREE.SphereGeometry(1.1, 20, 10, 0, Math.PI * 2, 0, Math.PI / 3.2), mat(C.white)); plato.material.side = THREE.DoubleSide; plato.rotation.x = -Math.PI / 2 - .5; plato.position.z = .4; g.add(plato);
+  const brazo = cil(.04, .04, .9, C.ink, 6); brazo.rotation.x = Math.PI / 2 - .5; brazo.position.set(0, .2, .15); g.add(brazo);
+  const foco = esfera(.1, C.lime, 8); foco.material = mat(C.lime, .8); foco.position.set(0, .45, -.25); g.add(foco);
+};
 export const tiene3D = n => HAY3D && !!MODELOS[n];
 
 // pinta un objeto 3D en el framebuffer: centro (cx, cy), tamaño en px, aparición p (0..1)
@@ -164,6 +194,8 @@ export function icono3D(fb, nombre, cx, cy, size, t, p = 1) {
   const s = nueva(nombre, MODELOS[nombre]); const S = Math.min(MAX, Math.round(size));
   s.root.rotation.y = t * .6 + (1 - p) * 2.5;                         // gira despacio (y entra girando)
   s.root.position.y = Math.sin(t * 1.3) * .08;
+  const an = s.root.getObjectByName('antena'); if (an) an.rotation.y = t * 2.2;
+  const bz = s.root.getObjectByName('baliza'); if (bz) bz.visible = Math.floor(t * 2.5) % 2 === 0;
   const k = s.root.getObjectByName('fuego'); if (k) k.scale.y = 1 + Math.sin(t * 20) * .2;
   const m = s.root.getObjectByName('mango'); if (m) m.position.y = 1.85 - Math.abs(Math.sin(t * 2.2)) * .5;
   for (let i = 0; i < 3; i++) { const l = s.root.getObjectByName('llama' + i); if (l) l.scale.set(1 + Math.sin(t * 9 + i) * .08, 1 + Math.sin(t * 11 + i * 2) * .15, 1); }

@@ -114,13 +114,16 @@
    "escenas": [
     {
      "texto": "Curiosidad: los que vuelan hacia el este van a miles de pies impares, y los que van al oeste, a pares.",
-     "tipo": "comparar",
-     "izq": "ESTE: IMPAR",
-     "der": "OESTE: PAR",
+     "tipo": "tarjetas",
      "destacar": [
       "este",
       "oeste,"
-     ]
+     ],
+     "items": [
+      "HACIA EL ESTE: IMPAR",
+      "HACIA EL OESTE: PAR"
+     ],
+     "icono": "avion"
     },
     {
      "texto": "Así, el avión que viene de frente nunca va a tu misma altura.",
