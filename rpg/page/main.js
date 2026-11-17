@@ -11,8 +11,15 @@ import { iconSprite, photoSprite, loadPhotos } from './raster.js';
 import { LUGARES, NOMBRE, FLOOR, VERT } from './lugares.js';
 import { micro, microEscena } from './micro.js';
 import { icono3D, tiene3D } from './three3d.js';
+import { voxTiene, voxFrame, voxProp, voxChispa, voxRender, voxApagar, voxActivo, K as VK } from './voxel.js';
+// mundo TODO 3D de vóxeles (18/11/2026): si el lugar tiene escena de vóxeles, el fondo 2D no se dibuja
+const VOXON = !q0().has('plano');
+function q0() { return new URLSearchParams(location.search); }
+function lugarDraw(nombre, f, camx, t) { if (VOXON && voxTiene(nombre)) { voxFrame(nombre); f.clear(T); return; } LUGARES[nombre](f, camx, t); }
+function chi(f, x, floor, o) { if (voxActivo() && voxChispa(x, floor, o)) return; chispa(f, x, floor, o); }
 // icono: en 3D (Three.js) si hay modelo, si no el dibujo 2D
 function icono(nombre, sz, x, y, t, p, dibujo = 1) {
+  if (voxActivo() && voxProp(nombre, x + sz / 2, y + sz / 2, Math.round(sz * 2.1), t, p)) return true;
   if (tiene3D(nombre)) return icono3D(fb, nombre, x + sz / 2, y + sz / 2, Math.round(sz * 1.25), t, p);
   fb.blit(iconSprite(nombre, sz, dibujo), Math.round(x), Math.round(y)); return true;
 }
@@ -32,10 +39,15 @@ const BW = W * 6, BH = H * 6, cv = document.getElementById('c'); cv.width = BW; 
 const g2 = cv.getContext('2d'); g2.imageSmoothingEnabled = false;
 const loO = document.createElement('canvas'); loO.width = W; loO.height = H;
 const gO = loO.getContext('2d'), imgO = gO.createImageData(W, H), u32O = new Uint32Array(imgO.data.buffer);
+let FUNDIDO = 0, DESTELLO = 0, T3 = 0;
 function show(z = 1, fx = W / 2, fy = H / 2, overlay = false, lutO = null) {
   const sw = W / z, sh = H / z, sx = clamp(fx - sw / 2, 0, W - sw), sy = clamp(fy - sh / 2, 0, H - sh);
-  g2.imageSmoothingEnabled = false; g2.drawImage(out.lo, sx, sy, sw, sh, 0, 0, BW, BH);
+  g2.imageSmoothingEnabled = false; g2.fillStyle = '#181425'; g2.fillRect(0, 0, BW, BH);
+  const v3 = voxActivo() ? voxRender(T3) : null; if (v3) g2.drawImage(v3, sx * VK, sy * VK, sw * VK, sh * VK, 0, 0, BW, BH);
+  g2.drawImage(out.lo, sx, sy, sw, sh, 0, 0, BW, BH);
+  if (DESTELLO > 0) { g2.globalAlpha = DESTELLO; g2.fillStyle = '#ffffff'; g2.fillRect(0, 0, BW, BH); g2.globalAlpha = 1; }
   if (overlay) { const d = fbO.d; for (let i = 0; i < d.length; i++) u32O[i] = d[i] === T ? 0 : lutO[d[i]]; gO.putImageData(imgO, 0, 0); g2.drawImage(loO, 0, 0, BW, BH); }
+  if (FUNDIDO > 0) { g2.globalAlpha = FUNDIDO; g2.fillStyle = '#000000'; g2.fillRect(0, 0, BW, BH); g2.globalAlpha = 1; }
 }
 
 // —— ritmo: todo entra en los tiempos de la música (112 ppm, la misma que audio_rpg.py) ——
@@ -440,13 +452,13 @@ function renderSeg(k, t, sep = false) {
   const bob = Math.floor(t / (BEAT * 2)) % 2, hop = hopAt(k, lt) * .6;
   const top = sep ? fbO : fb; if (sep) fbO.clear(T);
   if (s.kind === 'sub') {
-    LUGARES.puerta(fb, camOf(k), t);
-    chispa(fb, VERT ? 90 : 56, CHF, { t, s: 2, wave: 1, talk: ampAt(s, lt), bob, hop });
+    lugarDraw('puerta', fb, camOf(k), t);
+    chi(fb, VERT ? 90 : 56, CHF, { t, s: 2, wave: 1, talk: ampAt(s, lt), bob, hop });
     menuSub(lt, c.tap, th, '¿QUIERES SABER MÁS?', c.win);
     return LUT.full;
   }
   if (s.kind === 'final') {
-    LUGARES.puerta(fb, camOf(k), t);
+    lugarDraw('puerta', fb, camOf(k), t);
     const A = L.area, rem = s.remate || '¿QUIERES VER MÁS?', w = A.w;
     if (winA(A.x, A.y, w, 30, th.skin, lt, c.win)) { const ls = wrap(rem, w - 12); ls.slice(0, 2).forEach((ln, i) => centerText(ln, A.y + 6 + i * 10, C.pink, th.sh, 1, A.x, w)); }
     const [t2, t3] = (RPG && RPG.fin) || ['VÍDEO COMPLETO', 'EN EL CANAL'];
@@ -454,7 +466,7 @@ function renderSeg(k, t, sep = false) {
     if (winA(A.x, A.y + 36, w, hh, th.skin, lt, c.big - .1)) { dropTitle(t2, A.x + w / 2, A.y + 43, w - 10, titleCol(th), lt, c.big); if (lt > c.big + .5) centerText(t3, A.y + 36 + hh - 14, C.cyan, th.sh, 1, A.x, w); }
     if (lt > c.big + .7) { const op = lt > c.tap ? 'SUSCRITO ✓' : '▶ CONTINUAR'; centerText(op, A.y + 44 + hh - (beatP(t) > .6 && lt < c.tap ? 1 : 0), C.yellow, th.sh, 1, A.x, w); }
     burst(A.x + w / 2, A.y + 50 + hh, lt - c.tap, C.yellow, 12, 90);
-    chispa(fb, VERT ? 148 : L.chx, CHF, { t, wave: 1, talk: ampAt(s, lt), bob, hop });
+    chi(fb, VERT ? 148 : L.chx, CHF, { t, wave: 1, talk: ampAt(s, lt), bob, hop });
     return LUT.full;
   }
   const e = s.escena, sub = e.tipo === 'suscribete';
@@ -463,10 +475,10 @@ function renderSeg(k, t, sep = false) {
     dialogo(s, lt, th, top);
     return LUT.full;
   }
-  LUGARES[lugarOf(s)](fb, camOf(k) + Math.round(lt * 6), t);
+  lugarDraw(lugarOf(s), fb, camOf(k) + Math.round(lt * 6), t);
   // reacciones: salta en los acentos, se sorprende con las cifras, embiste en los combates
   let lunge = 0; if (e.tipo === 'comparar') for (const a of [c.h1, c.h2]) { const d = lt - a; if (d > 0 && d < .2) lunge = Math.round(Math.sin(d / .2 * Math.PI) * 6); }
-  chispa(fb, (sub ? (VERT ? 90 : 56) : L.chx) + lunge, CHF, { t, s: sub ? 2 : 1, talk: ampAt(s, lt), wave: sub || (e.tipo === 'tarjetas' && c.items && c.items.some(a => lt - a > 0 && lt - a < .3)) ? 1 : 0, bob, hop, surprise: e.tipo === 'cifra' && lt > c.settle && lt < c.settle + .8 ? 1 : 0 });
+  chi(fb, (sub ? (VERT ? 90 : 56) : L.chx) + lunge, CHF, { t, s: sub ? 2 : 1, talk: ampAt(s, lt), wave: sub || (e.tipo === 'tarjetas' && c.items && c.items.some(a => lt - a > 0 && lt - a < .3)) ? 1 : 0, bob, hop, surprise: e.tipo === 'cifra' && lt > c.settle && lt < c.settle + .8 ? 1 : 0 });
   contenido(k, s, lt, th);
   // pistas numeradas: la etiqueta sale desde el primer instante («Primera pista: …»)
   const mp = /^(primera|segunda|tercera|cuarta|quinta) pista/i.exec(e.texto || '');
@@ -513,6 +525,7 @@ function compose(ty, p, k) {
 }
 
 function frame(t) {
+  voxApagar(); FUNDIDO = 0; DESTELLO = 0; T3 = t;
   let k = 0; for (let i = 0; i < segs.length; i++) if (segs[i].start <= t) k = i;
   let a = -1, b = -1, p = 0;
   if (k > 0 && t < segs[k].start + POST(k)) { a = k - 1; b = k; p = (t - (segs[k].start - PRE(k))) / (PRE(k) + POST(k)); }
@@ -520,10 +533,19 @@ function frame(t) {
   if (a < 0) {
     fb.clear(C.ink); const lut = renderSeg(k, t, true);
     let Lx = lut; if (t > D.dur - .4) Lx = darken(lut, (t - (D.dur - .4)) / .4);
+    if (voxActivo() && t > D.dur - .4) FUNDIDO = (t - (D.dur - .4)) / .4;
     out.present(fb, Lx); const cz = segs[k].kind === 'escena' && segs[k].escena.tipo === 'microscopio' ? { z: 1, fx: W / 2, fy: H / 2 } : segs[k].kind === 'escena' ? camZoom(k, t - segs[k].start) : { z: 1 + .06 * Math.sin((t - segs[k].start) * 1.5) ** 2, fx: W / 2, fy: H / 2 };
     show(cz.z, cz.fx, cz.fy, true, Lx); return;
   }
   const ty = trans[b]; p = clamp(p, 0, 1);
+  // mundo de vóxeles: la transición es un vuelo de cámara (acercarse a la escena A, destello, alejarse de la B)
+  const esVox = j => VOXON && (segs[j].kind !== 'escena' ? voxTiene('puerta') : segs[j].escena.tipo !== 'microscopio' && voxTiene(lugarOf(segs[j])));
+  if (esVox(a) && esVox(b) && !MICRO.has(ty)) {
+    const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t, true); out.present(fb, lut);
+    const u = p < .5 ? eio(p * 2) : 1 - eo((p - .5) * 2);
+    DESTELLO = Math.max(0, 1 - Math.abs(p - .5) * 7) * .9;
+    show(1 + .9 * u, W / 2, H * .42, true, lut); return;
+  }
   if (ty === 'era') {   // caída de paleta por pasos (no alpha), con zoom hacia dentro y hacia fuera
     const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t);
     out.present(fb, darken(lut, p < .5 ? p * 2 : (1 - p) * 2)); show(1 + .5 * Math.sin(p * Math.PI), L.chx, FLOOR - 20); return;

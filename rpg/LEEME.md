@@ -76,3 +76,11 @@ Lecciones de la automatización:
 - `comparar` dibuja un «¡COMBATE!» con barras de vida: úsalo solo para enfrentamientos; para dos datos paralelos, `tarjetas`.
 - Datos (18/11): en Instagram ~50 % abandona en 3 s y el tiempo medio visto es 5-11 s → Shorts de 30-40 s, primera frase corta con el dato sorprendente.
 - Miniatura de un Short vertical: `ffmpeg -ss 0.3 … -vf "crop=1080:608:0:510,scale=1280:720:flags=neighbor"` (avión + rótulo del gancho).
+
+## TODO 3D en vóxeles (18/11/2026, decisión firme del usuario)
+Ya no hay fondos 2D: el escenario, los objetos y Chispa son vóxeles 3D (`page/voxel.js`) con luz, sombras y niebla, renderizados a 2× (360×640 en vertical) y escalados por vecino más cercano: textura de píxel por encima, pero con calidad. La interfaz (ventanas, títulos, diálogo, HUD) sigue en pixel art 2D encima.
+- Escenarios: `FABE.<lugar>` en voxel.js devuelve `{ s: escena, c: cámara, upd(t) }` (usa `t` global para que la cámara no salte entre frases). Cada vídeo crea los suyos (ejemplo 18/11: `aeropuerto`, `radar`, `aerovias`; `puerta` es el cuarto final común). Si un lugar no tiene escena de vóxeles se dibuja el 2D antiguo: no lo hagas, crea la escena.
+- Objetos: `FAB.<nombre>` construye un modelo con la clase `Vox` (`box`, `ball`, `cyl`, `set`, `del`, `luz` para lo que brilla, `build({centrar:true})`). Se dibujan en una segunda pasada con cámara ortográfica y se encuadran por su esfera envolvente: nunca se cortan. Partes animables por nombre: 'antena' (gira).
+- Chispa es un modelo de vóxeles (`chispaVox`): boca que habla, brazo que saluda, salto en los acentos.
+- Transiciones entre escenas de vóxeles: vuelo de cámara (acercarse, destello, alejarse). El microscopio sigue siendo 2D.
+- Para comparar con el estilo plano antiguo: `index.html?…&plano=1`.
