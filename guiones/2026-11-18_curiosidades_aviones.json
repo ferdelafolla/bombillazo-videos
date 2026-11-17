@@ -1,0 +1,144 @@
+{
+ "id": "2026-11-18_curiosidades_aviones",
+ "titulo": "¿Cómo no chocan miles de aviones? ✈️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends: «aviación» (MX) y «aircraft» (US, 2000+) tras la parada en tierra de todos los vuelos de EE. UU. del viernes 13/11/2026",
+ "fuentes": [
+  "FAA, Nationwide Ground Stop: Questions and Answers (15/11/2026): unos 3.500 aviones aterrizaron con seguridad",
+  "FAA Order JO 7110.65 y 14 CFR 91.179: separación de 5 millas náuticas y 1.000 pies; regla este impar / oeste par",
+  "Flying Magazine / AVweb: normas de separación del control aéreo"
+ ],
+ "remate": "¿CÓMO NO CHOCAN LOS AVIONES?",
+ "rpg": {
+  "gancho_lugar": "aeropuerto",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "aeropuerto",
+    "era": "snes",
+    "nombre": "EE. UU.",
+    "nota": "TODOS EN TIERRA"
+   },
+   {
+    "lugar": "radar",
+    "era": "snes",
+    "nombre": "EL RADAR",
+    "nota": "CARRILES INVISIBLES"
+   },
+   {
+    "lugar": "aerovias",
+    "era": "snes",
+    "nombre": "LAS AEROVÍAS",
+    "nota": "ESTE IMPAR · OESTE PAR"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "aeropuerto",
+   "escenas": [
+    {
+     "texto": "El viernes, Estados Unidos dejó en tierra todos sus vuelos… y tres mil quinientos aviones que ya volaban aterrizaron sin chocar.",
+     "tipo": "titulo",
+     "icono": "avion",
+     "texto_grande": "¿3.500 AVIONES SIN CHOCAR?",
+     "destacar": [
+      "tierra",
+      "chocar."
+     ]
+    },
+    {
+     "texto": "¿Cómo se esquivan tantos aviones en el cielo?",
+     "tipo": "icono",
+     "icono": "avion",
+     "destacar": [
+      "esquivan"
+     ]
+    },
+    {
+     "texto": "Cada avión aparece en un radar, y un controlador le dice por dónde ir.",
+     "tipo": "icono",
+     "icono": "torre",
+     "destacar": [
+      "radar,",
+      "controlador"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "carriles",
+   "lugar": "radar",
+   "escenas": [
+    {
+     "texto": "Pero el radar no basta: el cielo tiene carriles invisibles.",
+     "tipo": "titulo",
+     "icono": "radar",
+     "texto_grande": "CARRILES INVISIBLES",
+     "destacar": [
+      "carriles",
+      "invisibles."
+     ]
+    },
+    {
+     "texto": "Dos aviones a la misma altura van separados unos nueve kilómetros.",
+     "tipo": "cifra",
+     "valor": "9 KM",
+     "etiqueta": "A LA MISMA ALTURA",
+     "icono": "avion",
+     "destacar": [
+      "nueve"
+     ]
+    },
+    {
+     "texto": "Y si se cruzan, uno pasa unos trescientos metros por encima del otro.",
+     "tipo": "cifra",
+     "valor": "300 M",
+     "etiqueta": "POR ENCIMA",
+     "icono": "avion",
+     "destacar": [
+      "trescientos"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "aerovias",
+   "escenas": [
+    {
+     "texto": "Curiosidad: los que vuelan hacia el este van a miles de pies impares, y los que van al oeste, a pares.",
+     "tipo": "comparar",
+     "izq": "ESTE: IMPAR",
+     "der": "OESTE: PAR",
+     "destacar": [
+      "este",
+      "oeste,"
+     ]
+    },
+    {
+     "texto": "Así, el avión que viene de frente nunca va a tu misma altura.",
+     "tipo": "icono",
+     "icono": "avion",
+     "destacar": [
+      "frente",
+      "altura."
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
