@@ -28,7 +28,13 @@
     "lugar": "radar",
     "era": "snes",
     "nombre": "EL RADAR",
-    "nota": "CARRILES INVISIBLES"
+    "nota": "LA RUTA"
+   },
+   {
+    "lugar": "aerovias",
+    "era": "snes",
+    "nombre": "LAS AEROVÍAS",
+    "nota": "CARRILES"
    },
    {
     "lugar": "aerovias",
@@ -46,65 +52,72 @@
     {
      "texto": "El viernes, Estados Unidos dejó en tierra todos sus vuelos… y tres mil quinientos aviones que ya volaban aterrizaron sin chocar.",
      "tipo": "titulo",
-     "icono": "avion",
      "texto_grande": "¿3.500 AVIONES SIN CHOCAR?",
      "destacar": [
       "tierra",
       "chocar."
-     ]
+     ],
+     "accion": "aterrizajes"
     },
     {
      "texto": "¿Cómo se esquivan tantos aviones en el cielo?",
      "tipo": "icono",
-     "icono": "avion",
      "destacar": [
       "esquivan"
-     ]
-    },
+     ],
+     "accion": "cielo_lleno"
+    }
+   ]
+  },
+  {
+   "id": "control",
+   "lugar": "radar",
+   "escenas": [
     {
      "texto": "Cada avión aparece en un radar, y un controlador le dice por dónde ir.",
      "tipo": "icono",
-     "icono": "torre",
      "destacar": [
       "radar,",
       "controlador"
-     ]
+     ],
+     "accion": "pantalla"
     }
    ]
   },
   {
    "id": "carriles",
-   "lugar": "radar",
+   "lugar": "aerovias",
    "escenas": [
     {
      "texto": "Pero el radar no basta: el cielo tiene carriles invisibles.",
      "tipo": "titulo",
-     "icono": "radar",
-     "texto_grande": "CARRILES INVISIBLES",
      "destacar": [
-      "carriles",
-      "invisibles."
-     ]
+      "carriles"
+     ],
+     "accion": "carriles",
+     "rotulo": "CARRILES INVISIBLES"
     },
     {
      "texto": "Dos aviones a la misma altura van separados unos nueve kilómetros.",
      "tipo": "cifra",
      "valor": "9 KM",
      "etiqueta": "A LA MISMA ALTURA",
-     "icono": "avion",
      "destacar": [
       "nueve"
-     ]
+     ],
+     "accion": "separacion",
+     "rotulo": "9 KM"
     },
     {
      "texto": "Y si se cruzan, uno pasa unos trescientos metros por encima del otro.",
      "tipo": "cifra",
      "valor": "300 M",
      "etiqueta": "POR ENCIMA",
-     "icono": "avion",
      "destacar": [
       "trescientos"
-     ]
+     ],
+     "accion": "cruce",
+     "rotulo": "300 M"
     }
    ]
   },
@@ -116,23 +129,26 @@
      "texto": "Curiosidad: los que vuelan hacia el este van a miles de pies impares, y los que van al oeste, a pares.",
      "tipo": "tarjetas",
      "destacar": [
-      "este",
-      "oeste,"
+      "este"
      ],
      "items": [
       "HACIA EL ESTE: IMPAR",
       "HACIA EL OESTE: PAR"
      ],
-     "icono": "avion"
+     "accion": "este_oeste",
+     "rotulo": [
+      "HACIA EL ESTE: IMPAR",
+      "HACIA EL OESTE: PAR"
+     ]
     },
     {
      "texto": "Así, el avión que viene de frente nunca va a tu misma altura.",
      "tipo": "icono",
-     "icono": "avion",
      "destacar": [
       "frente",
       "altura."
-     ]
+     ],
+     "accion": "de_frente"
     },
     {
      "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",

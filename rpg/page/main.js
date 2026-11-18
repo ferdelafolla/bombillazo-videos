@@ -11,7 +11,7 @@ import { iconSprite, photoSprite, loadPhotos } from './raster.js';
 import { LUGARES, NOMBRE, FLOOR, VERT } from './lugares.js';
 import { micro, microEscena } from './micro.js';
 import { icono3D, tiene3D } from './three3d.js';
-import { voxTiene, voxFrame, voxProp, voxChispa, voxRender, voxApagar, voxActivo, K as VK } from './voxel.js';
+import { voxTiene, voxFrame, voxProp, voxChispa, voxRender, voxApagar, voxActivo, voxAccion, K as VK } from './voxel.js';
 // mundo TODO 3D de vóxeles (18/11/2026): si el lugar tiene escena de vóxeles, el fondo 2D no se dibuja
 const VOXON = !q0().has('plano');
 function q0() { return new URLSearchParams(location.search); }
@@ -275,8 +275,18 @@ const PUNTOS = {
 };
 const TARJ = [C.yellow, C.cyan, C.lime, C.orange, C.pink, C.red];
 
+// escenas narrativas (vóxeles): la acción la cuenta el 3D; aquí solo el gancho y un rótulo corto, cuando se dice su palabra
+function narrativa(s, lt, th) {
+  const e = s.escena, A = L.area;
+  if (e.texto_grande) { const ls = wrap(e.texto_grande, (A.w - 8) / 2), p = clamp(lt / .2, 0, 1);
+    ls.slice(0, 3).forEach((ln, i) => { const y = A.y + 22 + i * 22 - Math.round((1 - eo(p)) * 8); textOutlined(fb, ln, Math.round(A.x + (A.w - textW(ln, 2)) / 2), y, C.yellow, C.ink, 2); }); }
+  if (e.rotulo) { const at = tiempoPalabra(s, e.destacar || []) ?? .3, p = clamp((lt - at) / .25, 0, 1); if (p <= 0) return;
+    const ls = [].concat(e.rotulo), sc = ls.length > 1 || textW(ls[0], 2) > A.w - 20 ? 1 : 2, w = Math.max(...ls.map(l => textW(l, sc))) + 16, h = sc === 1 ? 10 * ls.length + 10 : 24, x = Math.round(A.x + (A.w - w) / 2), y = A.y + 22 - Math.round((1 - eo(p)) * 10);
+    win(fb, x, y, w, h, th.skin); ls.forEach((l, i) => sc === 1 ? centerText(l, y + 6 + i * 10, ls.length > 1 ? (i % 2 ? C.cyan : C.orange) : C.yellow, th.sh, 1, x, w) : textOutlined(fb, l, x + 8, y + 5, C.yellow, C.ink, 2)); }
+}
 function contenido(k, s, lt, th) {
   const e = s.escena, A = L.area, cx = A.x + A.w / 2, c = cues(k), bp = beatP(s.start + lt);
+  if (e.accion && voxActivo()) { narrativa(s, lt, th); return; }
   switch (e.tipo) {
     case 'titulo': {
       const tt0 = e.texto_grande || limpiar((e.destacar || [''])[0]), dos = wrap(tt0, (A.w - 16) / 2).length > 1;
@@ -476,6 +486,7 @@ function renderSeg(k, t, sep = false) {
     return LUT.full;
   }
   lugarDraw(lugarOf(s), fb, camOf(k) + Math.round(lt * 6), t);
+  if (e.accion && voxActivo()) voxAccion(e.accion, lt, s.dur);
   // reacciones: salta en los acentos, se sorprende con las cifras, embiste en los combates
   let lunge = 0; if (e.tipo === 'comparar') for (const a of [c.h1, c.h2]) { const d = lt - a; if (d > 0 && d < .2) lunge = Math.round(Math.sin(d / .2 * Math.PI) * 6); }
   chi(fb, (sub ? (VERT ? 90 : 56) : L.chx) + lunge, CHF, { t, s: sub ? 2 : 1, talk: ampAt(s, lt), wave: sub || (e.tipo === 'tarjetas' && c.items && c.items.some(a => lt - a > 0 && lt - a < .3)) ? 1 : 0, bob, hop, surprise: e.tipo === 'cifra' && lt > c.settle && lt < c.settle + .8 ? 1 : 0 });
@@ -541,6 +552,7 @@ function frame(t) {
   // mundo de vóxeles: la transición es un vuelo de cámara (acercarse a la escena A, destello, alejarse de la B)
   const esVox = j => VOXON && (segs[j].kind !== 'escena' ? voxTiene('puerta') : segs[j].escena.tipo !== 'microscopio' && voxTiene(lugarOf(segs[j])));
   if (esVox(a) && esVox(b) && !MICRO.has(ty)) {
+    if (segs[a].kind === 'escena' && segs[b].kind === 'escena' && lugarOf(segs[a]) === lugarOf(segs[b])) { const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t, true); out.present(fb, lut); const cz = camZoom(src, t - segs[src].start); show(cz.z, cz.fx, cz.fy, true, lut); return; }
     const src = p < .5 ? a : b; fb.clear(C.ink); const lut = renderSeg(src, t, true); out.present(fb, lut);
     const u = p < .5 ? eio(p * 2) : 1 - eo((p - .5) * 2);
     DESTELLO = Math.max(0, 1 - Math.abs(p - .5) * 7) * .9;

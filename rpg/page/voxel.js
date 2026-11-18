@@ -134,71 +134,134 @@ function chispaVox() {
   g.userData.alto = cy + Rb + 1; return g;
 }
 
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), ss = x => x * x * (3 - 2 * x);
+function avionMundo(sc) { const m = modelo('avion').clone(); m.children[0].rotation.set(0, 0, 0); m.scale.setScalar(sc); return m; }
+function pose(m, x, y, z, yaw, pitch, roll) { m.position.set(x, y, z); m.rotation.set(roll, yaw, 0, 'YXZ'); m.children[0].rotation.set(0, 0, pitch); }
 // —— escenarios ——
 const ESC = {};
 const FABE = {
   aeropuerto: () => {
-    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.plum, P.rose]); s.fog = new THREE.Fog(0x3a2a4a, 60, 220);
-    luces(s, { cielo: 0x8a7ab8, suelo: 0x262b44, amb: .9, sol: 0xc8d0ff, int: 1.2, dir: [40, 60, 30] });
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.plum, P.rose]); s.fog = new THREE.Fog(0x3a2a4a, 90, 320);
+    luces(s, { cielo: 0x9a8ac8, suelo: 0x7a7aa0, amb: 1.5, sol: 0xc8d0ff, int: 1.3, dir: [40, 70, 50], sombra: 120 });
     const v = new Vox();
-    v.box(-90, -1, -90, 90, 0, 40, (x, y, z) => Math.abs(z) <= 7 ? P.night : P.dslate);                 // suelo y pista
-    for (let x = -90; x < 90; x += 6) v.box(x, -1, 0, x + 3, 0, 1, P.white);                             // línea central
-    for (let x = -90; x < 90; x += 2) { v.set(x, -1, -7, P.silver); v.set(x, -1, 7, P.silver); }
-    v.box(-60, 0, -48, 10, 9, -34, P.slate); v.box(-62, 9, -50, 12, 10, -32, P.dslate);                  // terminal
-    for (let x = -58; x < 8; x += 3) for (const y of [2, 5]) v.box(x, y, -34, x + 2, y + 2, -33, (hsh(x, y, 1) > .25) ? P.amber : P.navy);
-    for (let i = 0; i < 26; i++) { const x = -40 + Math.floor(hsh(i, 9, 9) * 120), z = -80 - Math.floor(hsh(i, 8, 8) * 20), h = 6 + Math.floor(hsh(i, 7, 7) * 26); v.box(x, 0, z, x + 8, h, z + 8, P.night);   // ciudad al fondo
+    v.box(-160, -1, -90, 160, 0, 40, (x, y, z) => Math.abs(z) <= 7 ? P.night : P.dslate);                 // suelo y pista
+    for (let x = -160; x < 160; x += 6) v.box(x, -1, 0, x + 3, 0, 1, P.white);
+    for (let x = -160; x < 160; x += 2) { v.set(x, -1, -7, P.silver); v.set(x, -1, 7, P.silver); }
+    v.box(-70, 0, -48, 10, 9, -34, P.slate); v.box(-72, 9, -50, 12, 10, -32, P.dslate);                  // terminal
+    for (let x = -68; x < 8; x += 3) for (const y of [2, 5]) v.box(x, y, -34, x + 2, y + 2, -33, (hsh(x, y, 1) > .25) ? P.amber : P.navy);
+    v.cyl(30, -40, 0, 26, 2, P.silver); v.cyl(30, -40, 26, 27, 6, P.slate);                               // torre de control
+    v.cyl(30, -40, 27, 31, 6, (x, y, z) => (Math.abs(x) + Math.abs(z)) % 3 === 0 ? P.dslate : P.cyan); v.cyl(30, -40, 31, 32, 7, P.dslate);
+    for (let i = 0; i < 34; i++) { const x = -150 + Math.floor(hsh(i, 9, 9) * 300), z = -80 - Math.floor(hsh(i, 8, 8) * 10), h = 6 + Math.floor(hsh(i, 7, 7) * 26); v.box(x, 0, z, x + 8, h, z + 8, P.night);
       for (let y = 2; y < h - 1; y += 3) if (hsh(i, y, 3) > .5) v.set(x + 3, y, z + 8, P.amber); }
-    v.luz(P.cyan, P.amber);
-    s.add(v.build());
-    const luzP = new Vox(), luzA = new Vox();   // luces de pista que parpadean por turnos
-    for (let x = -90; x < 90; x += 8) { luzP.set(x, 0, -8, P.cyan); luzP.set(x, 0, 8, P.cyan); luzA.set(x + 4, 0, -8, P.amber); luzA.set(x + 4, 0, 8, P.amber); }
+    v.luz(P.cyan, P.amber); s.add(v.build());
+    const luzP = new Vox(), luzA = new Vox();
+    for (let x = -160; x < 160; x += 8) { luzP.set(x, 0, -8, P.cyan); luzP.set(x, 0, 8, P.cyan); luzA.set(x + 4, 0, -8, P.amber); luzA.set(x + 4, 0, 8, P.amber); }
     luzP.luz(P.cyan); luzA.luz(P.amber); const g1 = luzP.build(), g2 = luzA.build(); s.add(g1, g2);
-    const av = [-20, 30].map((x, i) => { const m = modelo('avion').clone(); m.scale.setScalar(.55); m.position.set(x, 5, -22); m.children[0].rotation.set(0, i ? Math.PI : 0, 0); s.add(m); return m; });
-    estrellas(s, 180, 200, 20);
-    const c = cam(42);
-    return { s, c, upd(t) { g1.visible = Math.floor(t * 2) % 2 === 0; g2.visible = !g1.visible;
-      const x = Math.sin(t * .06) * 22; c.position.set(x, 9, 44); c.lookAt(x * .6, 7, -10); } };
+    const bal = new Vox(); bal.set(30, 33, -40, P.red).luz(P.red); const gb = bal.build(); s.add(gb);
+    [-40, 50].forEach((x, i) => { const m = avionMundo(.55); m.position.set(x, 4, -22); m.rotation.y = i ? Math.PI : 0; s.add(m); });
+    const flota = Array.from({ length: 8 }, () => { const m = avionMundo(.55); s.add(m); m.visible = false; return m; });
+    estrellas(s, 220, 220, 20);
+    const c = cam(46);
+    return { s, c, flota, upd(t) { g1.visible = Math.floor(t * 2) % 2 === 0; g2.visible = !g1.visible; gb.visible = Math.floor(t * 1.5) % 2 === 0; flota.forEach(m => m.visible = false);
+      const x = Math.sin(t * .06) * 22; c.position.set(x, 9, 44); c.lookAt(x * .6, 7, -10); },
+      acc: {
+        // tres aviones aterrizan uno detrás de otro: descienden, levantan el morro, tocan pista y frenan
+        aterrizajes(lt) {
+          for (let i = 0; i < 3; i++) { const u = lt - i * 2.5; const m = flota[i]; if (u < 0) continue; m.visible = true;
+            if (u < 3.4) { const k = u / 3.4; pose(m, -46 + 38 * k, 40 * (1 - k) ** 1.15 + 2.6, 0, 0, -.14 + .22 * ss(clamp((k - .75) / .25, 0, 1)), 0); }
+            else { const r = Math.min(1, (u - 3.4) / 2.4), d = 36 * (r - r * r / 2); pose(m, -8 + d, 2.6, 0, 0, .08 * (1 - r), 0); } }
+          c.position.set(-10, 8, 80); c.lookAt(-10, 5.5, 0);
+        },
+        // el cielo lleno: decenas de aviones cruzando a distintas alturas
+        cielo_lleno(lt) {
+          for (let i = 0; i < 8; i++) { const m = flota[i], dir = i % 2 ? -1 : 1, y = 40 + i * 8, z = -30 + (i % 3) * 18, x = ((i * 23 + lt * 16 * dir) % 90 + 90) % 90 - 45 - 12;
+            m.visible = true; pose(m, x, y, z, dir > 0 ? 0 : Math.PI, 0, .15 * dir); }
+          c.position.set(0, 10, 70); c.lookAt(0, 62, -20);
+        },
+      } };
   },
   radar: () => {
     const s = new THREE.Scene(); s.background = new THREE.Color(P.ink); s.fog = new THREE.Fog(P.ink, 40, 110);
     luces(s, { cielo: 0x4a6a5a, suelo: 0x181425, amb: .7, sol: 0x9fe8b0, int: .9, dir: [10, 40, 40], sombra: 40 });
     const v = new Vox();
-    v.box(-40, -1, -30, 40, 0, 30, (x, y, z) => ((x >> 2) + (z >> 2)) % 2 ? P.night : P.dslate);          // suelo
-    v.box(-40, 0, -16, 40, 34, -14, P.night);                                                            // pared
-    for (let i = -3; i <= 3; i++) { const x = i * 10 - 4;                                               // consolas
+    v.box(-40, -1, -30, 40, 0, 30, (x, y, z) => ((x >> 2) + (z >> 2)) % 2 ? P.night : P.dslate);
+    v.box(-40, 0, -16, 40, 34, -14, P.night);
+    for (let i = -3; i <= 3; i++) { const x = i * 10 - 4;
       v.box(x, 0, -2, x + 8, 5, 4, P.slate); v.box(x, 5, 0, x + 8, 9, 2, P.dslate);
       v.box(x + 1, 6, 2, x + 7, 8, 3, (xx, yy) => (hsh(xx, yy, i) > .5 ? P.lime : P.dgreen));
       for (let k = 0; k < 6; k++) v.set(x + 1 + k, 5, 3, [P.amber, P.red, P.lime][(k + i + 9) % 3]); }
     v.luz(P.lime, P.amber, P.red); s.add(v.build());
-    const tc = document.createElement('canvas'); tc.width = tc.height = 96; const tg = tc.getContext('2d');
+    const tc = document.createElement('canvas'); tc.width = tc.height = 128; const tg = tc.getContext('2d');
     const tex = new THREE.CanvasTexture(tc); tex.magFilter = tex.minFilter = THREE.NearestFilter; tex.colorSpace = THREE.SRGBColorSpace;
     const pan = new THREE.Mesh(new THREE.PlaneGeometry(26, 26), new THREE.MeshBasicMaterial({ map: tex })); pan.position.set(0, 18, -13.9); s.add(pan);
     const marco = new Vox(); marco.box(-14, 4, -15, 14, 32, -14, P.slate); s.add(marco.build());
     const glow = new THREE.PointLight(0x63c74d, 30, 40, 1.6); glow.position.set(0, 18, -6); s.add(glow);
-    const c = cam(48);
-    return { s, c, upd(t) {
-      tg.fillStyle = '#0b1a12'; tg.fillRect(0, 0, 96, 96); tg.strokeStyle = '#265c42'; tg.lineWidth = 1;
-      for (let k = 1; k <= 4; k++) { tg.beginPath(); tg.arc(48, 48, k * 11, 0, Math.PI * 2); tg.stroke(); }
-      tg.beginPath(); tg.moveTo(4, 48); tg.lineTo(92, 48); tg.moveTo(48, 4); tg.lineTo(48, 92); tg.stroke();
-      const a = t * 1.6; for (let d = 0; d < 20; d++) { tg.strokeStyle = `rgba(99,199,77,${(1 - d / 20) * .8})`; tg.beginPath(); tg.moveTo(48, 48); tg.lineTo(48 + Math.cos(a - d * .03) * 44, 48 + Math.sin(a - d * .03) * 44); tg.stroke(); }
-      for (let i = 0; i < 9; i++) { const b = hsh(i, 4, 1) * Math.PI * 2 + t * .02 * (i % 2 ? 1 : -1), r = 8 + hsh(i, 5, 1) * 36; const x = 48 + Math.cos(b) * r, y = 48 + Math.sin(b) * r;
-        const da = ((a - b) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2); tg.fillStyle = da < 1.4 ? '#bfff9f' : '#3e8948'; tg.fillRect(Math.round(x) - 1, Math.round(y) - 1, 3, 3); }
+    const c = cam(48); let ruta = -1;
+    const pinta = t => {   // pantalla: anillos, barrido, aviones con estela y (si ruta ≥ 0) un avión guiado por su ruta
+      tg.fillStyle = '#0b1a12'; tg.fillRect(0, 0, 128, 128); tg.strokeStyle = '#265c42'; tg.lineWidth = 1;
+      for (let k = 1; k <= 4; k++) { tg.beginPath(); tg.arc(64, 64, k * 15, 0, Math.PI * 2); tg.stroke(); }
+      tg.beginPath(); tg.moveTo(4, 64); tg.lineTo(124, 64); tg.moveTo(64, 4); tg.lineTo(64, 124); tg.stroke();
+      const a = t * 1.6; for (let d = 0; d < 20; d++) { tg.strokeStyle = `rgba(99,199,77,${(1 - d / 20) * .7})`; tg.beginPath(); tg.moveTo(64, 64); tg.lineTo(64 + Math.cos(a - d * .03) * 60, 64 + Math.sin(a - d * .03) * 60); tg.stroke(); }
+      for (let i = 0; i < 10; i++) { const ang = hsh(i, 2, 2) * 6.28, sp = 3 + hsh(i, 3, 3) * 3, ph = (t * sp + hsh(i, 4, 4) * 120) % 120 - 60;
+        const x = 64 + Math.cos(ang) * ph, y = 64 + Math.sin(ang) * ph; tg.fillStyle = '#3e8948'; for (let k = 1; k < 4; k++) tg.fillRect(Math.round(x - Math.cos(ang) * k * 3), Math.round(y - Math.sin(ang) * k * 3), 1, 1);
+        tg.fillStyle = '#bfff9f'; tg.fillRect(Math.round(x) - 1, Math.round(y) - 1, 3, 3); }
+      if (ruta >= 0) {   // ruta: entra por la izquierda, gira 90° y sigue hacia arriba
+        const P0 = [10, 90], P1 = [64, 90], P2 = [64, 14], L1 = 54, L2 = 76, tot = L1 + L2, dib = clamp(ruta * 1.6, 0, 1) * tot;
+        tg.strokeStyle = '#feae34'; tg.setLineDash([4, 3]); tg.beginPath(); tg.moveTo(...P0); tg.lineTo(P0[0] + Math.min(dib, L1), 90); if (dib > L1) tg.lineTo(64, 90 - (dib - L1)); tg.stroke(); tg.setLineDash([]);
+        const av = clamp((ruta - .25) / .75, 0, 1) * tot, px = av < L1 ? P0[0] + av : 64, py = av < L1 ? 90 : 90 - (av - L1);
+        tg.fillStyle = '#fee761'; tg.fillRect(Math.round(px) - 2, Math.round(py) - 2, 5, 5); tg.fillStyle = '#feae34'; tg.font = '8px monospace'; tg.fillText('IB3500', Math.round(px) + 4, Math.round(py) - 3);
+      }
       tex.needsUpdate = true; glow.intensity = 24 + Math.sin(t * 3) * 6;
-      const z = 46 - Math.sin(t * .05) * 6; c.position.set(Math.sin(t * .08) * 6, 14, z); c.lookAt(0, 15, -10); } };
+    };
+    return { s, c, upd(t) { ruta = -1; pinta(t); const z = 46 - Math.sin(t * .05) * 6; c.position.set(Math.sin(t * .08) * 6, 14, z); c.lookAt(0, 15, -10); },
+      acc: {
+        // la cámara se acerca a la pantalla mientras el controlador traza la ruta de un avión
+        pantalla(lt, dur, t) { ruta = clamp(lt / Math.max(1, dur - .3), 0, 1); pinta(t); const k = ss(clamp(lt / (dur * .7), 0, 1)); c.position.set(0, 16 + 2 * k, 48 - 26 * k); c.lookAt(0, 18, -14); },
+      } };
   },
   aerovias: () => {
-    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, P.cyan, 0xd8f6ff]); s.fog = new THREE.Fog(0xbfe8ff, 120, 360);
-    luces(s, { cielo: 0xd8f0ff, suelo: 0x3e8948, amb: 1.2, sol: 0xfff3d0, int: 2.4, dir: [-40, 80, 50], sombra: 120 });
+    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, P.cyan, 0xd8f6ff]); s.fog = new THREE.Fog(0xbfe8ff, 140, 380);
+    luces(s, { cielo: 0xd8f0ff, suelo: 0x3e8948, amb: 1.25, sol: 0xfff3d0, int: 2.4, dir: [-40, 80, 50], sombra: 140 });
     const tierra = new Vox(); for (let x = -40; x < 40; x++) for (let z = -40; z < 20; z++) { const f = hsh(x >> 2, 0, z >> 2); tierra.set(x, 0, z, f > .66 ? P.lime : f > .33 ? P.green : f > .1 ? P.sand : P.blue); }
     const gt = tierra.build({ jit: .03, sombra: false }); gt.scale.setScalar(6); gt.position.set(0, -70, -60); s.add(gt);
-    const nubes = []; for (let i = 0; i < 9; i++) { const n = new Vox(); for (let k = 0; k < 4; k++) n.ball(k * 4 - 6, (k % 2) * 2, 0, 4 + (k % 3), P.white); const g = n.build({ jit: .03 }); g.position.set(-110 + i * 28, -18 + (i % 3) * 22, -40 - (i % 4) * 20); g.scale.setScalar(1.4); s.add(g); nubes.push(g); }
-    const carriles = []; const NIV = [-6, 6, 18, 30];
-    NIV.forEach((y, i) => { const l = new Vox(), c = i % 2 ? P.cyan : P.orange; for (let x = -140; x < 140; x += 4) l.set(x, y - 4, 0, c); l.luz(c); s.add(l.build());
-      for (let j = 0; j < 2; j++) { const m = modelo('avion').clone(); m.scale.setScalar(.38); m.children[0].rotation.set(0, i % 2 ? Math.PI : 0, 0); m.position.set(0, y, 0); s.add(m); carriles.push({ m, y, dir: i % 2 ? -1 : 1, off: j * 140 + i * 37 }); } });
-    const c = cam(46);
-    return { s, c, upd(t) { carriles.forEach(o => { const x = ((o.off + t * 14 * o.dir) % 280 + 280) % 280 - 140; o.m.position.x = x; });
-      nubes.forEach((n, i) => { n.position.x = ((-110 + i * 28 + t * 2) % 260 + 260) % 260 - 130; });
-      c.position.set(Math.sin(t * .05) * 10, 12, 92); c.lookAt(0, 12, 0); } };
+    const nubes = []; for (let i = 0; i < 10; i++) { const n = new Vox(); for (let k = 0; k < 4; k++) n.ball(k * 4 - 6, (k % 2) * 2, 0, 4 + (k % 3), P.white); const g = n.build({ jit: .03 }); g.position.set(-130 + i * 28, -26 + (i % 3) * 28, -50 - (i % 4) * 20); g.scale.setScalar(1.4); s.add(g); nubes.push(g); }
+    const NIV = [-6, 6, 18, 30], carriles = NIV.map((y, i) => { const l = new Vox(), col = i % 2 ? P.cyan : P.orange; for (let x = 0; x < 300; x += 4) l.set(x, 0, 0, col); l.luz(col); const g = l.build({ sombra: false }); const piv = new THREE.Group(); piv.position.set(-150, y - 4, 0); piv.add(g); s.add(piv); return piv; });
+    const flota = Array.from({ length: 8 }, () => { const m = avionMundo(.38); s.add(m); m.visible = false; return m; });
+    const barra = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: P.yellow })); barra.visible = false; s.add(barra);
+    const tope = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: P.yellow })); m.visible = false; s.add(m); return m; });
+    const regla = (a, b, k) => {   // barra amarilla de a hasta (a→b)·k, con topes
+      const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) * k; if (L < .1) return;
+      barra.visible = true; barra.scale.set(dx ? L : 1.2, dy ? L : 1.2, 1.2); barra.position.set(a[0] + dx * k / 2, a[1] + dy * k / 2, 3);
+      tope.forEach((m, i) => { m.visible = i === 0 || k >= 1; const p = i ? [a[0] + dx * k, a[1] + dy * k] : a; m.scale.set(dx ? 1.2 : 5, dx ? 5 : 1.2, 1.2); m.position.set(p[0], p[1], 3); });
+    };
+    const c = cam(46), base = t => { carriles.forEach(p => { p.scale.x = 1; p.visible = true; }); flota.forEach(m => m.visible = false); barra.visible = false; tope.forEach(m => m.visible = false);
+      nubes.forEach((n, i) => { n.position.x = ((-130 + i * 28 + t * 2) % 280 + 280) % 280 - 140; }); };
+    const vuelo = (t, n = 8) => { for (let i = 0; i < n; i++) { const L = i % 4, dir = L % 2 ? -1 : 1, x = ((i * 31 + L * 17 + t * 9 * dir) % 110 + 110) % 110 - 55; flota[i].visible = true; pose(flota[i], x, NIV[L], 0, dir > 0 ? 0 : Math.PI, 0, 0); } };
+    return { s, c, upd(t) { base(t); vuelo(t); c.position.set(Math.sin(t * .05) * 4, 12, 92); c.lookAt(0, 12, 0); },
+      acc: {
+        // los carriles se dibujan de izquierda a derecha y cada avión se coloca en el suyo
+        carriles(lt, dur, t) { carriles.forEach((p, i) => { p.scale.x = clamp((lt - i * .3) / 1.6, .001, 1); });
+          for (let i = 0; i < 4; i++) { const m = flota[i], dir = i % 2 ? -1 : 1, y0 = NIV[i] + (i % 2 ? 7 : -7), k = ss(clamp((lt - .8 - i * .3) / 1.2, 0, 1)); m.visible = true; flota[i + 4].visible = false;
+            pose(m, (i % 2 ? 9 : -9) + lt * 3 * dir, y0 + (NIV[i] - y0) * k, 0, dir > 0 ? 0 : Math.PI, 0, (1 - k) * .35 * dir); }
+          c.position.set(0, 12, 92); c.lookAt(0, 12, 0); },
+        // dos aviones en el mismo carril, separados ~9 km: la regla se estira entre los dos
+        separacion(lt) { flota.forEach(m => m.visible = false); carriles.forEach((p, i) => p.visible = i === 1); const x = -26 + lt * 5, y = NIV[1];
+          [0, 1].forEach(i => { flota[i].visible = true; pose(flota[i], x + i * 28, y, 0, 0, 0, 0); });
+          regla([x + 6, y + 5], [x + 22, y + 5], ss(clamp((lt - .6) / 1.4, 0, 1)));
+          c.position.set(x + 14, 12, 100); c.lookAt(x + 14, 9, 0); },
+        // dos aviones se cruzan: uno pasa 300 m por encima del otro
+        cruce(lt, dur) { flota.forEach(m => m.visible = false); carriles.forEach((p, i) => p.visible = i === 1 || i === 2); const u = lt / dur, xa = -24 + u * 48, xb = 24 - u * 48;
+          flota[0].visible = flota[1].visible = true; pose(flota[0], xa, NIV[1], 0, 0, 0, 0); pose(flota[1], xb, NIV[2], 0, Math.PI, 0, 0);
+          const k = ss(clamp((lt - dur * .35) / 1.2, 0, 1)); if (k > 0) regla([(xa + xb) / 2, NIV[1] + 3], [(xa + xb) / 2, NIV[2] - 3], k);
+          c.position.set(0, 13, 88); c.lookAt(0, 11, 0); },
+        // todos los carriles: los naranjas (impares) hacia el este, los cian (pares) hacia el oeste
+        este_oeste(lt, dur, t) { vuelo(t * 1.6); c.position.set(0, 12, 96); c.lookAt(0, 12, 0); },
+        // de frente: la cámara va detrás de un avión y el que viene de cara pasa por encima
+        de_frente(lt, dur) { flota.forEach(m => m.visible = false); carriles.forEach(p => p.visible = false); const u = lt / dur, xa = -14 + u * 14, xb = 70 - u * 110;
+          flota[0].visible = flota[1].visible = true; pose(flota[0], xa, NIV[1], 0, 0, 0, 0); pose(flota[1], xb, NIV[2], 0, Math.PI, 0, 0);
+          c.position.set(xa - 20, NIV[1] + 4, 40); c.lookAt(xa + 10, NIV[1] - 1, 0); },
+      } };
   },
   puerta: () => {   // cuarto final: pared de ladrillo, puerta con luz cálida y suelo de madera
     const s = new THREE.Scene(); s.background = new THREE.Color(P.ink); s.fog = new THREE.Fog(P.ink, 50, 120);
@@ -225,8 +288,8 @@ const PC = new THREE.OrthographicCamera(0, W, 0, -H, -500, 500); PC.position.z =
 const POOL = {}; let usados = {};
 function instancia(nombre) { const n = (usados[nombre] = (usados[nombre] || 0) + 1); const L = POOL[nombre] || (POOL[nombre] = []); if (!L[n - 1]) { const m = nombre === 'chispa' ? chispaVox() : modelo(nombre).clone(); PS.add(m); L.push(m); } return L[n - 1]; }
 
-let actual = null;
-export function voxFrame(lugar) { actual = lugar; for (const k in POOL) POOL[k].forEach(m => m.visible = false); usados = {}; }
+let actual = null, accion = null;
+export function voxFrame(lugar) { actual = lugar; accion = null; for (const k in POOL) POOL[k].forEach(m => m.visible = false); usados = {}; }
 export const voxActivo = () => !!actual;
 // objeto 3D centrado en (cx, cy) que cabe en un círculo de diámetro `size` (píxeles del búfer), siempre dentro de la pantalla
 export function voxProp(nombre, cx, cy, size, t, p = 1) {
@@ -252,8 +315,9 @@ export function voxChispa(x, floor, o = {}) {
 // render: escenario completo + objetos encima
 export function voxRender(t) {
   if (!actual) return null;
-  const e = esc(actual); e.upd(t);
+  const e = esc(actual); e.upd(t); if (accion && e.acc && e.acc[accion.n]) e.acc[accion.n](accion.lt, accion.dur, t);
   R.clear(); R.render(e.s, e.c); R.clearDepth(); R.render(PS, PC);
   return cv;
 }
-export function voxApagar() { actual = null; }
+export function voxApagar() { actual = null; accion = null; }
+export function voxAccion(n, lt, dur) { accion = n ? { n, lt, dur } : null; }

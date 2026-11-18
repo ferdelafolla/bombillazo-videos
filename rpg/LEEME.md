@@ -84,3 +84,11 @@ Ya no hay fondos 2D: el escenario, los objetos y Chispa son vóxeles 3D (`page/v
 - Chispa es un modelo de vóxeles (`chispaVox`): boca que habla, brazo que saluda, salto en los acentos.
 - Transiciones entre escenas de vóxeles: vuelo de cámara (acercarse, destello, alejarse). El microscopio sigue siendo 2D.
 - Para comparar con el estilo plano antiguo: `index.html?…&plano=1`.
+
+## Animación narrativa (18/11/2026, decisión del usuario)
+«Animaciones fluidas que cuenten lo que ocurre, no tan infográficas»: si se habla de aviones, se ven despegar, volar, aterrizar…
+- Cada escena del guion lleva `"accion": "<nombre>"`; la escena de vóxeles del lugar la implementa en `acc.<nombre>(lt, dur, t)` moviendo actores (flota de modelos, `pose(m, x, y, z, yaw, pitch, roll)`) y la cámara.
+- Con `accion` no salen ventanas de infografía: solo el gancho (`texto_grande`, en grande sobre la escena) y, si hace falta, un `rotulo` corto (texto o lista de líneas) cuando se dice la palabra de `destacar`.
+- Ejemplo (aviones): `aterrizajes`, `cielo_lleno`, `pantalla` (el radar traza la ruta), `carriles`, `separacion` (regla de 9 km), `cruce` (300 m), `este_oeste`, `de_frente`.
+- Encuadre vertical: con fov 46 el ancho visible es ~0,48 × distancia; la acción importante entre el 10 % y el 60 % de la altura (el diálogo ocupa 63-75 %).
+- Render más rápido: 4 trozos en paralelo con `render.mjs … --desde a --hasta b`, concat, `audio_rpg.py`, `unir.sh` y ffmpeg final (ver short_rpg.py).
