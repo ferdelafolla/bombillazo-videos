@@ -158,16 +158,16 @@ def main(tl_path, ev_path, vdir, salida):
     for e in evj['eras']:
         a, b = int(e['t0'] * SR), int(e['t1'] * SR); eras[e['era']][a:b] = 1
     for k in eras: eras[k] = uniform_filter1d(eras[k], int(.15 * SR))[:n]
-    musL = (mono_gb[:n] * eras['gb'] + mono_nes[:n] * eras['nes'] + L[:n] * eras['snes']) * .22
-    musR = (mono_gb[:n] * eras['gb'] + mono_nes[:n] * eras['nes'] + R[:n] * eras['snes']) * .22
+    musL = (mono_gb[:n] * eras['gb'] + mono_nes[:n] * eras['nes'] + L[:n] * eras['snes']) * .09
+    musR = (mono_gb[:n] * eras['gb'] + mono_nes[:n] * eras['nes'] + R[:n] * eras['snes']) * .09
     fi, fo = int(1 * SR), int(2.5 * SR); ramp = np.ones(n); ramp[:fi] = np.linspace(0, 1, fi); ramp[-fo:] = np.linspace(1, 0, fo)
     # ducking bajo la voz
     env = uniform_filter1d(np.abs(voz), int(.2 * SR)); act = np.clip(env / (np.percentile(env, 90) + 1e-9) * 2, 0, 1)
-    duck = 1 - .6 * uniform_filter1d(act, int(.35 * SR))
+    duck = 1 - .75 * uniform_filter1d(act, int(.35 * SR))   # 18/11: música más baja (el usuario la oía alta)
     musL *= ramp * duck; musR *= ramp * duck
     # efectos
     fx = np.zeros(n)
-    for e in evj['ev']:
+    for e in ([] if True else evj['ev']):   # sin efectos de sonido (decisión del usuario)
         f = SFX.get(e['type'])
         if f: add(fx, f(e) if e['type'] in ('letters', 'slots') else f(), e['t'], .4)
     fx = np.tanh(fx * 1.5) / 1.5

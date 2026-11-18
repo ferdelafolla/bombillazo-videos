@@ -92,3 +92,6 @@ Ya no hay fondos 2D: el escenario, los objetos y Chispa son vóxeles 3D (`page/v
 - Ejemplo (aviones): `aterrizajes`, `cielo_lleno`, `pantalla` (el radar traza la ruta), `carriles`, `separacion` (regla de 9 km), `cruce` (300 m), `este_oeste`, `de_frente`.
 - Encuadre vertical: con fov 46 el ancho visible es ~0,48 × distancia; la acción importante entre el 10 % y el 60 % de la altura (el diálogo ocupa 63-75 %).
 - Render más rápido: 4 trozos en paralelo con `render.mjs … --desde a --hasta b`, concat, `audio_rpg.py`, `unir.sh` y ffmpeg final (ver short_rpg.py).
+
+## Música más baja (18/11/2026, decisión del usuario)
+En `audio_rpg.py` la música va a 0,09 (antes 0,22) y baja un 75 % cuando habla la voz: queda ~11 dB por debajo de la mezcla. Los efectos de sonido están anulados por completo.
