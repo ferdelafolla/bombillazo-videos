@@ -95,3 +95,10 @@ Ya no hay fondos 2D: el escenario, los objetos y Chispa son vóxeles 3D (`page/v
 
 ## Música más baja (18/11/2026, decisión del usuario)
 En `audio_rpg.py` la música va a 0,09 (antes 0,22) y baja un 75 % cuando habla la voz: queda ~11 dB por debajo de la mezcla. Los efectos de sonido están anulados por completo.
+
+## 19/11/2026 (tarea diaria): HD, escaños del 29-N y GTA 6
+- Recursos nuevos en `voxel.js`: modelos `tele`, `mando`, `urna`, `escano`, `coche`, `palmera`, `caja`; escenas `salon`, `pixeles`, `mosaico` (HD), `hemiciclo`, `provincias`, `recuento` (escaños) y `tienda`, `leonida`, `vicecity` (GTA 6). En `lugares.js` solo llevan nombre (el 2D `hoy` queda para miniaturas de partidas).
+- Utilidades nuevas reutilizables: `Bloques` (InstancedMesh que se recoloca en cada fotograma: muros de píxeles, pilas de papeletas, gente), `pantalla()` (plano con textura de canvas), `mira(c, p, q, sube)` (cámara con el objetivo algo por encima del centro) y `emitir()` (pinta una imagen a la resolución que se quiera, nítida o borrosa).
+- `short_rpg.py` ya no mete el recordatorio «¿Quieres saber más?» a mitad del Short (cortaba la respuesta y sumaba ~3 s; `--con-sub` lo recupera) y renderiza en 4 trozos en paralelo.
+- `rpg.fin`: textos de ≤ 11 caracteres por línea («MÁS CURIOSIDADES» se corta en la tarjeta final).
+- En las tareas programadas no hay `add_repo`: el repo ya viene clonado con permiso de escritura (la prueba de push funciona). WebFetch de agentes falla por permisos: verifica con WebSearch (titulares y fechas) y el RSS del relevo.

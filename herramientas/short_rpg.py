@@ -41,11 +41,25 @@ json.dump(g, open(f'{tmp}/guion.json', 'w'), ensure_ascii=False)
 run('python3', f'{R}/remotion/scripts/preparar.py', f'{tmp}/guion.json')
 run('node', '--experimental-strip-types', f'{R}/remotion/scripts/exportar_rpg.ts', f'{R}/rpg/page/data/{gid}')
 
+# 4b) sin recordatorio a mitad (19/11/2026): cortaba la respuesta y alargaba el Short ~3 s
+if '--con-sub' not in sys.argv:
+    jp = f'{R}/rpg/page/data/{gid}/Short1.json'; d = json.load(open(jp)); off = 0; nuevos = []
+    for sg in d['segs']:
+        if sg['kind'] == 'sub': off += sg['dur']; continue
+        sg['start'] = round(sg['start'] - off, 4); nuevos.append(sg)
+    d['segs'] = nuevos; d['dur'] = round(d['dur'] - off, 4); json.dump(d, open(jp, 'w'), ensure_ascii=False)
+
 # 5) render
 os.makedirs(f'{R}/rpg/out', exist_ok=True); o = f'{R}/rpg/out/{gid}'
 if '--png' in sys.argv:
     run('node', 'render.mjs', 'Short1', f'{o}_mudo.mp4', '--d', gid, '--v', '--png', sys.argv[sys.argv.index('--png') + 1], cwd=f'{R}/rpg'); sys.exit()
-run('node', 'render.mjs', 'Short1', f'{o}_mudo.mp4', '--d', gid, '--v', cwd=f'{R}/rpg')
+DT = json.load(open(f'{R}/rpg/page/data/{gid}/Short1.json'))['dur']; NT = 4; cs = [round(DT * k / NT * 24) / 24 for k in range(NT + 1)]
+ps = [subprocess.Popen(['node', 'render.mjs', 'Short1', f'{o}_p{k}.mp4', '--d', gid, '--v', '--desde', str(cs[k]), '--hasta', str(cs[k + 1])], cwd=f'{R}/rpg') for k in range(NT)]
+if any(p.wait() for p in ps): sys.exit('fallo en un trozo del render')
+open(f'{o}_lista.txt', 'w').write(''.join(f"file '{o}_p{k}.mp4'\n" for k in range(NT)))
+run('ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', f'{o}_lista.txt', '-c', 'copy', f'{o}_mudo.mp4')
+run('node', 'render.mjs', 'Short1', f'{o}_ev.mp4', '--d', gid, '--v', '--png', '0.1', cwd=f'{R}/rpg')   # escribe el .ev.json de la línea de tiempo entera
+os.replace(f'{o}_ev.ev.json', f'{o}_mudo.ev.json')
 run('python3', 'audio_rpg.py', f'page/data/{gid}/Short1.json', f'{o}_mudo.ev.json', VD, f'{o}.wav', cwd=f'{R}/rpg')
 run('sh', f'{R}/remotion/audio/unir.sh', f'{o}_mudo.mp4', f'{o}.wav', f'{o}_mix.mp4')
 os.makedirs(f'{R}/videos', exist_ok=True)
