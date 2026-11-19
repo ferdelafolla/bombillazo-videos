@@ -1,0 +1,138 @@
+{
+ "id": "2026-11-19_hoy_gta6",
+ "titulo": "GTA 6 sale hoy: ¿dónde está Leonida? 🌴",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES/US/MX/AR: «gta 6 ultimate edition», «trucos gta 6», «unwanted attention gta 6» (19/11/2026), por el lanzamiento de GTA VI",
+ "fuentes": [
+  "La Prensa (16/11/2026): GTA 6 se lanza el jueves 19 de noviembre en PS5 y Xbox Series; Leonida, versión ficticia de Florida; 13 años después de GTA V (2013)",
+  "Liputan6 / Mithrie: lanzamiento oficial el 19 de noviembre de 2026",
+  "Red Bull Gaming: localizaciones de Leonida y Vice City (Miami)",
+  "Rockstar Games: Grand Theft Auto: Vice City (2002)"
+ ],
+ "remate": "¿DÓNDE ESTÁ LEONIDA?",
+ "rpg": {
+  "gancho_lugar": "tienda",
+  "fin": [
+   "MÁS CURIOSIDADES",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "tienda",
+    "era": "snes",
+    "nombre": "LA TIENDA",
+    "nota": "13 AÑOS"
+   },
+   {
+    "lugar": "leonida",
+    "era": "snes",
+    "nombre": "LEONIDA",
+    "nota": "FLORIDA"
+   },
+   {
+    "lugar": "vicecity",
+    "era": "snes",
+    "nombre": "VICE CITY",
+    "nota": "MIAMI"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "tienda",
+   "escenas": [
+    {
+     "texto": "Hoy sale un videojuego que la gente lleva trece años esperando.",
+     "tipo": "titulo",
+     "destacar": [
+      "trece"
+     ],
+     "accion": "cola",
+     "texto_grande": "¡13 AÑOS ESPERANDO!"
+    },
+    {
+     "texto": "Es GTA seis, y llega a PlayStation cinco y a Xbox Series.",
+     "tipo": "icono",
+     "destacar": [
+      "seis,"
+     ],
+     "accion": "abrir"
+    },
+    {
+     "texto": "¿Pero en qué lugar real se inspira su mapa?",
+     "tipo": "icono",
+     "destacar": [
+      "real"
+     ],
+     "accion": "subir"
+    }
+   ]
+  },
+  {
+   "id": "leonida",
+   "lugar": "leonida",
+   "escenas": [
+    {
+     "texto": "En Florida: el juego pasa en Leonida, una Florida inventada.",
+     "tipo": "icono",
+     "destacar": [
+      "Leonida,"
+     ],
+     "accion": "mapa",
+     "rotulo": "LEONIDA = FLORIDA"
+    },
+    {
+     "texto": "Y su gran ciudad, Vice City, es su versión de Miami.",
+     "tipo": "icono",
+     "destacar": [
+      "Miami."
+     ],
+     "accion": "bajar"
+    }
+   ]
+  },
+  {
+   "id": "vicecity",
+   "lugar": "vicecity",
+   "escenas": [
+    {
+     "texto": "Pero Vice City no es nueva: ya salió en otro GTA, en dos mil dos.",
+     "tipo": "icono",
+     "destacar": [
+      "dos",
+      "mil"
+     ],
+     "accion": "neon",
+     "rotulo": "2002"
+    },
+    {
+     "texto": "Sus protagonistas son Lucía y Jason, una pareja que huye por toda Leonida.",
+     "tipo": "icono",
+     "destacar": [
+      "Lucía"
+     ],
+     "accion": "persecucion"
+    },
+    {
+     "texto": "Curiosidad: hasta los cayos de Florida tienen copia: los Leonida Keys.",
+     "tipo": "icono",
+     "destacar": [
+      "cayos"
+     ],
+     "accion": "cayos",
+     "rotulo": "LEONIDA KEYS"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

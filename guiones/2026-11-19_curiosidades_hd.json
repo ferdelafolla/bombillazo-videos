@@ -1,0 +1,142 @@
+{
+ "id": "2026-11-19_curiosidades_hd",
+ "titulo": "¿Por qué la HD se ve tan nítida? 📺",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES: «movistar plus+» (19/11/2026), por el paso de varios canales a alta definición",
+ "fuentes": [
+  "ADSLZone (19/11/2026): Movistar Plus está a punto de estrenar canales en HD",
+  "Computer Hoy (19/11/2026): seis canales darán el salto al HD en los próximos días",
+  "Resoluciones: SD europea 720×576 = 414.720 píxeles; Full HD 1920×1080 = 2.073.600 (UIT-R BT.601 y BT.709)",
+  "Etimología de píxel: picture element (Merriam-Webster, RAE)"
+ ],
+ "remate": "¿POR QUÉ LA HD SE VE MEJOR?",
+ "rpg": {
+  "gancho_lugar": "salon",
+  "fin": [
+   "MÁS CURIOSIDADES",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "salon",
+    "era": "snes",
+    "nombre": "EL SALÓN",
+    "nota": "LA TELE NUEVA"
+   },
+   {
+    "lugar": "pixeles",
+    "era": "snes",
+    "nombre": "DENTRO",
+    "nota": "LOS PÍXELES"
+   },
+   {
+    "lugar": "mosaico",
+    "era": "snes",
+    "nombre": "LA PALABRA",
+    "nota": "PICTURE ELEMENT"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "salon",
+   "escenas": [
+    {
+     "texto": "Una imagen en HD tiene cinco veces más puntos que una antigua.",
+     "tipo": "titulo",
+     "destacar": [
+      "cinco"
+     ],
+     "accion": "encendido",
+     "texto_grande": "¡5 VECES MÁS PUNTOS!"
+    },
+    {
+     "texto": "Y esta semana, Movistar Plus+ pasa varios canales a alta definición.",
+     "tipo": "icono",
+     "destacar": [
+      "alta",
+      "definición."
+     ],
+     "accion": "zapping"
+    },
+    {
+     "texto": "¿Pero por qué se ve tan distinta, si la tele es la misma?",
+     "tipo": "icono",
+     "destacar": [
+      "distinta,"
+     ],
+     "accion": "dos_teles"
+    }
+   ]
+  },
+  {
+   "id": "pixeles",
+   "lugar": "pixeles",
+   "escenas": [
+    {
+     "texto": "Porque cada imagen está hecha de puntitos de color: los píxeles.",
+     "tipo": "icono",
+     "destacar": [
+      "píxeles."
+     ],
+     "accion": "zoom"
+    },
+    {
+     "texto": "La imagen antigua lleva unos cuatrocientos mil por fotograma.",
+     "tipo": "icono",
+     "destacar": [
+      "cuatrocientos"
+     ],
+     "accion": "gruesos",
+     "rotulo": "400.000"
+    },
+    {
+     "texto": "Y la alta definición completa, unos dos millones.",
+     "tipo": "icono",
+     "destacar": [
+      "dos",
+      "millones."
+     ],
+     "accion": "dividir",
+     "rotulo": "2.000.000"
+    },
+    {
+     "texto": "Pero si un canal llega en baja definición, la tele lo estira, y se ve borroso.",
+     "tipo": "icono",
+     "destacar": [
+      "borroso."
+     ],
+     "accion": "estirar"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "mosaico",
+   "escenas": [
+    {
+     "texto": "Curiosidad: píxel viene del inglés picture element, elemento de imagen.",
+     "tipo": "icono",
+     "destacar": [
+      "Curiosidad:"
+     ],
+     "accion": "letras",
+     "rotulo": [
+      "PICTURE ELEMENT",
+      "= ELEMENTO DE IMAGEN"
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

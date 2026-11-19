@@ -1,0 +1,138 @@
+{
+ "id": "2026-11-19_aldia_escanos",
+ "titulo": "¿Cómo se reparten los 350 escaños? 🗳️",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES/AR: «matrimonio» y «congreso» (19/11/2026), noticias sobre las elecciones generales del 29-N",
+ "fuentes": [
+  "Ministerio del Interior: elecciones generales del 29 de noviembre de 2026",
+  "Ley Orgánica 5/1985 del Régimen Electoral General (BOE), arts. 162 y 163: 350 diputados, 2 por provincia, 1 Ceuta y 1 Melilla, barrera del 3 % y ley D'Hondt",
+  "Artículo14 (12/11/2026): cómo se reparten los escaños el 29-N",
+  "Diario de León (17/11/2026): reparto de escaños por circunscripción"
+ ],
+ "remate": "¿CÓMO SE REPARTEN LOS ESCAÑOS?",
+ "rpg": {
+  "gancho_lugar": "hemiciclo",
+  "fin": [
+   "MÁS CURIOSIDADES",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "hemiciclo",
+    "era": "snes",
+    "nombre": "EL CONGRESO",
+    "nota": "350 ESCAÑOS"
+   },
+   {
+    "lugar": "provincias",
+    "era": "snes",
+    "nombre": "LAS PROVINCIAS",
+    "nota": "2 + POBLACIÓN"
+   },
+   {
+    "lugar": "recuento",
+    "era": "snes",
+    "nombre": "EL RECUENTO",
+    "nota": "D'HONDT"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "hemiciclo",
+   "escenas": [
+    {
+     "texto": "El veintinueve de noviembre se reparten trescientos cincuenta escaños.",
+     "tipo": "titulo",
+     "destacar": [
+      "trescientos"
+     ],
+     "accion": "encender",
+     "texto_grande": "350 ESCAÑOS EN JUEGO"
+    },
+    {
+     "texto": "¿Pero cómo se decide cuántos le tocan a cada provincia?",
+     "tipo": "icono",
+     "destacar": [
+      "provincia?"
+     ],
+     "accion": "vuelo"
+    }
+   ]
+  },
+  {
+   "id": "provincias",
+   "lugar": "provincias",
+   "escenas": [
+    {
+     "texto": "Cada provincia empieza con dos escaños, y Ceuta y Melilla, con uno.",
+     "tipo": "icono",
+     "destacar": [
+      "dos"
+     ],
+     "accion": "base",
+     "rotulo": "2 POR PROVINCIA"
+    },
+    {
+     "texto": "El resto se reparte por población: más habitantes, más escaños.",
+     "tipo": "icono",
+     "destacar": [
+      "población:"
+     ],
+     "accion": "crecer"
+    }
+   ]
+  },
+  {
+   "id": "recuento",
+   "lugar": "recuento",
+   "escenas": [
+    {
+     "texto": "Pero dentro de cada provincia, los votos se dividen con la ley D'Hondt.",
+     "tipo": "icono",
+     "destacar": [
+      "D'Hondt."
+     ],
+     "accion": "dividir",
+     "rotulo": "LEY D'HONDT"
+    },
+    {
+     "texto": "Los números más altos se quedan los escaños, uno a uno.",
+     "tipo": "icono",
+     "destacar": [
+      "altos"
+     ],
+     "accion": "escanos"
+    },
+    {
+     "texto": "Y quien no llega al tres por ciento en su provincia, no entra en el reparto.",
+     "tipo": "icono",
+     "destacar": [
+      "tres"
+     ],
+     "accion": "barrera",
+     "rotulo": "3 %"
+    },
+    {
+     "texto": "Curiosidad: la mayoría absoluta son ciento setenta y seis escaños, la mitad más uno.",
+     "tipo": "icono",
+     "destacar": [
+      "ciento"
+     ],
+     "accion": "mayoria",
+     "rotulo": "176"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
