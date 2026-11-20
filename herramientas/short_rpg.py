@@ -16,7 +16,7 @@ run = lambda *a, **k: subprocess.check_call(list(a), **k)
 dur = lambda f: float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]))
 
 # 1) cortes sobre la voz entera
-tmp = '/tmp/srpg'; shutil.rmtree(tmp, ignore_errors=True); os.makedirs(tmp)
+tmp = f'/tmp/srpg_{gid}'; shutil.rmtree(tmp, ignore_errors=True); os.makedirs(tmp)
 todas = [e for c in g['capitulos'] for e in c['escenas']]
 json.dump({'id': gid, 'capitulos': [{'id': 'todo', 'escenas': todas}]}, open(f'{tmp}/g.json', 'w'))
 shutil.copy(voz, f'{tmp}/{gid}_todo.mp3')

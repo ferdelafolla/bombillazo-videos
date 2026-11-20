@@ -585,6 +585,324 @@ Object.assign(FABE, {
       } };
   },
 });
+// ———————————— 20/11/2026: terremoto (aviso en el móvil), Black Friday (Filadelfia) y Juegos del Hambre (el doble de tributos) ————————————
+// figura de una persona en un Bloques: cuerpo, cabeza y pelo (ag = agacharse 0..1)
+function persona(B, x, y, z, ropa, o = {}) { const s = o.s || 1, h = 1 - (o.ag || 0) * .45;
+  B.pon(x, y + 2.2 * h * s, z, 2 * s, 4.4 * h * s, 1.5 * s, ropa); B.pon(x, y + (4.4 * h + .9) * s, z, 1.7 * s, 1.7 * s, 1.6 * s, P.skin); B.pon(x, y + (4.4 * h + 1.9) * s, z, 1.8 * s, .6 * s, 1.7 * s, o.pelo ?? P.dbrown);
+  if (o.movil) B.pon(x + .9 * s, y + (3.4 * h) * s, z + .9 * s, .7 * s, 1.1 * s, .3 * s, o.movil); }
+// texto en una pantalla (se redibuja solo si cambia)
+function rotular(P2, lineas, fg, bg, px, o = {}) { const k = lineas.join('|') + fg + bg + px; if (P2._k === k) return; P2._k = k; const { g, cv, tex } = P2;
+  g.fillStyle = bg; g.fillRect(0, 0, cv.width, cv.height); if (o.borde) { g.strokeStyle = o.borde; g.lineWidth = 4; g.strokeRect(2, 2, cv.width - 4, cv.height - 4); }
+  g.font = `bold ${px}px monospace`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  lineas.forEach((l, i) => { g.fillStyle = Array.isArray(fg) ? fg[i] : fg; g.fillText(l, cv.width / 2, cv.height / 2 + (i - (lineas.length - 1) / 2) * px * 1.12); }); tex.needsUpdate = true; }
+function centra(w) { const b = new THREE.Box3().setFromObject(w), c = b.getCenter(new THREE.Vector3()); w.children.forEach(m => m.position.sub(c)); const r = new THREE.Group(); r.add(w); return r; }
+const bola = (col, r = 1) => new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), new THREE.MeshBasicMaterial({ color: col }));
+
+Object.assign(FAB, {
+  // —— terremoto ——
+  movil: () => {   // móvil de pantalla grande (la pantalla se pinta aparte)
+    const v = new Vox(); v.box(-4, 0, 0, 4, 15, 1, P.ink); v.box(-3, 1, 1, 3, 14, 2, P.night); v.set(0, 13, 2, P.slate); v.box(-1, 0, 1, 1, 1, 2, P.slate);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .03 })); return w;
+  },
+  casa: () => {   // casa de dos aguas con chimenea y ventanas encendidas
+    const v = new Vox(); v.box(-5, 0, -4, 5, 7, 4, P.sand);
+    for (let y = 7; y < 12; y++) v.box(-6 + (y - 7), y, -5, 6 - (y - 7), y + 1, 5, y % 2 ? P.red : P.crimson);
+    v.box(3, 9, -2, 5, 14, 0, P.brown); v.box(-1, 0, 4, 1, 4, 5, P.dbrown);
+    for (const x of [-3, 3]) { v.box(x - 1, 3, 4, x + 1, 5, 5, P.amber); v.box(x - 1, 3, -5, x + 1, 5, -4, P.amber); } v.luz(P.amber);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w;
+  },
+  sensor: () => {   // estación sísmica: caseta, panel solar, mástil y luz verde
+    const v = new Vox(); v.box(-3, 0, -3, 3, 5, 3, P.silver); v.box(-4, 5, -4, 4, 6, 4, P.dslate); v.box(-1, 1, 3, 1, 4, 4, P.slate);
+    v.box(0, 6, 0, 1, 15, 1, P.steel); v.box(-2, 12, 0, 3, 13, 1, P.steel); v.set(0, 15, 0, P.lime); v.box(4, 2, -3, 5, 7, 3, P.navy); v.luz(P.lime);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w;
+  },
+  // —— Black Friday ——
+  bolsa: () => {   // bolsa de compras negra con asas y etiqueta de descuento
+    const v = new Vox(); v.box(-5, 0, -2, 5, 11, 2, P.ink); v.box(-3, 11, 0, -2, 14, 1, P.silver); v.box(2, 11, 0, 3, 14, 1, P.silver); v.box(-2, 13, 0, 2, 14, 1, P.silver);
+    v.box(-3, 3, 2, 3, 8, 3, P.yellow); for (let i = 0; i < 4; i++) v.set(-2 + i + (i > 1 ? 1 : 0), 4 + i, 3, P.red); v.set(-2, 7, 3, P.red); v.set(2, 4, 3, P.red); v.luz(P.yellow);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w;
+  },
+  agente: () => {   // policía de tráfico de los años 60: gorra, placa, silbato y un brazo que se mueve
+    const v = new Vox(); v.box(-2, 0, -1, 2, 6, 1, P.navy); v.box(-3, 6, -2, 3, 13, 2, P.navy); v.box(-3, 8, -2, 3, 9, 2, P.ink); v.set(-2, 11, 2, P.yellow);
+    v.box(-2, 13, -2, 2, 17, 2, P.skin); v.set(-1, 15, 2, P.ink); v.set(1, 15, 2, P.ink); v.box(-2, 17, -2, 2, 19, 2, P.navy); v.box(-2, 17, 2, 2, 18, 4, P.ink); v.set(0, 18, 2, P.yellow);
+    v.set(0, 14, 2, P.silver); v.set(0, 14, 3, P.silver); v.box(-5, 6, -1, -3, 12, 1, P.navy); v.box(-5, 4, -1, -3, 6, 1, P.white); v.box(-2, -1, -1, 2, 0, 2, P.ink); v.luz(P.yellow);
+    const w = new THREE.Group(); w.add(v.build());
+    const a = new Vox(); a.box(0, -6, -1, 2, 0, 1, P.navy); a.box(0, -8, -1, 2, -6, 1, P.white); const ga = a.build(); const hombro = new THREE.Group(); hombro.position.set(3, 12.5, 0); hombro.add(ga); hombro.name = 'brazo'; w.add(hombro);
+    return centra(w);
+  },
+  libro: () => {   // libro de cuentas abierto: tapas rojas, lomo y renglones
+    const v = new Vox(); v.box(-14, 0, -10, 14, 1, 10, P.crimson); v.box(-1, 0, -10, 1, 2, 10, P.dbrown);
+    v.box(-13, 1, -9, -1, 2, 9, P.white); v.box(1, 1, -9, 13, 2, 9, P.white); for (let z = -8; z <= 8; z += 2) { v.box(-12, 2, z, -2, 2.4, z + 1, P.silver); v.box(2, 2, z, 12, 2.4, z + 1, P.silver); }
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .03 })); return w;
+  },
+  // —— Juegos del Hambre (sin personajes ni símbolos de la saga: objetos genéricos) ——
+  cuerno: () => {   // gran cuerno dorado con cajas y mochilas en la boca
+    const v = new Vox();
+    for (let x = 0; x <= 26; x++) { const r = 7 - x * .23, cy = 7 + (x > 15 ? (x - 15) ** 2 * .09 : 0); for (let y = -8; y <= 8; y++) for (let z = -8; z <= 8; z++) { const d = Math.hypot(y, z); if (d <= r + .3 && (d > r - 1.3 || x > 20)) v.set(x, Math.round(cy + y), z, (x >> 2) % 2 ? P.amber : P.yellow); } }
+    for (let i = 0; i < 7; i++) v.box(-3 - (i % 3) * 3, 0, -5 + (i % 4) * 3, -1 - (i % 3) * 3, 2 + (i % 2), -3 + (i % 4) * 3, [P.brown, P.green, P.orange, P.slate][i % 4]);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .05 })); return w;
+  },
+  tren: () => {   // tren bala plateado con franja y ventanillas
+    const v = new Vox(); v.box(-20, 1, -3, 20, 7, 3, P.silver); for (let x = 20; x < 27; x++) { const h = 7 - (x - 20) * .8; v.box(x, 1, -3 + (x - 20) * .3 | 0, x + 1, Math.max(2, h), 3 - (x - 20) * .3 | 0, P.silver); }
+    v.box(-20, 4, 3, 20, 6, 4, P.navy); v.box(-20, 4, -4, 20, 6, -3, P.navy); v.box(-20, 1, 3, 25, 2, 4, P.red); v.box(-20, 1, -4, 25, 2, -3, P.red); v.box(-18, 0, -2, 22, 1, 2, P.ink); v.set(26, 2, 0, P.yellow); v.luz(P.yellow);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w;
+  },
+  pino: () => {   // pino de capas
+    const v = new Vox(); v.box(-1, 0, -1, 1, 5, 1, P.dbrown); for (let k = 0; k < 4; k++) { const y0 = 4 + k * 4, r = 6 - k * 1.4; for (let y = 0; y < 5; y++) v.cyl(0, 0, y0 + y, y0 + y + 1, r * (1 - y / 6), k % 2 ? P.green : P.dgreen); }
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w;
+  },
+});
+
+Object.assign(FABE, {
+  // —— terremoto 1: un pueblo de California, el móvil que avisa y la grieta ——
+  falla: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, P.cyan, 0xd8f6ff]); s.fog = new THREE.Fog(0xbfe8ff, 120, 260);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.25, sol: 0xfff1d6, int: 2.1, dir: [-40, 70, 50], sombra: 90 });
+    const v = new Vox(); v.box(-100, -5, -90, 100, 0, 60, (x, y, z) => y === -1 ? (Math.abs(z + 5) < 3 ? P.slate : hsh(x >> 2, 1, z >> 2) > .7 ? P.green : P.lime) : P.brown);
+    for (let i = 0; i < 9; i++) { const x = -80 + i * 20, h = 6 + hsh(i, 5, 5) * 8 | 0; v.ball(x, -2, -88, 14 + h, (X, Y) => Y > 10 ? P.silver : P.dgreen, .5); } s.add(v.build());
+    const casas = [[-26, -24], [-10, -30], [8, -26], [26, -22], [-34, 8], [-18, 14], [18, 12], [34, 6], [0, -48], [-44, -40], [44, -38]].map(([x, z], i) => { const m = actor('casa', .8); m.position.set(x, 5, z); m.rotation.y = (hsh(i, 9, 9) - .5) * .8; m.userData.b = [x, z]; s.add(m); return m; });
+    const G = new Bloques(140); s.add(G.im);
+    const grieta = k => { G.ini(); for (let z = 55; z > -90; z -= 1.2) { const u = (55 - z) / 145; if (u > k) break; const x = Math.sin(z * .07) * 5 + Math.sin(z * .23) * 1.5, w2 = 1.6 + Math.sin(z * .5) * .6; G.pon(x, -.35, z, w2 * Math.min(1, (k - u) * 8), 1, 1.4, P.ink); } G.fin(); };
+    const movil = actor('movil', .75); s.add(movil); const scr = pantalla(6, 13, 60, 130); scr.m.position.z = 1.06; movil.add(scr.m);
+    const hora = () => rotular(scr, ['10:42', '', '', ''], '#c0cbdc', '#262b44', 14);
+    const alerta = on => rotular(scr, on ? ['⚠', 'ALERTA', 'SÍSMICA', '', 'AGÁCHATE'] : ['10:42'], on ? ['#fee761', '#ffffff', '#ffffff', '#fff', '#fee761'] : '#c0cbdc', on ? '#e43b44' : '#262b44', on ? 13 : 14);
+    const tiembla = (a, t) => casas.forEach((m, i) => { const [x, z] = m.userData.b; m.position.set(x + Math.sin(t * 41 + i) * a, 5 + Math.abs(Math.sin(t * 37 + i * 2)) * a * .6, z + Math.cos(t * 33 + i) * a * .5); m.rotation.z = Math.sin(t * 29 + i) * a * .05; });
+    const c = cam(46);
+    return { s, c, upd(t) { tiembla(0, t); grieta(0); movil.visible = true; movil.position.set(0, 7, 30); movil.rotation.set(-.05, Math.sin(t * .6) * .15, 0); hora(); mira(c, [0, 14, 70], [0, 7, 30], .02); },
+      acc: {
+        // el móvil vibra con la alerta roja; al fondo, el pueblo aún tranquilo… y empieza a temblar
+        vibra(lt, dur, t) { const on = lt > .25; alerta(on); movil.position.set(on ? Math.sin(t * 70) * .25 : 0, 7, 30); movil.rotation.set(-.05, -.2 + Math.sin(t * .8) * .1, on ? Math.sin(t * 55) * .04 : 0);
+          tiembla(lt > dur * .7 ? .4 * (lt - dur * .7) : 0, t); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(4, -2, k), 13, lerp(74, 78, k)], [0, 7, 30], .02); },
+        // sacudida: las casas tiemblan y el suelo se abre en una grieta
+        sacudida(lt, dur, t) { movil.visible = false; const a = 1.3 * Math.min(1, lt * 2) * (1 - .5 * clamp((lt - dur * .7) / (dur * .3), 0, 1)); tiembla(a, t); grieta(ss(clamp(lt / (dur * .7), 0, 1)));
+          const sh = Math.sin(t * 47) * a * .5; mira(c, [sh, 52 + sh, 104], [0, 0, -14], .04); },
+        // la cámara se acerca a la grieta y baja hacia el suelo
+        bajar(lt, dur, t) { movil.visible = false; tiembla(.15, t); grieta(1); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(0, 4, k), lerp(52, 6, k), lerp(104, 22, k)], [lerp(0, 2, k), lerp(0, -8, k), lerp(-14, -6, k)], .04); },
+      } };
+  },
+  // —— terremoto 2: el suelo en corte, con las ondas P (azules) y S (rojas) ——
+  ondas: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, P.cyan]); s.fog = new THREE.Fog(0x124e89, 200, 400);
+    luces(s, { cielo: 0xd8f0ff, suelo: 0x733e39, amb: 1.4, sol: 0xfff1d6, int: 1.8, dir: [-30, 60, 80], sombra: 60 });
+    const v = new Vox(); v.box(-22, -40, -6, 22, 0, 6, (x, y, z) => { const j = hsh(x, y, z); if (y === -1) return j > .5 ? P.green : P.lime; if (y > -4) return P.brown; if (y > -15) return j > .8 ? P.brown : P.tan; if (y > -27) return j > .85 ? P.dbrown : P.brown; return j > .8 ? P.umber : P.dbrown; });
+    for (let y = -31; y < -1; y++) { const x = Math.round(-12 + (y + 31) * .28); v.set(x, y, 5, P.ink); v.set(x + 1, y, 5, P.ink); } s.add(v.build({ jit: .05 }));
+    const casas = [-6, 2, 10, 17].map((x, i) => { const m = actor('casa', .36); m.position.set(x, 2.3, 0); m.userData.x = x; s.add(m); return m; });
+    const sensor = actor('sensor', .42); sensor.position.set(-17, 3.4, 1); s.add(sensor); const luzS = bola(P.lime, .9); luzS.position.set(-17, 7.4, 1.3); s.add(luzS);
+    const H = [-12, -30], foco = bola(P.yellow, 1.6); foco.position.set(H[0], H[1], 6.4); s.add(foco);
+    const B = new Bloques(700, true); s.add(B.im);
+    const anillo = (r, col, wig, t) => { if (r <= .3) return; const N = Math.max(14, Math.min(160, r * 4 | 0)); for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2, rr = r + wig * Math.sin(a * 16 + t * 24); const x = H[0] + Math.cos(a) * rr, y = H[1] + Math.sin(a) * rr; if (Math.abs(x) < 21.6 && y < -.3 && y > -39.6) B.pon(x, y, 6.6, .95, .95, .5, col); } };
+    const llega = (r, x) => r > Math.hypot(x - H[0], H[1]);
+    const tiembla = (a, t) => casas.forEach((m, i) => { m.position.x = m.userData.x + Math.sin(t * 43 + i) * a; m.position.y = 2.3 + Math.abs(Math.sin(t * 39 + i)) * a * .7; m.rotation.z = Math.sin(t * 31 + i) * a * .12; });
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); B.fin(); tiembla(0, t); foco.scale.setScalar(.6); luzS.material.color.setHex(P.dslate); mira(c, [Math.sin(t * .1) * 4, -14, 125], [0, -18, 0], .12); },
+      acc: {
+        // la falla se rompe en el foco y salen ondas de los dos tipos, una y otra vez
+        rotura(lt, dur, t) { foco.scale.setScalar(1 + Math.abs(Math.sin(lt * 7)) * .8); B.ini(); for (let k = 0; k < 3; k++) { anillo(((lt * 12) + k * 9) % 27, P.cyan, 0, t); anillo(((lt * 7) + k * 9) % 27, P.red, .5, t); } B.fin(); tiembla(.08, t); },
+        // las ondas P, rápidas: llegan al sensor (luz verde) y casi no mueven las casas
+        ondas_p(lt, dur, t) { const r = lt * 36 / (dur * .55); B.ini(); anillo(r, P.cyan, 0, t); anillo(r - 2, P.blue, 0, t); B.fin(); foco.scale.setScalar(.8);
+          luzS.material.color.setHex(llega(r, -17) ? (Math.floor(t * 6) % 2 ? P.lime : P.yellow) : P.dslate); tiembla(llega(r, 0) ? .06 : 0, t); },
+        // detrás, las ondas S, lentas y onduladas: cuando llegan arriba, las casas se sacuden
+        ondas_s(lt, dur, t) { const rp = 50 + lt * 30, r = lt * 34 / (dur * .6); B.ini(); anillo(rp, P.cyan, 0, t); anillo(r, P.red, .9, t); anillo(r - 2, P.orange, .9, t); B.fin(); foco.scale.setScalar(.8);
+          luzS.material.color.setHex(P.lime); tiembla(llega(r, 0) ? .7 : .03, t); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(-14, -10, k), lerp(125, 118, k)], [0, -18, 0], .12); },
+      } };
+  },
+  // —— terremoto 3: el aviso sale del sensor y llega a los móviles antes que la sacudida ——
+  aviso: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, P.cyan, 0xe8f8ff]); s.fog = new THREE.Fog(0xcfeeff, 140, 300);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.3, sol: 0xfff1d6, int: 2, dir: [40, 70, 50], sombra: 80 });
+    const v = new Vox(); v.box(-110, -2, -110, 110, 0, 60, (x, y, z) => (Math.abs(z - 8) < 3 || Math.abs(x - 4) < 3) ? P.slate : hsh(x >> 2, 3, z >> 2) > .7 ? P.green : P.lime); s.add(v.build());
+    const casas = [[-14, -22], [2, -26], [18, -20], [-6, -8], [14, -6], [26, -32], [-24, -36], [8, -42]].map(([x, z], i) => { const m = actor('casa', .7); m.position.set(x, 4.4, z); m.userData.b = [x, z]; s.add(m); return m; });
+    const iconos = casas.map(m => { const b = bola(P.red, 1.3); s.add(b); return b; });
+    const sensor = actor('sensor', .9); sensor.position.set(-18, 8, 14); s.add(sensor); const luzS = bola(P.lime, 1.1); luzS.position.set(-18, 16, 14.5); s.add(luzS);
+    const cartel = pantalla(22, 10, 176, 80); cartel.m.position.set(6, 17, -14); s.add(cartel.m); const poste = new THREE.Mesh(new THREE.BoxGeometry(1, 12, 1), new THREE.MeshLambertMaterial({ color: P.steel })); poste.position.set(6, 6, -14.6); s.add(poste);
+    const B = new Bloques(900, true), Pp = new Bloques(40 * 4); s.add(B.im, Pp.im);
+    const gente = [[-10, 10], [-4, 12], [2, 10], [8, 13], [14, 10], [20, 12], [-16, 14], [-1, 16], [11, 17], [24, 16]];
+    const pon = (ag, alerta, t) => { Pp.ini(); gente.forEach(([x, z], i) => persona(Pp, x, 0, z, [P.red, P.blue, P.orange, P.rose, P.teal][i % 5], { s: .9, ag, movil: alerta ? (Math.floor(t * 8 + i) % 2 ? P.red : P.yellow) : P.ink })); Pp.fin(); };
+    const arcos = (lt, t) => { for (let k = 0; k < 3; k++) { const r = ((lt * 70) + k * 26) % 78; if (r < 2) continue; const N = r * 2.2 | 0; for (let i = 0; i <= N; i++) { const a = Math.PI * i / N; B.pon(-18 + Math.cos(a) * r, 16 + Math.sin(a) * r * .5, 14 - Math.sin(a) * r * .55, 1, 1, 1, k % 2 ? P.yellow : P.amber); } } };
+    const onda = (r, t) => { const N = 120; for (let i = 0; i < N; i++) { const a = -.2 + i / N * 1.3; const x = -120 + Math.cos(a) * r, z = 30 - Math.sin(a) * r; if (x > -60 && x < 60 && z > -60 && z < 50) B.pon(x, .5 + Math.abs(Math.sin(i * .7 + t * 9)) * 1.2, z, 3, 1.5, 3, i % 2 ? P.brown : P.dbrown); } };
+    const tiembla = (a, t) => casas.forEach((m, i) => { const [x, z] = m.userData.b; m.position.set(x + Math.sin(t * 41 + i) * a, 4.4 + Math.abs(Math.sin(t * 37 + i)) * a * .5, z); });
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); B.fin(); pon(0, false, t); iconos.forEach(b => b.visible = false); tiembla(0, t); cartel.m.visible = true; poste.visible = true; luzS.material.color.setHex(P.lime); rotular(cartel, ['PUEBLO', 'TRANQUILO'], '#ffffff', '#3a4466', 22, { borde: '#c0cbdc' }); mira(c, [Math.sin(t * .1) * 6, 30, 92], [0, 6, -8], .07); },
+      acc: {
+        // el sensor nota las ondas P y lanza el aviso: arcos de luz que llegan a todas las casas y móviles
+        senal(lt, dur, t) { B.ini(); arcos(lt, t); onda(20 + lt * 6, t); B.fin(); luzS.material.color.setHex(Math.floor(t * 8) % 2 ? P.yellow : P.lime);
+          const llegado = lt * 70; iconos.forEach((b, i) => { const [x, z] = casas[i].userData.b; const ok = llegado > Math.hypot(x + 18, z - 14); b.visible = ok; b.position.set(x, 14 + Math.sin(t * 5 + i) * .6, z); });
+          pon(0, llegado > 30, t); rotular(cartel, llegado > 30 ? ['¡ALERTA', 'SÍSMICA!'] : ['PUEBLO', 'TRANQUILO'], llegado > 30 ? '#fee761' : '#ffffff', llegado > 30 ? '#e43b44' : '#3a4466', 22, { borde: '#ffffff' });
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-4, 4, k), 30, 96], [0, 6, -8], .07); },
+        // cuenta atrás: la gente se agacha y se cubre; al final llega la sacudida
+        cubrirse(lt, dur, t) { const ag = ss(clamp((lt - .3) / 1.2, 0, 1)), n = Math.max(0, Math.ceil(8 * (1 - lt / (dur * .85)))); B.ini(); onda(40 + lt * 17, t); B.fin(); pon(ag, true, t);
+          iconos.forEach((b, i) => { const [x, z] = casas[i].userData.b; b.visible = true; b.position.set(x, 14, z); }); tiembla(lt > dur * .85 ? .8 : 0, t);
+          rotular(cartel, n > 0 ? ['AGÁCHATE', String(n) + ' s'] : ['¡YA', 'LLEGA!'], '#fee761', '#e43b44', 22, { borde: '#ffffff' }); mira(c, [0, 26, 80], [2, 4, -2], .08); },
+        // red de móviles vista desde arriba: el anillo de ondas P pasa y cada móvil que lo nota se enciende
+        red(lt, dur, t) { B.ini(); const r = lt * 22; for (let i = 0; i < 330; i++) { const x = (hsh(i, 1, 7) - .5) * 90, z = (hsh(i, 2, 7) - .5) * 100 - 10, d = Math.hypot(x + 30, z + 20), on = d < r;
+            B.pon(x, .6 + (on ? Math.max(0, 1.5 - (r - d) * .3) * 3 : 0), z, 2.2, .8, 3.4, on ? ((r - d) < 6 ? P.white : P.cyan) : P.ink); }
+          const N = Math.max(20, r * 3 | 0); for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2; const x = -30 + Math.cos(a) * r, z = -20 + Math.sin(a) * r; if (Math.abs(x) < 50 && z > -62 && z < 44) B.pon(x, .3, z, 1.2, .4, 1.2, P.blue); } B.fin();
+          iconos.forEach(b => b.visible = false); cartel.m.visible = false; poste.visible = false; Pp.ini(); Pp.fin(); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(120, 132, k), lerp(56, 48, k)], [0, 0, -12], .0); },
+      } };
+  },
+
+  // —— Black Friday 1: la tienda, la cola, el calendario y el apagón ——
+  escaparate: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.navy]); s.fog = new THREE.Fog(0x262b44, 100, 230);
+    luces(s, { cielo: 0x9aa8d8, suelo: 0x262b44, amb: 1.25, sol: 0xd8e0ff, int: 1.2, dir: [30, 60, 70], sombra: 70 });
+    const v = new Vox(); v.box(-90, -1, -30, 90, 0, 60, (x, y, z) => z > 10 ? ((x % 8 < 4) && z === 24 ? P.white : P.night) : P.slate);
+    v.box(-34, 0, -26, 34, 34, -18, P.dslate); v.box(-36, 34, -28, 36, 36, -16, P.slate); v.box(-30, 2, -18, -8, 16, -17, 0x2a5f8a); v.box(8, 2, -18, 30, 16, -17, 0x2a5f8a);
+    for (let x = -70; x < 70; x += 15) if (Math.abs(x) > 38) { const h = 26 + (hsh(x, 2, 1) * 30 | 0); v.box(x, 0, -40, x + 12, h, -30, P.night); for (let y = 3; y < h - 2; y += 4) for (let k = 2; k < 11; k += 3) if (hsh(x + k, y, 3) > .55) v.set(x + k, y, -30, P.amber); }
+    v.luz(P.amber); s.add(v.build());
+    const puerta = new Vox(); puerta.box(-7, 0, 0, 7, 16, 1, (x, y) => y % 2 ? P.silver : P.steel); const gp = puerta.build(); gp.position.set(0, 0, -16.9); s.add(gp);
+    const interior = new THREE.PointLight(0xfee761, 0, 70, 1.3); interior.position.set(0, 8, -10); s.add(interior);
+    const letrero = pantalla(30, 13, 240, 104); letrero.m.position.set(0, 25, -16.8); s.add(letrero.m);
+    const cartelI = pantalla(10, 7, 100, 70), cartelD = pantalla(10, 7, 100, 70); cartelI.m.position.set(-14, 10, -16.8); cartelD.m.position.set(14, 10, -16.8); s.add(cartelI.m, cartelD.m);
+    const bolsas = [0, 1, 2, 3].map(() => { const b = actor('bolsa', .5); s.add(b); return b; });
+    const cal = new THREE.Group(); cal.position.set(0, 14, 16); s.add(cal); const atras = pantalla(16, 18, 128, 144), frente = pantalla(16, 18, 128, 144); atras.m.position.set(0, 0, -.05); cal.add(atras.m);
+    const bisagra = new THREE.Group(); bisagra.position.set(0, 9, 0); frente.m.position.set(0, -9, 0); bisagra.add(frente.m); cal.add(bisagra);
+    const anillas = new THREE.Mesh(new THREE.BoxGeometry(14, .8, .8), new THREE.MeshLambertMaterial({ color: P.steel })); anillas.position.set(0, 9.2, .2); cal.add(anillas);
+    const pie = new THREE.Mesh(new THREE.BoxGeometry(1, 6, 1), new THREE.MeshLambertMaterial({ color: P.dslate })); pie.position.set(0, -12, -.5); cal.add(pie);
+    const pag = (P2, dia, n, sub, col) => { const k = dia + n + sub; if (P2._k === k) return; P2._k = k; const { g, cv, tex } = P2; g.fillStyle = '#ffffff'; g.fillRect(0, 0, 128, 144); g.fillStyle = col; g.fillRect(0, 0, 128, 34);
+      g.fillStyle = '#fff'; g.font = 'bold 22px monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(dia, 64, 18); g.fillStyle = '#181425'; g.font = 'bold 66px monospace'; g.fillText(n, 64, 84); g.fillStyle = col; g.font = 'bold 13px monospace'; sub.split('|').forEach((l, i) => g.fillText(l, 64, 124 + i * 14 - (sub.includes('|') ? 7 : 0))); tex.needsUpdate = true; };
+    const Pp = new Bloques(36 * 4); s.add(Pp.im); const ropa = [P.red, P.blue, P.lime, P.orange, P.rose, P.cyan, P.yellow, P.teal];
+    const cola = (entra, salta) => { Pp.ini(); for (let i = 0; i < 30; i++) { const fila = i % 3, col = Math.floor(i / 3), x0 = (col - 4.5) * 4.6, z0 = 2 + fila * 4.5; const kk = clamp(entra * 2.2 - i / 30, 0, 1);
+        const x = lerp(x0, 0, kk), z = lerp(z0, -18, kk); if (z < -14.5) continue; persona(Pp, x, Math.abs(Math.sin(salta * 9 + i)) * salta * .6, z, ropa[i % 8], { s: 1 }); } Pp.fin(); };
+    const letreros = (negro) => { rotular(letrero, ['BLACK', 'FRIDAY'], [negro > 0 ? `rgb(${255 - negro * 230 | 0},${255 - negro * 230 | 0},${255 - negro * 210 | 0})` : '#ffffff', '#fee761'], '#181425', 44, { borde: '#fee761' }); rotular(cartelI, ['-50%'], '#fee761', '#e43b44', 34); rotular(cartelD, ['-70%'], '#fee761', '#e43b44', 34); };
+    const c = cam(46);
+    return { s, c, upd(t) { cola(0, 0); gp.position.y = 0; interior.intensity = 0; bolsas.forEach(b => b.visible = false); cal.visible = false; letrero.m.visible = true; letreros(0); mira(c, [Math.sin(t * .1) * 5, 16, 92], [0, 16, -12], .12); },
+      acc: {
+        // se abre la persiana y la cola entra corriendo; salen bolsas volando
+        rebajas(lt, dur, t) { letrero.m.visible = false; const k = ss(clamp((lt - .2) / 1.2, 0, 1)); gp.position.y = k * 15.5; interior.intensity = 160 * k; cola(clamp((lt - .6) / (dur * 1.1), 0, 1), k > .5 ? 1 : 0);
+          bolsas.forEach((b, i) => { const u = clamp((lt - 1.2 - i * .35) / 1.4, 0, 1); b.visible = u > 0 && u < 1; b.position.set(lerp(0, (i - 1.5) * 12, u), 6 + Math.sin(u * Math.PI) * 18, lerp(-14, 10, u)); b.rotation.set(u * 3, u * 5 + i, 0); });
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [0, 16, lerp(98, 90, kc)], [0, 16, -12], .12); },
+        // el calendario pasa la hoja: del jueves 26 (Acción de Gracias) al viernes 27
+        calendario(lt, dur, t) { cal.visible = true; cola(.15, 0); gp.position.y = 15.5; interior.intensity = 160; pag(atras, 'VIERNES', '27', 'NOVIEMBRE', '#181425'); pag(frente, 'JUEVES', '26', 'ACCIÓN DE|GRACIAS', '#f77622');
+          const k = ss(clamp((lt - dur * .35) / .9, 0, 1)); bisagra.rotation.x = -k * Math.PI * .98; frente.m.visible = k < .97; cal.rotation.y = Math.sin(t * .7) * .12; mira(c, [0, 16, 82], [0, 14, 16], .085); },
+        // ¿por qué «negro»? se apaga todo y solo queda la palabra BLACK… a oscuras
+        apagon(lt, dur, t) { const k = ss(clamp((lt - .3) / 1.4, 0, 1)); cola(.15, 0); gp.position.y = 15.5 * (1 - k); interior.intensity = 160 * (1 - k); letreros(k); const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(16, 20, kc), lerp(92, 84, kc)], [0, 17, -12], .12); },
+      } };
+  },
+  // —— Black Friday 2: el libro de cuentas, de rojo a negro ——
+  cuentas: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.umber, P.dbrown, P.brown]); s.fog = new THREE.Fog(0x3e2731, 120, 240);
+    luces(s, { cielo: 0xffe8c8, suelo: 0x3e2731, amb: 1.3, sol: 0xfff0d0, int: 2, dir: [-30, 80, 30], sombra: 50 });
+    const v = new Vox(); v.box(-50, -4, -40, 50, 0, 40, (x, y, z) => y === -1 ? ((z >> 2) % 2 ? P.brown : P.tan) : P.dbrown);
+    v.box(26, 0, -18, 30, 2, -14, P.dslate); v.box(27, 2, -17, 29, 20, -15, P.dslate); v.box(18, 18, -19, 30, 22, -13, P.amber); v.luz(P.amber);   // flexo
+    for (let i = 0; i < 5; i++) v.cyl(-28, 14, i, i + 1, 3, P.yellow); v.cyl(-22, 20, 0, 3, 3, P.yellow); s.add(v.build());   // monedas
+    const libro = actor('libro', 1.3); libro.position.set(0, 2, 0); s.add(libro);
+    const izq = pantalla(15, 22, 120, 176), der = pantalla(15, 22, 120, 176); [izq, der].forEach((p2, i) => { p2.m.rotation.x = -Math.PI / 2; p2.m.position.set(i ? 9.5 : -9.5, 3.85, 0); s.add(p2.m); });
+    const R0 = ['-1.200', '-850', '-430', '-90'], N0 = ['+300', '+1.500', '+2.900', '+4.800'];
+    const hoja = (P2, filas, cols, tit) => { const k = filas.join() + cols.join(); if (P2._k === k) return; P2._k = k; const { g, tex } = P2; g.fillStyle = '#ffffff'; g.fillRect(0, 0, 120, 176); g.fillStyle = '#8b9bb4'; for (let y = 40; y < 176; y += 30) g.fillRect(6, y + 12, 108, 2);
+      g.font = 'bold 15px monospace'; g.textAlign = 'center'; g.fillStyle = '#3a4466'; g.fillText(tit, 60, 22); g.font = 'bold 22px monospace'; filas.forEach((f, i) => { g.fillStyle = cols[i]; g.fillText(f, 60, 60 + i * 30); }); tex.needsUpdate = true; };
+    const c = cam(46);
+    return { s, c, upd(t) { hoja(izq, R0, R0.map(() => '#e43b44'), 'ENERO-OCT'); hoja(der, R0, R0.map(() => '#e43b44'), 'NOVIEMBRE'); mira(c, [Math.sin(t * .15) * 8, 72, 58], [0, 2, 0], .1); },
+      acc: {
+        // la página de noviembre pasa de números rojos a negros, fila a fila
+        rojo_negro(lt, dur, t) { hoja(izq, R0, R0.map(() => '#e43b44'), 'ENERO-OCT'); const f = R0.map((r, i) => lt > dur * (.4 + i * .12) ? N0[i] : r); hoja(der, f, f.map(x => x[0] === '+' ? '#181425' : '#e43b44'), 'NOVIEMBRE');
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 6, k), lerp(74, 66, k), lerp(60, 54, k)], [lerp(0, 4, k), 2, 0], .1); },
+      } };
+  },
+  // —— Black Friday 3: Filadelfia en los años 60, atascos, gentío y el cartel de «Big Friday» ——
+  filadelfia: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.steel, P.silver, 0xe8eef5]); s.fog = new THREE.Fog(0xc0cbdc, 110, 260);
+    luces(s, { cielo: 0xe8eef8, suelo: 0x5a6988, amb: 1.35, sol: 0xfff4e0, int: 1.7, dir: [-40, 70, 40], sombra: 90 });
+    const v = new Vox(); v.box(-40, -1, -140, 40, 0, 70, (x, y, z) => Math.abs(x) > 12 ? P.silver : (x === 0 && (z >> 2) % 2 ? P.yellow : P.dslate));
+    v.box(-70, -1, -14, 70, 0, -2, (x, y, z) => Math.abs(x) > 12 ? P.silver : ((x >> 1) % 2 ? P.white : P.dslate));   // cruce con paso de cebra
+    for (let i = 0; i < 7; i++) for (const sd of [-1, 1]) { const z = -130 + i * 26, h = 22 + (hsh(i, sd, 4) * 26 | 0), x0 = sd < 0 ? -40 : 16, col = [P.brown, P.dbrown, P.tan, P.crimson][(i + (sd > 0 ? 2 : 0)) % 4];
+      if (z > -16 && z < 0) continue; v.box(x0, 0, z, x0 + 24, h, z + 22, col); for (let y = 4; y < h - 2; y += 5) for (let k = 2; k < 21; k += 4) v.box(sd < 0 ? x0 + 24 : x0 - 1, y, z + k, sd < 0 ? x0 + 25 : x0, y + 3, z + k + 2, hsh(i, y, k) > .4 ? P.navy : P.amber);
+      v.box(sd < 0 ? x0 + 24 : x0 - 2, 6, z + 3, sd < 0 ? x0 + 26 : x0, 9, z + 19, [P.red, P.lime, P.blue][(i + sd + 3) % 3]); }
+    v.box(-6, 0, -175, 6, 60, -163, P.sand); v.box(-3, 60, -172, 3, 74, -166, P.tan); v.cyl(0, -169, 74, 80, 2, P.silver); v.box(-3, 50, -163, 3, 56, -162, P.white); v.luz(P.amber); s.add(v.build());   // torre del reloj al fondo
+    const agente = actor('agente', .55); agente.position.set(0, 6.2, -8); s.add(agente); const peana = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 1, 12), new THREE.MeshLambertMaterial({ color: P.white })); peana.position.set(0, .5, -8); s.add(peana);
+    const brazo = agente.getObjectByName('brazo');
+    const Cc = new Bloques(30 * 4), Pp = new Bloques(90 * 4); s.add(Cc.im, Pp.im); const colC = [P.red, P.blue, P.lime, P.yellow, P.rose, P.teal, P.orange, P.sand];
+    const coches = (av, t) => { Cc.ini(); for (let i = 0; i < 26; i++) { const carril = i % 2, x = carril ? 5 : -5, dir = carril ? -1 : 1, z0 = (carril ? -120 : 60) + dir * -1 * 0 + (Math.floor(i / 2)) * 10.5 * (carril ? 1 : -1);
+        const z = z0 + dir * av * (1 + .1 * Math.sin(i)), col = colC[i % 8], bot = Math.abs(Math.sin(t * 8 + i)) * .1; if (z > -16 && z < 0) continue;
+        Cc.pon(x, 1.8 + bot, z, 5, 2.2, 9, col); Cc.pon(x, 3.6 + bot, z + dir * .5, 4.4, 1.6, 5, P.silver); Cc.pon(x, .7, z - 3, 5.4, 1.4, 1.6, P.ink); Cc.pon(x, .7, z + 3, 5.4, 1.4, 1.6, P.ink); } Cc.fin(); };
+    const gentio = (n, t) => { Pp.ini(); for (let i = 0; i < n; i++) { const sd = i % 2 ? 1 : -1, x = sd * (14.5 + (i % 5) * 1.6), z = -110 + ((i * 37) % 160) + Math.sin(t * 1.5 + i) * 1.2; if (z > -15 && z < -1) continue; persona(Pp, x, 0, z, [P.crimson, P.navy, P.dbrown, P.plum, P.teal, P.slate][i % 6], { pelo: i % 3 ? P.dbrown : P.ink }); } Pp.fin(); };
+    const banda = new THREE.Group(); s.add(banda); const cart = pantalla(30, 8, 240, 64); cart.m.position.set(15, 0, 0); banda.add(cart.m); banda.position.set(-15, 30, -40);
+    rotular(cart, ['★ BIG FRIDAY ★'], '#e43b44', '#ffffff', 30, { borde: '#124e89' });
+    const c = cam(46);
+    return { s, c, upd(t) { coches(0, t); gentio(40, t); banda.visible = false; brazo.rotation.z = 0; agente.rotation.y = 0; mira(c, [Math.sin(t * .1) * 4, 18, 46], [0, 10, -20], .05); },
+      acc: {
+        // llegada: la cámara baja desde los tejados hasta el cruce
+        llegar(lt, dur, t) { coches(lt * 2, t); gentio(40, t); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(95, 20, k), lerp(70, 46, k)], [0, lerp(20, 10, k), lerp(-60, -20, k)], .04); },
+        // atasco: los coches casi no avanzan, la acera se llena y el policía no para de hacer señas
+        atasco(lt, dur, t) { coches(lt * .6, t); gentio(Math.min(90, 40 + lt * 18 | 0), t); brazo.rotation.z = 2.6 + Math.sin(t * 7) * .5; agente.rotation.y = Math.sin(t * 1.3) * .6; mira(c, [lerp(10, 4, ss(clamp(lt / dur, 0, 1))), 16, 36], [0, 8, -12], .08); },
+        // las tiendas cuelgan «Big Friday»… se descuelga y nadie le hace caso
+        cartel(lt, dur, t) { coches(lt * .6, t); gentio(90, t); brazo.rotation.z = 2.6 + Math.sin(t * 7) * .5; banda.visible = true; const sube = ss(clamp(lt / 1.2, 0, 1)), cae = ss(clamp((lt - dur * .55) / 1, 0, 1));
+          banda.position.set(-15, lerp(6, 30, sube), -40); banda.rotation.z = -cae * 1.25; mira(c, [0, 18, 34], [0, 18, -40], .1); },
+      } };
+  },
+
+  // —— Juegos 1: la arena con el cuerno dorado y los tributos en sus plataformas ——
+  arena: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, P.cyan]); s.fog = new THREE.Fog(0x9fd8f0, 130, 300);
+    luces(s, { cielo: 0xe0f0ff, suelo: 0x265c42, amb: 1.25, sol: 0xfff1d6, int: 2.2, dir: [-40, 80, 40], sombra: 70 });
+    const v = new Vox(); v.box(-120, -2, -120, 120, 0, 120, (x, y, z) => { const d = Math.hypot(x, z); return d < 30 ? (hsh(x, 1, z) > .8 ? P.tan : P.sand) : hsh(x >> 2, 2, z >> 2) > .6 ? P.green : P.dgreen; });
+    v.box(40, -2, -80, 90, -1, -40, P.blue); s.add(v.build({ jit: .05 }));
+    for (let i = 0; i < 34; i++) { const a = i / 34 * Math.PI * 2 + hsh(i, 1, 1) * .2, r = 44 + hsh(i, 2, 2) * 30, p = actor('pino', .9 + hsh(i, 3, 3) * .6); p.position.set(Math.cos(a) * r, 9, Math.sin(a) * r); s.add(p); }
+    const cuerno = actor('cuerno', .75); cuerno.position.set(0, 5, 0); cuerno.rotation.y = Math.PI / 2 + .3; s.add(cuerno);
+    const B = new Bloques(48 * 5); s.add(B.im); const col12 = [P.red, P.orange, P.yellow, P.lime, P.green, P.teal, P.cyan, P.blue, P.navy, P.plum, P.rose, P.pink];
+    const plataformas = (k2, t) => { B.ini(); for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2, x = Math.cos(a) * 20, z = Math.sin(a) * 20, nueva = i % 2 === 1, y = nueva ? lerp(-5, 0, k2) : 0; if (nueva && k2 <= 0) continue;
+        B.pon(x, y + .5, z, 2.6, 1, 2.6, P.steel); persona(B, x, y + 1, z, col12[Math.floor(i / 4) % 12], { s: .75, pelo: i % 3 ? P.dbrown : P.ink }); } B.fin(); };
+    const cielo2 = pantalla(26, 12, 208, 96); cielo2.m.position.set(0, 21, -22); s.add(cielo2.m);
+    const c = cam(46);
+    return { s, c, upd(t) { plataformas(1, t); cielo2.m.visible = false; const a = t * .05; mira(c, [Math.sin(a) * 70, 52, Math.cos(a) * 70], [0, 0, 0], .06); },
+      acc: {
+        // 24 plataformas… y de la tierra salen otras 24: 48 tributos
+        duplicar(lt, dur, t) { plataformas(ss(clamp((lt - dur * .3) / (dur * .45), 0, 1)), t); mira(c, [0, 60, 78], [0, -2, 0], .05); },
+        // vuelta alrededor de la arena
+        vuelta(lt, dur, t) { plataformas(1, t); const a = .3 + lt * .32; mira(c, [Math.sin(a) * 88, 44, Math.cos(a) * 88], [0, 2, 0], .06); },
+        // en el cielo, el número de los Juegos retrocede del 74 al 50
+        atras(lt, dur, t) { plataformas(1, t); cielo2.m.visible = true; const n = Math.round(lerp(74, 50, ss(clamp((lt - .3) / (dur * .7), 0, 1)))); rotular(cielo2, [n + '.º', 'JUEGOS'], n === 50 ? '#fee761' : '#ffffff', '#124e89', 40, { borde: '#fee761' }); mira(c, [0, 24, 84], [0, 21, -22], .0); },
+        // la cámara sube hasta ver el círculo entero desde arriba
+        subir(lt, dur, t) { plataformas(1, t); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(40, 112, k), lerp(78, 30, k)], [0, 0, 0], .04); },
+      } };
+  },
+  // —— Juegos 2: la capital y los doce distritos, con los hitos de 25 años y el tren de tributos ——
+  distritos: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, 0xbfe8ff]); s.fog = new THREE.Fog(0xb0d8f0, 150, 320);
+    luces(s, { cielo: 0xe0f0ff, suelo: 0x265c42, amb: 1.3, sol: 0xfff1d6, int: 2, dir: [-30, 80, 60], sombra: 80 });
+    const v = new Vox(); v.box(-110, -2, -110, 110, 0, 90, (x, y, z) => hsh(x >> 3, 4, z >> 3) > .65 ? P.green : P.lime);
+    for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2, x = Math.cos(a) * 7, z = -34 + Math.sin(a) * 5, h = 18 + (i % 3) * 8; v.box(x - 2, 0, z - 2, x + 2, h, z + 2, i % 2 ? P.white : P.silver); v.set(x, h, z, P.yellow); } v.box(-3, 0, -37, 3, 34, -31, P.white); v.ball(0, 34, -34, 4, P.silver); v.luz(P.yellow);
+    const D = []; for (let i = 0; i < 12; i++) { const a = Math.PI * (.08 + .84 * i / 11), x = -Math.cos(a) * 34, z = -34 + Math.sin(a) * 40; D.push([x, z]);
+      for (let k = 0; k < 3; k++) v.box(x - 3 + k * 2.2 | 0, 0, z - 1 + (k % 2) * 2 | 0, (x - 3 + k * 2.2 | 0) + 2, 3, (z - 1 + (k % 2) * 2 | 0) + 2, [P.brown, P.tan, P.sand][k]);
+      const n = Math.hypot(x, z + 34) | 0; for (let r = 4; r < n - 3; r++) { const u = r / n; v.set(x * (1 - u), 0, z * (1 - u) + -34 * u, P.slate); } }
+    s.add(v.build({ jit: .05 }));
+    const tren = actor('tren', .32); s.add(tren);
+    const hitos = [25, 50, 75].map((n, i) => { const g = new THREE.Group(); const col = new THREE.Mesh(new THREE.BoxGeometry(6, 14, 6), new THREE.MeshLambertMaterial({ color: i === 1 ? P.amber : P.silver })); col.position.y = 7; g.add(col);
+      const p2 = pantalla(5.4, 5, 54, 50); p2.m.position.set(0, 10, 3.05); g.add(p2.m); rotular(p2, [String(n)], i === 1 ? '#181425' : '#3a4466', i === 1 ? '#fee761' : '#ffffff', 30); g.position.set((i - 1) * 13, 0, 34); s.add(g); return g; });
+    const B = new Bloques(48 * 3); s.add(B.im); const col12 = [P.red, P.orange, P.yellow, P.lime, P.green, P.teal, P.cyan, P.blue, P.navy, P.plum, P.rose, P.pink];
+    const tributos = (n, ida) => { B.ini(); D.forEach(([x, z], d) => { for (let k = 0; k < n; k++) { const ox = (k - 1.5) * 1.6, u = ida, X = lerp(x + ox, ox * .5, u), Z = lerp(z + 4, -28, u); persona(B, X, 0, Z, col12[d], { s: .8 }); } }); B.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { tributos(0, 0); hitos.forEach(h => { h.visible = false; h.scale.y = 1; }); tren.visible = false; mira(c, [Math.sin(t * .05) * 8, 104, 78], [0, 0, -16], .04); },
+      acc: {
+        // tres hitos de piedra: 25, 50 y 75 años; el de 50 brilla en oro
+        hitos(lt, dur, t) { hitos.forEach((h, i) => { const k = ss(clamp((lt - .2 - i * .5) / .7, 0, 1)); h.visible = k > 0; h.scale.set(1, Math.max(.01, k), 1); h.position.y = i === 1 && lt > 2 ? Math.abs(Math.sin(t * 3)) * .6 : 0; });
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 4, k), 24, lerp(126, 118, k)], [0, 10, 30], .1); },
+        // cada distrito saca dos tributos… y luego dos más; todos van hacia la capital y sale el tren
+        envio(lt, dur, t) { const n = lt < dur * .38 ? 2 : 4; tributos(n, ss(clamp((lt - dur * .6) / (dur * .4), 0, 1))); tren.visible = lt > dur * .7; const u = clamp((lt - dur * .7) / (dur * .3), 0, 1); tren.position.set(0, 1.5, lerp(10, -26, u)); tren.rotation.y = Math.PI / 2;
+          mira(c, [0, 104, 78], [0, 0, -16], .04); },
+      } };
+  },
+  // —— Juegos 3: la plaza del distrito, el foco sobre un chico de 16 años y, años después, el mentor ——
+  mentor: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.slate]); s.fog = new THREE.Fog(0x262b44, 90, 200);
+    luces(s, { cielo: 0x9aa8c8, suelo: 0x262b44, amb: 1.05, sol: 0xc8d0ff, int: 1.1, dir: [30, 60, 60], sombra: 60 });
+    const v = new Vox(); v.box(-70, -1, -60, 70, 0, 60, (x, y, z) => ((x >> 2) + (z >> 2)) % 2 ? P.dslate : P.slate); v.box(-16, 0, -22, 16, 3, -10, P.dbrown); v.box(-16, 3, -22, 16, 4, -21, P.brown);
+    for (let x = -60; x < 60; x += 14) { const h = 14 + (hsh(x, 6, 6) * 10 | 0); v.box(x, 0, -44, x + 12, h, -34, P.night); v.box(x + 2, h - 6, -34, x + 4, h - 3, -33, P.amber); } v.luz(P.amber); s.add(v.build());
+    const panel = pantalla(26, 10, 208, 80); panel.m.position.set(0, 13, -21.5); s.add(panel.m); rotular(panel, ['DISTRITO 12', 'COSECHA 50'], ['#fee761', '#ffffff'], '#181425', 24, { borde: '#c0cbdc' });
+    const foco = new THREE.SpotLight(0xfff1c0, 0, 90, .22, .4, 1); foco.position.set(0, 50, 10); s.add(foco, foco.target); const cono = new THREE.Mesh(new THREE.ConeGeometry(4.5, 46, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0xfff1c0, transparent: true, opacity: .16, depthWrite: false })); s.add(cono);
+    const B = new Bloques(60 * 3), H = new Bloques(4 * 4); s.add(B.im, H.im);
+    const plaza = (sale) => { B.ini(); for (let i = 0; i < 48; i++) { const x = (i % 12 - 5.5) * 3.6, z = 4 + Math.floor(i / 12) * 4.2; if (i === 17 && sale > 0) continue; persona(B, x, 0, z, [P.slate, P.steel, P.dslate, P.silver][i % 4], { s: .9, pelo: i % 2 ? P.dbrown : P.ink }); } B.fin(); };
+    const chico = (u, s2, mayor, t) => { const x = lerp((17 % 12 - 5.5) * 3.6, 0, u), z = lerp(4 + 4.2, -16, u), y = u > .7 ? 3 : 0; H.ini(); persona(H, x, y, z, mayor ? P.dbrown : P.teal, { s: s2, pelo: mayor ? P.tan : P.dbrown }); if (mayor > 0) persona(H, x + lerp(14, 4.5, mayor), 3, z + 1, P.green, { s: .8, pelo: P.dbrown }); H.fin();
+      foco.target.position.set(x, y, z); cono.position.set(x, y + 23, z); };
+    const c = cam(46);
+    return { s, c, upd(t) { plaza(0); H.ini(); H.fin(); foco.intensity = 0; cono.visible = false; mira(c, [Math.sin(t * .1) * 5, 24, 84], [0, 6, -8], .08); },
+      acc: {
+        // el foco cae sobre un chico entre la gente y él sube al escenario
+        chico(lt, dur, t) { const u = ss(clamp((lt - dur * .3) / (dur * .6), 0, 1)); plaza(1); chico(u, .9, 0, t); foco.intensity = 900; cono.visible = true; const k = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(26, 20, k), lerp(86, 64, k)], [0, 6, lerp(-4, -12, k)], .1); },
+        // años después: el chico crece (pelo más claro) y llega una aprendiz a su lado
+        crecer(lt, dur, t) { const k = ss(clamp((lt - .3) / (dur * .5), 0, 1)); plaza(1); chico(1, lerp(.9, 1.15, k), Math.max(.001, ss(clamp((lt - dur * .45) / (dur * .45), 0, 1))), t); foco.intensity = 900; cono.visible = true; mira(c, [4, 18, 58], [2, 7, -14], .1); },
+      } };
+  },
+});
 // sitios del hemiciclo: 350 asientos en filas semicirculares → [x, z, y, ángulo, fila, fracción]
 function hemiSitios() { const out = []; const filas = 10; let quedan = 350; for (let f = 0; f < filas; f++) { const r = 14 + f * 3.6, n = f === filas - 1 ? quedan : Math.round(350 * r / (filas * 14 + 3.6 * 45)); quedan -= n;
   for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + Math.PI * (i + .5) / n; out.push([Math.sin(a) * r, -20 - Math.cos(a) * r * -1 * -1 + 0, f * 1.2, a, f, i / n]); } }

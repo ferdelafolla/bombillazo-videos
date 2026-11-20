@@ -102,3 +102,12 @@ En `audio_rpg.py` la música va a 0,09 (antes 0,22) y baja un 75 % cuando habla 
 - `short_rpg.py` ya no mete el recordatorio «¿Quieres saber más?» a mitad del Short (cortaba la respuesta y sumaba ~3 s; `--con-sub` lo recupera) y renderiza en 4 trozos en paralelo.
 - `rpg.fin`: textos de ≤ 11 caracteres por línea («MÁS CURIOSIDADES» se corta en la tarjeta final).
 - En las tareas programadas no hay `add_repo`: el repo ya viene clonado con permiso de escritura (la prueba de push funciona). WebFetch de agentes falla por permisos: verifica con WebSearch (titulares y fechas) y el RSS del relevo.
+
+## 20/11/2026 (tarea diaria): terremoto, Black Friday y Juegos del Hambre
+- Recursos nuevos en `voxel.js`: modelos `movil`, `casa`, `sensor` (terremoto), `bolsa`, `agente` (policía de los 60 con 'brazo' que se mueve), `libro` (Black Friday), `cuerno`, `tren`, `pino` (Juegos); escenas `falla`, `ondas` (corte del suelo con ondas P azules y S rojas onduladas), `aviso`, `escaparate`, `cuentas`, `filadelfia`, `arena`, `distritos`, `mentor`.
+- Utilidades nuevas: `persona(B, x, y, z, ropa, {s, ag, pelo, movil})` (figura de 3 bloques en un `Bloques`; `ag` = agacharse), `rotular(pantalla, líneas, color, fondo, px)` (texto en una pantalla 3D, solo se redibuja si cambia), `centra(grupo)` y `bola(color, r)`.
+- Duración: el motor suma ~6 s a la voz (entrada, transiciones y tarjeta final). Con voces de 40-45 s el Short pasa de 45 s: se aceleró la voz un 8 % (`ffmpeg -af atempo=1.08` → `voces/<id>_ritmo.mp3`). Mejor: guiones de ≤ 105 palabras.
+- `short_rpg.py` usa una carpeta temporal por vídeo (`/tmp/srpg_<id>`).
+- Con 2 CPU el render de un Short de ~48 s tarda ~20 min (4 trozos en paralelo); lánzalos encadenados con `setsid nohup`.
+- Encuadre: fachadas y objetos anchos necesitan distancia ≥ ancho / 0,48; con `mira(c, p, q, sube)` un `sube` de 0,1-0,12 deja el objeto entre el 15 y el 55 % de la altura. El texto del gancho ocupa ~27-40 %: no pongas letreros 3D ahí en la primera escena.
+- Metricool: el 19/11 por la tarde se agotó el cupo («account limit»): 8 publicaciones en error.
