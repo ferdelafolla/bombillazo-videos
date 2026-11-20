@@ -1,0 +1,130 @@
+{
+ "id": "2026-11-20_aldia_blackfriday",
+ "titulo": "¿Por qué se llama Black Friday? 🛍️",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends US «apple store black friday deals» (2.000+), 20/11/2026; Black Friday el 27/11/2026",
+ "fuentes": [
+  "Finantres Noticias y Vozpópuli (noviembre de 2026): el Black Friday de 2026 es el viernes 27 de noviembre",
+  "Encyclopaedia Britannica y History.com: el nombre lo usaba la policía de Filadelfia en los años 60 por el caos de tráfico y gente; los comerciantes intentaron llamarlo «Big Friday»; la explicación de las cuentas en negro llegó después"
+ ],
+ "remate": "¿POR QUÉ «NEGRO»?",
+ "rpg": {
+  "gancho_lugar": "escaparate",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "escaparate",
+    "era": "snes",
+    "nombre": "LA TIENDA",
+    "nota": "27-N"
+   },
+   {
+    "lugar": "cuentas",
+    "era": "snes",
+    "nombre": "LAS CUENTAS",
+    "nota": "ROJO"
+   },
+   {
+    "lugar": "filadelfia",
+    "era": "snes",
+    "nombre": "FILADELFIA",
+    "nota": "AÑOS 60"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "escaparate",
+   "escenas": [
+    {
+     "texto": "El Black Friday no se llama así por las ofertas.",
+     "tipo": "titulo",
+     "destacar": [
+      "ofertas."
+     ],
+     "accion": "rebajas",
+     "texto_grande": "¿POR QUÉ «NEGRO»?"
+    },
+    {
+     "texto": "Este año cae el viernes veintisiete, el día después de Acción de Gracias en Estados Unidos.",
+     "tipo": "icono",
+     "destacar": [
+      "veintisiete,"
+     ],
+     "accion": "calendario",
+     "rotulo": "VIERNES 27"
+    },
+    {
+     "texto": "¿Pero por qué a un día de compras se le llama viernes negro?",
+     "tipo": "icono",
+     "destacar": [
+      "negro?"
+     ],
+     "accion": "apagon"
+    }
+   ]
+  },
+  {
+   "id": "cuentas",
+   "lugar": "cuentas",
+   "escenas": [
+    {
+     "texto": "Mucha gente cree que es por las cuentas de las tiendas, que pasan de rojo a negro.",
+     "tipo": "icono",
+     "destacar": [
+      "rojo"
+     ],
+     "accion": "rojo_negro"
+    }
+   ]
+  },
+  {
+   "id": "filadelfia",
+   "lugar": "filadelfia",
+   "escenas": [
+    {
+     "texto": "Pero no: el nombre nació antes, en Filadelfia, en los años sesenta.",
+     "tipo": "icono",
+     "destacar": [
+      "Filadelfia,"
+     ],
+     "accion": "llegar",
+     "rotulo": [
+      "FILADELFIA",
+      "AÑOS 60"
+     ]
+    },
+    {
+     "texto": "Su policía llamaba así a ese día, por los atascos y el gentío que llenaban el centro.",
+     "tipo": "icono",
+     "destacar": [
+      "atascos"
+     ],
+     "accion": "atasco"
+    },
+    {
+     "texto": "Curiosidad: las tiendas intentaron cambiarlo por Gran Viernes, y nadie les hizo caso.",
+     "tipo": "icono",
+     "destacar": [
+      "cambiarlo"
+     ],
+     "accion": "cartel",
+     "rotulo": "«BIG FRIDAY»"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

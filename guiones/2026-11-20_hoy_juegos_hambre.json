@@ -1,0 +1,140 @@
+{
+ "id": "2026-11-20_hoy_juegos_hambre",
+ "titulo": "¿Por qué hay el doble de tributos en Amanecer en la cosecha? 🏹",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends MX «hunger games» (500+), 20/11/2026, por el estreno de «Los Juegos del Hambre: Amanecer en la cosecha»",
+ "fuentes": [
+  "Boston Globe y The Daily Tribune (17/11/2026): estreno el 20 de noviembre; Haymitch en los 50.º Juegos",
+  "Publimetro (10/11/2026) y Guía del Ocio: Segundo Vasallaje de los Veinticinco, el doble de tributos (48), 24 años antes de la primera película",
+  "Suzanne Collins, «Amanecer en la cosecha» (Scholastic, 2025)"
+ ],
+ "remate": "¿POR QUÉ EL DOBLE?",
+ "rpg": {
+  "gancho_lugar": "arena",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "arena",
+    "era": "snes",
+    "nombre": "LA ARENA",
+    "nota": "48"
+   },
+   {
+    "lugar": "distritos",
+    "era": "snes",
+    "nombre": "LOS DISTRITOS",
+    "nota": "12 × 4"
+   },
+   {
+    "lugar": "mentor",
+    "era": "snes",
+    "nombre": "EL MENTOR",
+    "nota": "16 AÑOS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "arena",
+   "escenas": [
+    {
+     "texto": "En estos Juegos del Hambre luchan el doble de tributos.",
+     "tipo": "titulo",
+     "destacar": [
+      "doble"
+     ],
+     "accion": "duplicar",
+     "texto_grande": "¡EL DOBLE DE TRIBUTOS!"
+    },
+    {
+     "texto": "Es Amanecer en la cosecha, la nueva película de la saga, que llega esta semana a los cines.",
+     "tipo": "icono",
+     "destacar": [
+      "cosecha,"
+     ],
+     "accion": "vuelta"
+    },
+    {
+     "texto": "Cuenta los quincuagésimos Juegos, veinticuatro años antes de los de Katniss.",
+     "tipo": "icono",
+     "destacar": [
+      "veinticuatro"
+     ],
+     "accion": "atras",
+     "rotulo": "24 AÑOS ANTES"
+    },
+    {
+     "texto": "¿Pero por qué esta vez hay el doble?",
+     "tipo": "icono",
+     "destacar": [
+      "doble?"
+     ],
+     "accion": "subir"
+    }
+   ]
+  },
+  {
+   "id": "distritos",
+   "lugar": "distritos",
+   "escenas": [
+    {
+     "texto": "Porque es un Vasallaje de los Veinticinco: cada veinticinco años, los Juegos cambian sus reglas.",
+     "tipo": "icono",
+     "destacar": [
+      "Vasallaje"
+     ],
+     "accion": "hitos",
+     "rotulo": [
+      "VASALLAJE",
+      "DE LOS 25"
+     ]
+    },
+    {
+     "texto": "Y esta vez, cada uno de los doce distritos envía cuatro tributos, no dos: cuarenta y ocho en total.",
+     "tipo": "icono",
+     "destacar": [
+      "cuatro"
+     ],
+     "accion": "envio",
+     "rotulo": "12 × 4 = 48"
+    }
+   ]
+  },
+  {
+   "id": "mentor",
+   "lugar": "mentor",
+   "escenas": [
+    {
+     "texto": "Uno de ellos es Haymitch, un chico de dieciséis años.",
+     "tipo": "icono",
+     "destacar": [
+      "dieciséis"
+     ],
+     "accion": "chico",
+     "rotulo": "16 AÑOS"
+    },
+    {
+     "texto": "Curiosidad: es el mismo Haymitch que, años después, hace de mentor de Katniss.",
+     "tipo": "icono",
+     "destacar": [
+      "mentor"
+     ],
+     "accion": "crecer"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

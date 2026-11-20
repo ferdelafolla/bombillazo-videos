@@ -1,0 +1,145 @@
+{
+ "id": "2026-11-20_curiosidades_terremoto",
+ "titulo": "¿Cómo sabe tu móvil que viene un terremoto? 📱",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends US «earthquake» (20.000+), «earthquake alert», «usgs earthquake» y AR «temblor en san juan» (2.000+), 20/11/2026",
+ "fuentes": [
+  "Reuters vía Cyprus Mail (20/11/2026) y NBC Bay Area: terremoto de magnitud 5,1 (preliminar) cerca del condado de Monterey, California (USGS)",
+  "USGS ShakeAlert: las ondas P viajan más rápido que las S, que causan la mayor parte de la sacudida; aviso de segundos",
+  "Allen et al., Science (2025) y Google Research: los acelerómetros de los móviles Android detectan las ondas P"
+ ],
+ "remate": "¿CÓMO LO SABE?",
+ "rpg": {
+  "gancho_lugar": "falla",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "falla",
+    "era": "snes",
+    "nombre": "LA FALLA",
+    "nota": "5,1"
+   },
+   {
+    "lugar": "ondas",
+    "era": "snes",
+    "nombre": "BAJO TIERRA",
+    "nota": "P Y S"
+   },
+   {
+    "lugar": "aviso",
+    "era": "snes",
+    "nombre": "EL AVISO",
+    "nota": "SEGUNDOS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "falla",
+   "escenas": [
+    {
+     "texto": "Tu móvil puede avisarte de un terremoto antes de notarlo.",
+     "tipo": "titulo",
+     "destacar": [
+      "terremoto"
+     ],
+     "accion": "vibra",
+     "texto_grande": "¡AVISO ANTES DEL TEMBLOR!"
+    },
+    {
+     "texto": "Esta semana, un terremoto de magnitud cinco coma uno sacudió California.",
+     "tipo": "icono",
+     "destacar": [
+      "cinco"
+     ],
+     "accion": "sacudida",
+     "rotulo": "MAGNITUD 5,1"
+    },
+    {
+     "texto": "¿Pero cómo puede llegar el aviso antes que la sacudida?",
+     "tipo": "icono",
+     "destacar": [
+      "aviso"
+     ],
+     "accion": "bajar"
+    }
+   ]
+  },
+  {
+   "id": "ondas",
+   "lugar": "ondas",
+   "escenas": [
+    {
+     "texto": "Porque un terremoto lanza dos tipos de ondas bajo el suelo.",
+     "tipo": "icono",
+     "destacar": [
+      "dos"
+     ],
+     "accion": "rotura"
+    },
+    {
+     "texto": "Primero llegan las ondas P: rápidas, pero suaves.",
+     "tipo": "icono",
+     "destacar": [
+      "P:"
+     ],
+     "accion": "ondas_p",
+     "rotulo": "ONDAS P"
+    },
+    {
+     "texto": "Detrás vienen las ondas S, más lentas, que son las que sacuden.",
+     "tipo": "icono",
+     "destacar": [
+      "S,"
+     ],
+     "accion": "ondas_s",
+     "rotulo": "ONDAS S"
+    }
+   ]
+  },
+  {
+   "id": "aviso",
+   "lugar": "aviso",
+   "escenas": [
+    {
+     "texto": "Los sensores notan las ondas P y lanzan el aviso, que viaja casi a la velocidad de la luz.",
+     "tipo": "icono",
+     "destacar": [
+      "luz."
+     ],
+     "accion": "senal"
+    },
+    {
+     "texto": "Así tienes unos segundos para agacharte y cubrirte antes de que llegue lo fuerte.",
+     "tipo": "icono",
+     "destacar": [
+      "segundos"
+     ],
+     "accion": "cubrirse",
+     "rotulo": "UNOS SEGUNDOS"
+    },
+    {
+     "texto": "Curiosidad: los móviles Android también hacen de sensor, porque notan las primeras ondas.",
+     "tipo": "icono",
+     "destacar": [
+      "sensor,"
+     ],
+     "accion": "red"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
