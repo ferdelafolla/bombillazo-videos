@@ -1,0 +1,128 @@
+{
+ "id": "2026-11-21_aldia_solo_en_casa",
+ "titulo": "Kevin vuelve: nueva película de Solo en casa 🏠",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends AR «disney» (500+), 21/11/2026, por la nueva película de «Solo en casa» (Home Alone) con Macaulay Culkin",
+ "fuentes": [
+  "TMZ (20/11/2026): Macaulay Culkin confirma que vuelve como Kevin McCallister; The Hollywood Reporter (noviembre de 2026): secuela en desarrollo en Disney con Culkin, Seth Rogen y Evan Goldberg",
+  "Nacionale y prensa de Hollywood (noviembre de 2026): proyecto en fase inicial, sin fecha; la historia se contaría desde el punto de vista del padre",
+  "Wikipedia/Britannica: «Solo en casa» (1990); la casa del rodaje está en Winnetka, Illinois, cerca de Chicago"
+ ],
+ "remate": "¿CÓMO SERÁ?",
+ "rpg": {
+  "gancho_lugar": "nevada",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "nevada",
+    "era": "snes",
+    "nombre": "LA CASA",
+    "nota": "1990"
+   },
+   {
+    "lugar": "plato",
+    "era": "snes",
+    "nombre": "EL RODAJE",
+    "nota": "DISNEY"
+   },
+   {
+    "lugar": "winnetka",
+    "era": "snes",
+    "nombre": "WINNETKA",
+    "nota": "CHICAGO"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "nevada",
+   "escenas": [
+    {
+     "texto": "Kevin vuelve a Solo en casa, treinta y seis años después.",
+     "tipo": "titulo",
+     "destacar": [
+      "Kevin"
+     ],
+     "accion": "luces",
+     "texto_grande": "¡KEVIN VUELVE!"
+    },
+    {
+     "texto": "Macaulay Culkin ha confirmado que volverá a ser Kevin McCallister.",
+     "tipo": "icono",
+     "destacar": [
+      "confirmado"
+     ],
+     "accion": "puerta_abre"
+    }
+   ]
+  },
+  {
+   "id": "rodaje",
+   "lugar": "plato",
+   "escenas": [
+    {
+     "texto": "Disney prepara la película, con Seth Rogen y Evan Goldberg en el proyecto.",
+     "tipo": "icono",
+     "destacar": [
+      "Disney"
+     ],
+     "accion": "claqueta",
+     "rotulo": "DISNEY"
+    },
+    {
+     "texto": "¿Pero cómo se cuenta Solo en casa con un Kevin de cuarenta y seis años?",
+     "tipo": "icono",
+     "destacar": [
+      "cuarenta"
+     ],
+     "accion": "grua"
+    },
+    {
+     "texto": "Según la prensa de Hollywood, esta vez Kevin sería el padre.",
+     "tipo": "icono",
+     "destacar": [
+      "padre."
+     ],
+     "accion": "familia"
+    },
+    {
+     "texto": "Y aún no hay fecha de estreno: el proyecto está en sus primeras fases.",
+     "tipo": "icono",
+     "destacar": [
+      "fecha"
+     ],
+     "accion": "calendario",
+     "rotulo": "SIN FECHA"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "winnetka",
+   "escenas": [
+    {
+     "texto": "Curiosidad: la casa de la película es real, y está en Winnetka, cerca de Chicago.",
+     "tipo": "icono",
+     "destacar": [
+      "Winnetka,"
+     ],
+     "accion": "vuelo_lago",
+     "rotulo": "WINNETKA"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

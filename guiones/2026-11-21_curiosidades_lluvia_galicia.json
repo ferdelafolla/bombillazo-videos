@@ -1,0 +1,137 @@
+{
+ "id": "2026-11-21_curiosidades_lluvia_galicia",
+ "titulo": "¿Por qué la lluvia siempre entra por Galicia? 🌧️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «roberto brasero» (100+), 21/11/2026: lluvias persistentes y rachas muy fuertes de viento en el noroeste",
+ "fuentes": [
+  "Libertad Digital (21/11/2026) y Las Voces del Pueblo (21/11/2026): varios frentes atlánticos barren el noroeste con lluvias persistentes y rachas muy fuertes; El Cronista (21/11/2026): Galicia, entre las zonas más afectadas",
+  "AEMET y Met Office: en latitudes medias predominan los vientos del oeste; lluvia orográfica al ascender el aire por las montañas; el aire seco se enfría unos 9,8 °C por kilómetro de ascenso (gradiente adiabático seco)"
+ ],
+ "remate": "¿POR QUÉ GALICIA?",
+ "rpg": {
+  "gancho_lugar": "costa",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "costa",
+    "era": "snes",
+    "nombre": "LA COSTA",
+    "nota": "LLUVIA"
+   },
+   {
+    "lugar": "atlantico",
+    "era": "snes",
+    "nombre": "EL ATLÁNTICO",
+    "nota": "OESTE"
+   },
+   {
+    "lugar": "ladera",
+    "era": "snes",
+    "nombre": "LA MONTAÑA",
+    "nota": "-1 °C"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "costa",
+   "escenas": [
+    {
+     "texto": "Este sábado, la lluvia vuelve a entrar por Galicia.",
+     "tipo": "titulo",
+     "destacar": [
+      "Galicia."
+     ],
+     "accion": "chaparron",
+     "texto_grande": "¿POR QUÉ SIEMPRE GALICIA?"
+    },
+    {
+     "texto": "¿Por qué casi todas las borrascas llegan por el noroeste?",
+     "tipo": "icono",
+     "destacar": [
+      "noroeste?"
+     ],
+     "accion": "mirar_mar"
+    }
+   ]
+  },
+  {
+   "id": "atlantico",
+   "lugar": "atlantico",
+   "escenas": [
+    {
+     "texto": "Porque, en nuestras latitudes, el viento sopla casi siempre del oeste.",
+     "tipo": "icono",
+     "destacar": [
+      "oeste."
+     ],
+     "accion": "viento_oeste",
+     "rotulo": "VIENTO DEL OESTE"
+    },
+    {
+     "texto": "Y empuja hacia aquí los frentes del Atlántico, cargados de humedad.",
+     "tipo": "icono",
+     "destacar": [
+      "humedad."
+     ],
+     "accion": "frente"
+    },
+    {
+     "texto": "Pero, ¿por qué descargan justo al llegar a la costa?",
+     "tipo": "icono",
+     "destacar": [
+      "costa?"
+     ],
+     "accion": "llegada"
+    }
+   ]
+  },
+  {
+   "id": "montana",
+   "lugar": "ladera",
+   "escenas": [
+    {
+     "texto": "Porque chocan con las montañas, y el aire tiene que subir.",
+     "tipo": "icono",
+     "destacar": [
+      "subir."
+     ],
+     "accion": "subida"
+    },
+    {
+     "texto": "Al subir se enfría, el vapor se convierte en gotas, y llueve.",
+     "tipo": "icono",
+     "destacar": [
+      "llueve."
+     ],
+     "accion": "condensa"
+    },
+    {
+     "texto": "Curiosidad: el aire seco se enfría casi un grado por cada cien metros que sube.",
+     "tipo": "icono",
+     "destacar": [
+      "grado"
+     ],
+     "accion": "termometro",
+     "rotulo": [
+      "-1 GRADO",
+      "CADA 100 M"
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

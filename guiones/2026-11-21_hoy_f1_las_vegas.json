@@ -1,0 +1,131 @@
+{
+ "id": "2026-11-21_hoy_f1_las_vegas",
+ "titulo": "¿Por qué el más rápido de Las Vegas no sale primero? 🏎️",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends AR «a que hora es la clasificacion de f1» (200+), 21/11/2026: clasificación del GP de Las Vegas",
+ "fuentes": [
+  "Formula1.com y Sky Sports (21/11/2026): Antonelli, el más rápido; Verstappen hereda la pole y Russell sale segundo",
+  "GrandPrix.com y Washington Post/AP (21/11/2026): penalización de cinco puestos a Antonelli por montar su sexto motor (unidad de potencia por encima del límite)",
+  "Formula1.com: el circuito urbano de Las Vegas recorre el Strip y la carrera es nocturna"
+ ],
+ "remate": "¿POR QUÉ NO SALE PRIMERO?",
+ "rpg": {
+  "gancho_lugar": "strip",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "strip",
+    "era": "snes",
+    "nombre": "LA RECTA",
+    "nota": "POLE"
+   },
+   {
+    "lugar": "garaje",
+    "era": "snes",
+    "nombre": "EL GARAJE",
+    "nota": "6.º MOTOR"
+   },
+   {
+    "lugar": "casinos",
+    "era": "snes",
+    "nombre": "LOS CASINOS",
+    "nota": "NOCHE"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "strip",
+   "escenas": [
+    {
+     "texto": "El más rápido en Las Vegas no saldrá primero.",
+     "tipo": "titulo",
+     "destacar": [
+      "rápido"
+     ],
+     "accion": "vuelta_rapida",
+     "texto_grande": "¡EL MÁS RÁPIDO, SIN POLE!"
+    },
+    {
+     "texto": "Kimi Antonelli hizo la mejor vuelta en la clasificación del Gran Premio.",
+     "tipo": "icono",
+     "destacar": [
+      "mejor"
+     ],
+     "accion": "cronometro",
+     "rotulo": "1.º ANTONELLI"
+    },
+    {
+     "texto": "Pero la pole es para Max Verstappen, y George Russell saldrá segundo.",
+     "tipo": "icono",
+     "destacar": [
+      "pole"
+     ],
+     "accion": "parrilla",
+     "rotulo": [
+      "POLE",
+      "VERSTAPPEN"
+     ]
+    },
+    {
+     "texto": "¿Por qué castigan al más rápido?",
+     "tipo": "icono",
+     "destacar": [
+      "castigan"
+     ],
+     "accion": "retroceso"
+    }
+   ]
+  },
+  {
+   "id": "motores",
+   "lugar": "garaje",
+   "escenas": [
+    {
+     "texto": "Porque cada piloto tiene un número limitado de motores por temporada.",
+     "tipo": "icono",
+     "destacar": [
+      "motores"
+     ],
+     "accion": "motores"
+    },
+    {
+     "texto": "Antonelli ya va por el sexto, y estrenar uno de más cuesta cinco puestos en la parrilla.",
+     "tipo": "icono",
+     "destacar": [
+      "cinco"
+     ],
+     "accion": "sexto",
+     "rotulo": "-5 PUESTOS"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "casinos",
+   "escenas": [
+    {
+     "texto": "Curiosidad: aquí se corre de noche, por la avenida de los casinos.",
+     "tipo": "icono",
+     "destacar": [
+      "noche,"
+     ],
+     "accion": "neones"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
