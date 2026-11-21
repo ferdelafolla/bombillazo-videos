@@ -952,3 +952,344 @@ export function voxRender(t) {
 }
 export function voxApagar() { actual = null; accion = null; }
 export function voxAccion(n, lt, dur) { accion = n ? { n, lt, dur } : null; }
+
+// ———————————————————— 21/11/2026: lluvia en Galicia, «Solo en casa» y F1 en Las Vegas ————————————————————
+// lluvia (o nieve) en una caja: n gotas que caen y vuelven a empezar
+function llueve(B, x0, x1, z0, z1, y0, y1, t, n, col = P.cyan, v = 42, o = {}) {
+  const h = y1 - y0; for (let i = 0; i < n; i++) { let x = x0 + hsh(i, 5, 1) * (x1 - x0); const z = z0 + hsh(i, 6, 2) * (z1 - z0), y = y1 - ((t * v * (.8 + hsh(i, 8, 4) * .4) + hsh(i, 7, 3) * h) % h);
+    if (o.copo) { x += Math.sin(t * 1.3 + i) * .8; B.pon(x, y, z, .55, .55, .55, col); } else B.pon(x + (o.inc || 0) * (y1 - y), y, z, .22, 2.4, .22, col); } }
+// nubarrón de bloques: bolas de cubos alrededor de (x, y, z)
+function nubarron(B, x, y, z, r, col, sem = 0, base) { for (let k = 0; k < 9; k++) { const a = hsh(k, sem, 11) * 6.28, d = hsh(k, sem, 12) * r * .8, s = r * (.55 + hsh(k, sem, 13) * .45);
+  B.pon(x + Math.cos(a) * d, y + (hsh(k, sem, 14) - .3) * r * .5, z + Math.sin(a) * d * .6, s * 1.6, s * .9, s * 1.2, k < 3 && base != null ? base : col); } }
+// coche de F1 genérico (sin equipos ni marcas), morro hacia +x
+function f1(c1, c2) { const v = new Vox();
+  v.box(-12, 1, -2, 12, 3, 2, c1); v.box(12, 1, -1, 17, 2, 1, c1); v.box(16, 0, -6, 19, 1, 6, c2);                 // chasis, morro y alerón delantero
+  v.box(-6, 1, -4, 4, 3, 4, c1); v.box(-6, 3, -2, 0, 5, 2, c1); v.box(-3, 3, -1, 2, 4, 1, P.ink); v.box(-1, 5, 0, 3, 6, 1, P.ink);   // pontones, toma de aire, cabina, halo
+  v.box(-1, 4, -1, 1, 5, 1, P.yellow); v.box(-15, 6, -5, -12, 7, 5, c2); v.box(-14, 2, -1, -13, 6, 1, P.ink);       // casco, alerón trasero
+  v.box(-14, 1, -5, -12, 7, -4, c1); v.box(-14, 1, 4, -12, 7, 5, c1); v.box(4, 2, -2, 12, 3, 2, c2);
+  for (const [x, z] of [[10, -5], [10, 5], [-10, -5], [-10, 5]]) v.box(x - 2, -1, z - 1, x + 2, 3, z + 1, P.ink);
+  const w = new THREE.Group(); w.add(v.build({ centrar: false })); w.children[0].position.y = 1; return w; }
+// la casa de ladrillo de la película (versión propia: dos plantas, ventanas blancas y tejado de pizarra con nieve)
+function casaLad(v, x0, z0, puerta = true) { const zf = z0 + 14;
+  v.box(x0, 0, z0, x0 + 30, 18, zf, (x, y) => (y % 3 === 0 || (x + ((y / 3) | 0) * 2) % 5 === 0) ? 0x9a6a5a : (hsh(x, y, 7) > .5 ? P.crimson : 0x8a2a32));
+  const ven = (cx, y0) => { v.box(x0 + cx - 2, y0, zf, x0 + cx + 2, y0 + 6, zf + 1, P.white); v.box(x0 + cx - 1, y0 + 1, zf, x0 + cx + 1, y0 + 5, zf + 1, P.amber);
+    v.box(x0 + cx - 3, y0, zf, x0 + cx - 2, y0 + 6, zf + 1, P.dgreen); v.box(x0 + cx + 2, y0, zf, x0 + cx + 3, y0 + 6, zf + 1, P.dgreen); };
+  [4, 10, 20, 26].forEach(cx => ven(cx, 3)); [4, 10, 15, 20, 26].forEach(cx => ven(cx, 11));
+  v.box(x0 + 12, 0, zf, x0 + 18, 9, zf + 1, P.white); v.box(x0 + 13, 0, zf, x0 + 17, 8, zf + 1, puerta ? P.dgreen : P.amber); v.box(x0 + 11, -1, zf, x0 + 19, 0, zf + 4, P.silver);
+  for (let k = 0; k < 8; k++) v.box(x0 - 1 + (k > 5 ? 2 : 0), 18 + k, z0 - 1 + k, x0 + 31 - (k > 5 ? 2 : 0), 19 + k, zf + 1 - k, k === 7 ? P.white : (k % 2 ? P.dslate : P.slate));
+  v.box(x0 - 1, 18, zf, x0 + 31, 19, zf + 1, P.white); v.box(x0 + 3, 18, z0 + 5, x0 + 6, 29, z0 + 8, P.crimson); v.box(x0 + 24, 18, z0 + 5, x0 + 27, 29, z0 + 8, P.crimson); v.luz(P.amber); }
+function abeto(v, x, z, h = 14) { v.box(x, 0, z, x + 1, 3, z + 1, P.dbrown); for (let y = 3; y < h; y++) { const r = (h - y) * .42; v.cyl(x, z, y, y + 1, r, y % 3 === 0 ? P.white : P.dgreen); } v.set(x, h, z, P.white); }
+
+Object.assign(FAB, {
+  // —— lluvia en Galicia ——
+  nube: () => { const v = new Vox(); [[0, 0, 0, 7], [-8, -1, 1, 5], [8, -1, -1, 5.5], [-3, 3, -1, 5], [4, 3, 1, 4.5], [0, 0, -4, 5]].forEach(([x, y, z, r]) => v.ball(x, y, z, r, (X, Y) => y + Y < -3 ? P.steel : (y + Y < -1 ? P.silver : P.white)));
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .04 })); return w; },
+  faro: () => {   // faro gallego a franjas rojas y blancas sobre una roca, con la linterna encendida
+    const v = new Vox(); v.ball(0, 0, 0, 6, P.slate, .5); v.cyl(0, 0, 2, 24, 3, (x, y) => ((y - 2) >> 2) % 2 ? P.red : P.white); v.cyl(0, 0, 24, 25, 4.6, P.dslate);
+    v.cyl(0, 0, 25, 29, 2.6, (x, y, z) => (x + z) % 2 ? P.yellow : P.amber); v.cyl(0, 0, 29, 31, 3, P.red); v.set(0, 31, 0, P.dslate); v.luz(P.yellow, P.amber);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w; },
+  horreo: () => {   // hórreo de piedra: pies con tornarratos, cámara de tablas, tejado de teja y cruz
+    const v = new Vox(); for (const x of [-8, 0, 8]) for (const z of [-2, 2]) { v.box(x - 1, 0, z - 1, x + 1, 4, z + 1, P.steel); v.box(x - 2, 4, z - 2, x + 2, 5, z + 2, P.silver); }
+    v.box(-10, 5, -3, 10, 11, 3, (x, y, z) => (Math.abs(z) === 3 && x % 2) ? P.dbrown : P.brown); v.box(-10, 5, -3, -9, 11, 3, P.silver); v.box(9, 5, -3, 10, 11, 3, P.silver);
+    for (let k = 0; k < 4; k++) v.box(-11, 11 + k, -4 + k, 11, 12 + k, 4 - k, k % 2 ? P.crimson : P.orange); v.box(9, 15, 0, 10, 20, 1, P.silver); v.box(9, 17, -1, 10, 18, 2, P.silver);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w; },
+  termometro: () => {   // termómetro de pared: marco blanco, rayas, bulbo rojo y columna ('mercurio') que sube y baja
+    const v = new Vox(); v.box(-3, -2, -1, 4, 30, 0, P.white); for (let y = 2; y < 28; y += 3) v.box(2, y, 0, 3, y + 1, 1, P.ink); v.ball(0, 0, 0, 2.2, P.red); v.box(0, 0, 0, 1, 28, 1, P.silver);
+    const w = new THREE.Group(); w.add(v.build({ centrar: false, jit: .02 }));
+    const m = new Vox(); m.box(0, 0, 0, 1, 1, 1, P.red); const gm = m.build({ jit: 0 }); gm.position.set(0, 1.5, .3); gm.scale.set(1, 26, 1); gm.name = 'mercurio'; w.add(gm); return centra(w); },
+  // —— Solo en casa ——
+  casa_ladrillo: () => { const v = new Vox(); casaLad(v, -15, -7); const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w; },
+  claqueta: () => {   // claqueta de cine: pizarra negra y palo a rayas que se abre ('palo')
+    const v = new Vox(); v.box(-10, 0, 0, 10, 12, 2, P.ink); for (const y of [4, 8]) v.box(-9, y, 2, 9, y + 1, 3, P.white); v.box(-10, 12, 0, 10, 14, 2, (x) => ((x + 20) >> 1) % 2 ? P.white : P.ink);
+    const w = new THREE.Group(); w.add(v.build());
+    const p = new Vox(); p.box(0, 0, 0, 20, 2, 2, (x) => ((x) >> 1) % 2 ? P.white : P.ink); const gp = p.build(); gp.position.set(0, 0, 0); const piv = new THREE.Group(); piv.position.set(-10, 14, 0); piv.add(gp); piv.name = 'palo'; w.add(piv);
+    return centra(w); },
+  camara_cine: () => {   // cámara de cine clásica con dos bobinas y objetivo
+    const v = new Vox(); v.box(-6, 0, -3, 6, 7, 3, P.dslate); v.box(6, 2, -2, 10, 5, 2, P.ink); v.box(10, 1, -3, 11, 6, 3, P.slate); v.set(11, 3, 0, P.cyan);
+    for (const x of [-3, 3]) { for (let a = 0; a < 6.28; a += .3) v.set(x + Math.round(Math.cos(a) * 3.5), 11 + Math.round(Math.sin(a) * 3.5), 0, P.slate); v.box(x, 7, 0, x + 1, 11, 1, P.slate); v.set(x, 11, 0, P.silver); }
+    v.box(-1, -6, -1, 1, 0, 1, P.steel); v.luz(P.cyan); const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w; },
+  // —— F1 en Las Vegas ——
+  monoplaza: () => { const g = f1(P.silver, P.cyan); return centra(g); },
+  motor: () => {   // unidad de potencia: bloque gris, culatas, turbo y tubos
+    const v = new Vox(); v.box(-7, 0, -4, 7, 6, 4, P.slate); for (const z of [-4, 3]) v.box(-6, 6, z, 6, 9, z + 1, P.steel); v.box(-6, 6, -3, 6, 7, 3, P.dslate);
+    for (let x = -5; x <= 5; x += 2) { v.box(x, 6, -5, x + 1, 7, -4, P.orange); v.box(x, 6, 4, x + 1, 7, 5, P.orange); } v.ball(8, 4, 0, 2.5, P.silver); v.box(-8, 1, -2, -7, 5, 2, P.ink); v.box(-2, 9, -1, 2, 10, 1, P.red);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w; },
+  letrero: () => {   // letrero luminoso de casino: marco de bombillas y estrella
+    const v = new Vox(); v.box(-1, 0, 0, 1, 14, 2, P.steel); v.box(-10, 14, 0, 10, 26, 2, P.plum);
+    for (let x = -10; x < 10; x++) { v.set(x, 14, 2, x % 2 ? P.yellow : P.amber); v.set(x, 25, 2, x % 2 ? P.amber : P.yellow); } for (let y = 14; y < 26; y++) { v.set(-10, y, 2, y % 2 ? P.yellow : P.amber); v.set(9, y, 2, y % 2 ? P.amber : P.yellow); }
+    for (const [x, y] of [[0, 23], [-1, 21], [0, 21], [1, 21], [-3, 20], [-2, 20], [2, 20], [3, 20], [-1, 19], [0, 19], [1, 19], [-2, 17], [2, 17], [-2, 18], [2, 18]]) v.set(x, y, 2, P.pink);
+    v.luz(P.yellow, P.amber, P.pink); const w = new THREE.Group(); w.add(v.build({ centrar: true })); return w; },
+});
+
+Object.assign(FABE, {
+  // —— lluvia 1: un pueblo de la costa gallega bajo la lluvia, con faro y hórreo; al fondo, el mar ——
+  costa: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.dslate, P.slate, P.steel]); s.fog = new THREE.Fog(0x8b9bb4, 80, 260);
+    luces(s, { cielo: 0xc0cbdc, suelo: 0x265c42, amb: 1.6, sol: 0xdfe8ff, int: 1.0, dir: [-30, 60, 40], sombra: 90 });
+    const mar = new THREE.Mesh(new THREE.PlaneGeometry(700, 400), new THREE.MeshLambertMaterial({ color: P.navy })); mar.rotation.x = -Math.PI / 2; mar.position.set(0, -6, -200); s.add(mar);
+    const v = new Vox(); v.box(-90, -8, -16, 90, 0, 70, (x, y, z) => { if (y === -1) return Math.abs(x - 2) < 3 ? P.steel : (hsh(x >> 2, 1, z >> 2) > .6 ? P.green : P.dgreen); return hsh(x, y, z) > .5 ? P.slate : P.dslate; });
+    for (let x = -90; x < 90; x++) for (let k = 0; k < 4; k++) if (hsh(x, k, 9) > .45) v.del(x, -1 - k, -16 + k), v.del(x, -2 - k, -16 + k);   // acantilado roto
+    const piedra = (x, z, w, d, col) => { v.box(x, 0, z, x + w, 7, z + d, (X, Y, Z) => hsh(X, Y, Z) > .5 ? P.silver : P.steel); for (let k = 0; k < 4; k++) v.box(x - 1 + k, 7 + k, z - 1, x + w + 1 - k, 8 + k, z + d + 1, col); v.box(x + 2, 2, z + d, x + 4, 5, z + d + 1, P.amber); v.box(x + w - 4, 0, z + d, x + w - 2, 5, z + d + 1, P.dbrown); };
+    piedra(-34, 6, 11, 8, P.crimson); piedra(-20, -4, 10, 8, P.orange); piedra(10, 4, 12, 8, P.crimson); piedra(26, 16, 10, 8, P.orange); piedra(-44, 24, 10, 8, P.orange); piedra(30, -6, 9, 7, P.crimson);
+    for (let z = -12; z < 70; z += 3) { v.box(-50, 0, z, -49, 2, z + 1, P.steel); } v.luz(P.amber); s.add(v.build());
+    const faro = actor('faro', .9); faro.position.set(13, 13, -12); s.add(faro); const horreo = actor('horreo', .7); horreo.position.set(-16, 7, 14); s.add(horreo);
+    const B = new Bloques(1100, true), N = new Bloques(260), Pp = new Bloques(120); s.add(B.im, N.im, Pp.im);
+    const haz = new THREE.Mesh(new THREE.BoxGeometry(60, 1.4, 1.4), new THREE.MeshBasicMaterial({ color: 0xfee761, transparent: true, opacity: .45 })); haz.position.set(13, 26, -12); s.add(haz);
+    const gente = [[-14, 26, 1], [6, 30, -1], [-2, 20, 1], [18, 24, -1]];
+    const camina = (t, prisa) => { Pp.ini(); gente.forEach(([x0, z, d], i) => { const x = x0 + d * ((t * (2 + prisa * 4) + i * 7) % 30 - 15); persona(Pp, x, 0, z, [P.navy, P.red, P.teal, P.amber][i], { s: 1.1 });
+      Pp.pon(x, 8.6, z, 5.2, .5, 5.2, [P.red, P.yellow, P.blue, P.rose][i]); Pp.pon(x, 9.1, z, 3, .5, 3, [P.red, P.yellow, P.blue, P.rose][i]); Pp.pon(x, 7, z, .3, 3, .3, P.ink); }); Pp.fin(); };
+    const cielo2 = (t, oscuro, avance) => { N.ini(); for (let i = 0; i < 14; i++) { const x = -80 + i * 13, z = lerp(-170, -30, avance) - (i % 3) * 14, y = 34 + (i % 4) * 5; nubarron(N, x + Math.sin(t * .3 + i) * 2, y, z, 9 + (i % 3) * 2, oscuro ? P.dslate : P.slate, i, P.night); } N.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); llueve(B, -50, 50, -10, 80, 0, 50, t, 520, 0x9fd8ff, 44, { inc: .12 }); B.fin(); cielo2(t, false, .6); camina(t, 0); haz.rotation.y = t * 1.6;
+        mira(c, [Math.sin(t * .08) * 5, 34, 118], [0, 8, 0], .06); },
+      acc: {
+        // chaparrón: la lluvia arrecia, la gente corre con paraguas y la cámara se acerca al pueblo
+        chaparron(lt, dur, t) { const k = ss(clamp(lt / dur, 0, 1)); B.ini(); llueve(B, -50, 50, -10, 80, 0, 50, t, 600 + 450 * k, 0x9fd8ff, 52, { inc: .16 }); B.fin(); camina(t, 1); cielo2(t, true, .7);
+          mira(c, [lerp(-4, 3, k), lerp(36, 26, k), lerp(124, 100, k)], [0, 8, 0], .06); },
+        // la cámara se gira hacia el mar: una pared de nubes oscuras llega desde el horizonte
+        mirar_mar(lt, dur, t) { const k = ss(clamp(lt / dur, 0, 1)); B.ini(); llueve(B, -50, 50, -10, 80, 0, 50, t, 700, 0x9fd8ff, 50, { inc: .16 }); B.fin(); camina(t, 1); cielo2(t, true, .2 + .7 * k);
+          mira(c, [3, lerp(26, 34, k), lerp(100, 84, k)], [0, lerp(8, 26, k), lerp(0, -90, k)], .06); },
+      } };
+  },
+  // —— lluvia 2: el Atlántico visto desde arriba; el viento del oeste empuja los frentes hacia Galicia (a la derecha) ——
+  atlantico: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, P.cyan]); s.fog = new THREE.Fog(0x0099db, 160, 380);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x124e89, amb: 1.4, sol: 0xfff1d6, int: 1.8, dir: [-40, 80, 30], sombra: 90 });
+    const mar = new THREE.Mesh(new THREE.PlaneGeometry(800, 600), new THREE.MeshLambertMaterial({ color: P.navy })); mar.rotation.x = -Math.PI / 2; mar.position.y = -.5; s.add(mar);
+    const costa = z => 18 + Math.sin(z * .21) * 3 + Math.sin(z * .57) * 1.6 + (z < -20 ? (z + 20) * -.15 : 0);   // costa recortada (rías)
+    const v = new Vox(); for (let z = -90; z < 70; z++) { const x0 = Math.round(costa(z)); for (let x = x0; x < 110; x++) { const h = Math.max(1, Math.round(1 + (x - x0) * .35 + Math.sin(x * .3 + z * .2) * 2.5 + (hsh(x >> 2, 4, z >> 2) - .5) * 3)), hh = Math.min(h, 16);
+      for (let y = 0; y < hh; y++) v.set(x, y, z, y === hh - 1 ? (hh > 12 ? P.silver : hh > 6 ? P.dgreen : (x - x0 < 2 ? P.sand : P.green)) : P.brown); } }
+    s.add(v.build());
+    const nubes = Array.from({ length: 12 }, (_, i) => { const m = actor('nube', .9 + hsh(i, 1, 1) * .5); s.add(m); return m; });
+    const B = new Bloques(900, true); s.add(B.im);
+    const vientos = (t, n, v2) => { for (let i = 0; i < n; i++) { const z = -70 + hsh(i, 2, 5) * 120, y = 6 + hsh(i, 3, 5) * 18, L = 140, x = -100 + ((t * v2 + hsh(i, 4, 5) * L) % L); B.pon(x, y, z, 7, .35, .35, P.white); } };
+    const vapor = (t, n) => { for (let i = 0; i < n; i++) { const x = -70 + hsh(i, 6, 6) * 80, z = -60 + hsh(i, 7, 6) * 100, y = ((t * 5 + hsh(i, 8, 6) * 18) % 18); if (x < costa(z) - 2) B.pon(x, y, z, .7, .7, .7, P.cyan); } };
+    const pon = (i, x, y, z) => { nubes[i].visible = true; nubes[i].position.set(x, y, z); };
+    const c = cam(46);
+    return { s, c, upd(t) { nubes.forEach((m, i) => { m.visible = false; m.scale.setScalar(.5 + hsh(i, 1, 1) * .3); }); B.ini(); vientos(t, 60, 20); B.fin(); mira(c, [-8, 112, 78], [6, 0, -14], .02); },
+      acc: {
+        // viento del oeste: rayas blancas que cruzan el océano de izquierda a derecha, y alguna nube que se deja llevar
+        viento_oeste(lt, dur, t) { B.ini(); vientos(t, 150, 32); B.fin(); for (let i = 0; i < 4; i++) pon(i, -60 + ((lt * 12 + i * 30) % 90), 22 + i * 2, -40 + i * 22);
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-14, -6, k), 112, 80], [lerp(0, 6, k), 0, -14], .02); },
+        // el frente: el mar se evapora, la humedad sube y se forma una fila de nubes que avanza hacia la costa
+        frente(lt, dur, t) { B.ini(); vientos(t, 70, 32); vapor(t, 260); B.fin(); const k = clamp(lt / dur, 0, 1), xf = -70 + 60 * k;
+          for (let i = 0; i < 9; i++) { const z = -70 + i * 15, sc = ss(clamp(k * 1.6 - i * .05, 0, 1)); nubes[i].scale.setScalar(.15 + sc * .5); pon(i, xf + Math.sin(i * 1.7) * 6, 24, z); }
+          mira(c, [-14, 116, 80], [-2, 0, -14], .02); },
+        // llegada: las nubes chocan con la costa, se amontonan y empieza a llover sobre tierra
+        llegada(lt, dur, t) { const k = ss(clamp(lt / dur, 0, 1)); B.ini(); vientos(t, 40, 32);
+          for (let i = 0; i < 9; i++) { const z = -70 + i * 15, x = Math.min(costa(z) + 2, -10 + 34 * k + Math.sin(i * 1.7) * 6); nubes[i].scale.setScalar(.7); pon(i, x, 24 + (x > costa(z) - 4 ? 4 : 0), z); }
+          if (k > .4) llueve(B, 10, 40, -70, 60, 2, 20, t, 360 * (k - .3), 0x9fd8ff, 40); B.fin(); mira(c, [lerp(-8, 2, k), lerp(112, 74, k), lerp(78, 66, k)], [lerp(6, 16, k), 0, -10], .02); },
+      } };
+  },
+  // —— lluvia 3: la montaña en corte; el aire sube por la ladera, se enfría, se hace nube y llueve ——
+  ladera: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, P.cyan, 0xd8f6ff]); s.fog = new THREE.Fog(0xbfe8ff, 200, 400);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.4, sol: 0xfff1d6, int: 1.9, dir: [-30, 60, 80], sombra: 70 });
+    const alt = x => x < -18 ? -2 : x < 16 ? 40 * ss((x + 18) / 34) - 2 : Math.max(10, 38 - (x - 16) * .7);
+    const v = new Vox(); for (let x = -60; x < 60; x++) { const h = Math.round(alt(x)); for (let z = -7; z < 7; z++) { if (h < 0) { v.set(x, -2, z, P.navy); v.set(x, -1, z, P.blue); continue; }
+      for (let y = -8; y <= h; y++) v.set(x, y, z, y === h ? (h > 32 ? P.silver : P.green) : y > h - 3 ? P.dgreen : (hsh(x, y, z) > .8 ? P.dbrown : P.brown)); } }
+    for (let i = 0; i < 12; i++) { const x = -14 + i * 2.6 | 0, h = Math.round(alt(x)); if (h > 30) continue; v.box(x, h + 1, -6, x + 1, h + 3, -5, P.dbrown); v.ball(x, h + 4, -5.5, 1.6, P.dgreen); } s.add(v.build({ jit: .05 }));
+    const termo = actor('termometro', .8); termo.position.set(-19, 28, 2); s.add(termo); const merc = termo.getObjectByName('mercurio');
+    const B = new Bloques(900, true), Nb = new Bloques(160); s.add(B.im, Nb.im);
+    const ruta = u => { const x = lerp(-34, 18, u); return [x, Math.max(alt(x), 0) + 5 + (x < -18 ? 1 : 0)]; };
+    const parcela = (u, nube, oscuro, t) => { const [x, y] = ruta(u); Nb.ini(); const r = 3.5 + nube * 5, n = 18 + (nube * 14 | 0); for (let k = 0; k < n; k++) { const a = hsh(k, 3, 3) * 6.28, d = hsh(k, 4, 3) * r;
+      const col = nube > .05 ? (oscuro > .5 ? P.slate : (oscuro > .2 ? P.silver : P.white)) : (k % 3 ? P.cyan : P.white); const sz = nube > .05 ? 2.4 + nube * 1.5 : 1.8;
+      Nb.pon(x + Math.cos(a) * d, y + Math.sin(a) * d * .6 + 1 + Math.sin(t * 2 + k) * .2, 8 + hsh(k, 5, 3) * 2, sz, sz * .8, sz, col); } Nb.fin(); return [x, y]; };
+    const flechas = (t, u0, u1) => { for (let i = 0; i < 24; i++) { const u = u0 + ((t * .12 + i / 24) % 1) * (u1 - u0), [x, y] = ruta(u); B.pon(x, y - 1.5, 8.5, 1.6, .3, .3, P.white, -Math.atan2(alt(x + 1) - alt(x - 1), 2) * 0); } };
+    const temp = y => clamp(1 - y / 50, .15, 1);
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); flechas(t, 0, 1); B.fin(); parcela(.05, 0, 0, t); termo.position.set(-19, 28, 2); merc.scale.y = 26 * temp(0); mira(c, [Math.sin(t * .1) * 3, 22, 108], [0, 18, 0], .08); },
+      acc: {
+        // la burbuja de aire (azul) llega del mar y sube por la ladera
+        subida(lt, dur, t) { const u = .02 + .55 * ss(clamp(lt / dur, 0, 1)); B.ini(); flechas(t, 0, 1); B.fin(); const [, y] = parcela(u, 0, 0, t); merc.scale.y = 26 * temp(y); },
+        // arriba se enfría: los cubos se vuelven nube, la nube se oscurece y llueve en la ladera
+        condensa(lt, dur, t) { const k = clamp(lt / dur, 0, 1), u = .57 + .3 * ss(k); const nube = ss(clamp(k * 2, 0, 1)), osc = clamp(k * 1.6 - .5, 0, 1); const [x, y] = parcela(u, nube, osc, t);
+          B.ini(); flechas(t, .6, 1); if (osc > .1) for (let i = 0; i < 200 * osc; i++) { const xx = x - 6 + hsh(i, 9, 9) * 12, hh = y - Math.max(0, alt(xx)), yy = y - ((t * 30 + hsh(i, 8, 8) * hh) % hh); B.pon(xx, yy, 8 + hsh(i, 7, 7) * 3, .25, 2, .25, 0x9fd8ff); } B.fin();
+          merc.scale.y = 26 * temp(y); mira(c, [2, 30, 104], [4, 28, 0], .08); },
+        // el termómetro viaja con el aire: cada salto hacia arriba, la columna baja un poco
+        termometro(lt, dur, t) { const k = clamp(lt / dur, 0, 1), u = .2 + .6 * k; const [x, y] = parcela(u, k > .5 ? .6 : 0, 0, t); termo.position.set(x - 8, y + 6, 4); merc.scale.y = 26 * temp(y) * (1 - .15 * k);
+          B.ini(); for (let h = 0; h < 40; h += 5) B.pon(-40, h, 8, 3, .4, .4, P.white); flechas(t, 0, 1); B.fin(); mira(c, [x * .6 - 3, y + 10, 92], [x * .8 - 3, y + 10, 0], .08); },
+      } };
+  },
+});
+
+Object.assign(FABE, {
+  // —— Solo en casa 1: calle nevada de noche y la casa de ladrillo; se encienden las luces y se abre la puerta ——
+  nevada: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.navy, P.dslate]); s.fog = new THREE.Fog(0x262b44, 90, 240);
+    luces(s, { cielo: 0x9ab0e0, suelo: 0xc0cbdc, amb: 1.25, sol: 0xb8c8ff, int: 1.1, dir: [30, 70, 60], sombra: 80 });
+    const v = new Vox(); v.box(-100, -2, -80, 100, 0, 90, (x, y, z) => (z > 26 && z < 40) ? (hsh(x >> 1, 2, z >> 1) > .85 ? P.white : P.steel) : (hsh(x, 1, z) > .2 ? P.white : P.silver));
+    v.box(-2, 0, 10, 2, 1, 26, P.silver); casaLad(v, -15, -10, false);
+    for (const [x, z, c1] of [[-62, -6, P.navy], [36, -4, P.sand], [-70, 50, P.teal], [40, 52, P.plum]]) { v.box(x, 0, z, x + 22, 12, z + 12, c1); for (let k = 0; k < 6; k++) v.box(x - 1, 12 + k, z - 1 + k, x + 23, 13 + k, z + 13 - k, k === 5 ? P.white : P.dslate);
+      for (const dx of [4, 16]) v.box(x + dx, 4, z + (z > 20 ? -1 : 12), x + dx + 3, 8, z + (z > 20 ? 0 : 13), P.amber); }
+    [[-28, 6], [26, 8], [-40, -20], [44, -24], [-22, 20], [22, 20]].forEach(([x, z], i) => abeto(v, x, z, 13 + (i % 3) * 3));
+    for (const x of [-34, 34]) { v.box(x, 0, 24, x + 1, 13, 25, P.ink); v.box(x - 1, 13, 23, x + 2, 15, 26, P.yellow); } v.luz(P.amber, P.yellow); s.add(v.build());
+    const piv = new THREE.Group(); piv.position.set(-2, 0, 4.5); const pv = new Vox(); pv.box(0, 0, 0, 4, 8, 1, P.dgreen); pv.set(3, 4, 1, P.yellow); const pm = pv.build({ jit: .02 }); piv.add(pm); s.add(piv);
+    const calida = new THREE.PointLight(0xfeae34, 0, 40, 1.6); calida.position.set(0, 5, 8); s.add(calida);
+    const L = new Bloques(160, true), Sn = new Bloques(500, true), Pp = new Bloques(30); s.add(L.im, Sn.im, Pp.im);
+    const bombillas = []; for (let x = -16; x <= 16; x += 1.5) bombillas.push([x, 18.3, 5.2]); for (let y = 0; y <= 18; y += 1.5) { bombillas.push([-15.8, y, 4.6]); bombillas.push([15.8, y, 4.6]); }
+    for (let x = -11; x <= 11; x += 1.5) bombillas.push([x, 9.6, 5]);
+    const COL = [P.red, P.lime, P.yellow, P.blue, P.orange];
+    const luces2 = (n, t) => { L.ini(); bombillas.forEach(([x, y, z], i) => { if (i < n) L.pon(x, y, z, .8, .8, .8, COL[(i + (Math.floor(t * 2) % 5)) % 5]); }); L.fin(); };
+    const nieve = t => { Sn.ini(); llueve(Sn, -60, 60, -30, 80, 0, 50, t, 480, P.white, 4, { copo: true }); Sn.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { nieve(t); luces2(0, t); piv.rotation.y = 0; calida.intensity = 0; Pp.ini(); Pp.fin(); mira(c, [Math.sin(t * .08) * 5, 22, 104], [0, 12, 0], .08); },
+      acc: {
+        // las luces de Navidad se encienden una a una y la cámara se acerca a la casa
+        luces(lt, dur, t) { const k = ss(clamp(lt / dur, 0, 1)); luces2(Math.floor(bombillas.length * clamp(lt / (dur * .8), 0, 1)), t); mira(c, [lerp(-6, 0, k), lerp(26, 20, k), lerp(116, 96, k)], [0, 12, 0], .08); },
+        // se abre la puerta, sale luz cálida y un hombre con abrigo baja los escalones hasta la nieve
+        puerta_abre(lt, dur, t) { luces2(bombillas.length, t); const a = ss(clamp(lt / .9, 0, 1)); piv.rotation.y = -1.7 * a; calida.intensity = 60 * a;
+          const w = clamp((lt - 1) / (dur - 1.2), 0, 1); Pp.ini(); if (lt > .8) persona(Pp, Math.sin(w * 6) * .3, w > .3 ? 0 : 0, lerp(3, 18, w), P.dgreen, { s: 1.6, pelo: P.tan }); Pp.fin();
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(4, 8, k), 13, lerp(88, 76, k)], [0, 9, 6], .08); },
+      } };
+  },
+  // —— Solo en casa 2: el plató, con una réplica de la fachada, focos, grúa, claqueta y equipo de rodaje ——
+  plato: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.ink); s.fog = new THREE.Fog(P.ink, 90, 200);
+    luces(s, { cielo: 0x9a8ac8, suelo: 0x3a4466, amb: 1.1, sol: 0xffe2b0, int: 1.8, dir: [20, 60, 70], sombra: 70 });
+    const v = new Vox(); v.box(-70, -1, -50, 70, 0, 70, (x, y, z) => ((x >> 3) + (z >> 3)) % 2 ? P.night : P.dslate); v.box(-70, 0, -52, 70, 60, -50, P.ink);
+    casaLad(v, -15, -24, true); v.box(-16, 0, -26, 16, 1, -24, P.dbrown);
+    for (const x of [-17, 16]) for (let y = 0; y < 30; y += 6) { v.box(x, y, -26, x + 1, y + 6, -25, P.steel); v.box(x, y, -26, x + 1, y + 1, -10, P.steel); }   // andamios de la réplica
+    v.box(-20, 0, 26, 20, 1, 30, P.slate); for (let x = -20; x < 20; x += 3) v.box(x, 1, 27, x + 1, 2, 29, P.dbrown);   // vía del travelling
+    for (const [x, z] of [[-30, 10], [30, 12], [-34, -8], [34, -6]]) { v.box(x, 0, z, x + 1, 22, z + 1, P.steel); v.box(x - 3, 22, z - 2, x + 4, 27, z + 3, P.slate); v.box(x - 2, 23, z + 3, x + 3, 26, z + 4, P.yellow); }
+    for (const x of [-22, 18]) { v.box(x, 0, 36, x + 4, 4, 40, P.dbrown); v.box(x, 4, 39, x + 4, 9, 40, P.navy); v.box(x, 4, 36, x + 4, 5, 39, P.navy); }   // sillas de director
+    v.luz(P.yellow); s.add(v.build());
+    for (const [x, z] of [[-30, 10], [30, 12]]) { const l = new THREE.SpotLight(0xffe8b0, 400, 140, .6, .5, 1.4); l.position.set(x, 24, z); l.target.position.set(0, 6, -10); s.add(l, l.target); }
+    const claq = actor('claqueta', .9); s.add(claq); const palo = claq.getObjectByName('palo');
+    const brazo = new THREE.Group(); brazo.position.set(26, 6, 22); s.add(brazo); const bv = new Vox(); bv.box(0, -1, -1, 40, 1, 1, P.amber); bv.box(-8, -2, -2, 0, 2, 2, P.slate); const gb = bv.build(); gb.position.x = -40; brazo.add(gb);
+    const base = new Vox(); base.box(23, 0, 19, 29, 6, 25, P.slate); s.add(base.build());
+    const camc = actor('camara_cine', .7); s.add(camc);
+    const tablero = pantalla(18, 14, 144, 112); tablero.m.position.set(-24, 14, 18); tablero.m.rotation.y = .5; s.add(tablero.m); const pata = new Vox(); pata.box(-26, 0, 17, -25, 7, 18, P.dbrown); pata.box(-22, 0, 19, -21, 7, 20, P.dbrown); s.add(pata.build());
+    const Pp = new Bloques(60); s.add(Pp.im);
+    const equipo = t => { [[-26, 32, P.navy], [24, 34, P.rose], [10, 30, P.teal]].forEach(([x, z, c1], i) => persona(Pp, x + Math.sin(t * .5 + i) * 1.5, 0, z, c1, { s: 1.4 })); };
+    const grua = a => { brazo.rotation.z = a; const p = new THREE.Vector3(-40, 0, 0).applyEuler(brazo.rotation).add(brazo.position); camc.position.set(p.x, p.y + 4, p.z); camc.rotation.y = -Math.PI / 2 + .3; };
+    const c = cam(46);
+    return { s, c, upd(t) { claq.visible = false; tablero.m.visible = true; rotular(tablero, ['RODAJE', 'SOLO EN', 'CASA'], '#ffffff', '#181425', 20, { borde: '#feae34' }); grua(-.15); Pp.ini(); equipo(t); Pp.fin(); mira(c, [Math.sin(t * .1) * 6, 26, 110], [0, 12, -6], .08); },
+      acc: {
+        // la claqueta se cierra delante del plató: ¡acción!
+        claqueta(lt, dur, t) { claq.visible = true; claq.position.set(0, 18, 46); claq.rotation.set(0, Math.sin(t * .6) * .15, 0); const cierra = lt < .9 ? -.7 * ss(lt / .9) : -.7 * (1 - ss(clamp((lt - .9) / .15, 0, 1)));
+          palo.rotation.z = lt > 1.05 ? 0 : -cierra * -1; palo.rotation.z = lt < 1.05 ? .7 * ss(clamp(lt / .9, 0, 1)) * (lt > .9 ? 1 - (lt - .9) / .15 : 1) : 0;
+          mira(c, [0, 20, 112], [0, 14, 20], .08); },
+        // la grúa sube la cámara de cine por la fachada mientras la nuestra la sigue
+        grua(lt, dur, t) { const k = ss(clamp(lt / dur, 0, 1)); grua(-.15 + .75 * k); mira(c, [lerp(30, 12, k), lerp(10, 40, k), lerp(96, 84, k)], [lerp(-6, -4, k), lerp(8, 24, k), -10], .08); },
+        // un padre y sus dos hijos cruzan delante de la casa; los niños corren delante
+        familia(lt, dur, t) { grua(.6); const k = clamp(lt / dur, 0, 1); Pp.ini(); equipo(t); const x = lerp(-20, 14, k);
+          persona(Pp, x, 0, 6, P.dgreen, { s: 1.6, pelo: P.tan }); persona(Pp, x + 7 + Math.sin(t * 6) * .5, Math.abs(Math.sin(t * 7)) * .8, 8, P.red, { s: .9, pelo: P.amber }); persona(Pp, x + 11, Math.abs(Math.sin(t * 7 + 1)) * .8, 5, P.blue, { s: .8 }); Pp.fin();
+          mira(c, [lerp(-6, 6, k), 12, 66], [lerp(-6, 6, k), 7, 0], .08); },
+        // el calendario de rodaje: las hojas pasan y la fecha de estreno sigue en interrogación
+        calendario(lt, dur, t) { grua(.6); const M = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']; const i = Math.floor(lt * 6);
+          rotular(tablero, lt < dur * .55 ? ['ESTRENO', M[i % 12], '¿?'] : ['ESTRENO', '¿ ? ?', ''], ['#feae34', '#ffffff', '#e43b44'], '#181425', 22, { borde: '#feae34' }); tablero.m.position.set(-24, 14, 18);
+          mira(c, [-4, 17, 66], [-22, 13, 18], .06); },
+      } };
+  },
+  // —— Solo en casa 3: Winnetka desde el aire, nevado, junto al lago Míchigan y con Chicago al fondo ——
+  winnetka: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.navy, P.blue, P.cyan, 0xd8f6ff]); s.fog = new THREE.Fog(0xcfe6ff, 160, 420);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0xc0cbdc, amb: 1.4, sol: 0xfff1d6, int: 1.8, dir: [-40, 70, 50], sombra: 120 });
+    const lago = new THREE.Mesh(new THREE.PlaneGeometry(900, 700), new THREE.MeshLambertMaterial({ color: 0x7fb8e0 })); lago.rotation.x = -Math.PI / 2; lago.position.set(0, -1.4, -300); s.add(lago);
+    const v = new Vox(); v.box(-120, -3, -70, 120, 0, 120, (x, y, z) => ((x + 200) % 24 < 3 || (z + 200) % 24 < 3) ? P.steel : (hsh(x, 2, z) > .15 ? P.white : P.silver));
+    for (let x = -120; x < 120; x++) for (let k = 0; k < 3; k++) if (hsh(x, 5, k) > .4) v.set(x, -1, -71 - k, P.sand);
+    for (let i = 0; i < 70; i++) { const gx = -108 + (i % 10) * 24, gz = -56 + Math.floor(i / 10) * 24; if (Math.abs(gx - 4) < 10 && Math.abs(gz - 16) < 10) continue; const x = gx + 6, z = gz + 6, c1 = [P.sand, P.silver, P.crimson, P.navy, P.tan][i % 5];
+      v.box(x, 0, z, x + 10, 6, z + 8, c1); for (let k = 0; k < 3; k++) v.box(x - 1, 6 + k, z - 1 + k, x + 11, 7 + k, z + 9 - k, k === 2 ? P.white : P.slate); if (hsh(i, 3, 3) > .4) abeto(v, x - 4, z + 10, 9); }
+    for (let i = 0; i < 16; i++) { const x = -150 + i * 12 + (hsh(i, 1, 9) * 6 | 0), h = 30 + (hsh(i, 2, 9) * 70 | 0); v.box(x, 0, -330, x + 9, h, -322, (X, Y) => (Y % 4 === 1 && X % 3) ? P.silver : P.slate); }
+    s.add(v.build());
+    const casa = actor('casa_ladrillo', .55); casa.position.set(10, 6.4, 22); s.add(casa);
+    const pin = new THREE.Group(); const pv = new Vox(); pv.ball(0, 8, 0, 3, P.red); pv.cyl(0, 0, 0, 5, 1, P.red); pv.set(0, 9, 3, P.white); pin.add(pv.build({ centrar: false })); s.add(pin);
+    const Sn = new Bloques(400, true); s.add(Sn.im);
+    const c = cam(46);
+    return { s, c, upd(t) { Sn.ini(); llueve(Sn, -60, 60, -40, 80, 0, 60, t, 300, P.white, 4, { copo: true }); Sn.fin(); pin.position.set(10, 17 + Math.sin(t * 3) * 1.2, 22); pin.rotation.y = t;
+        mira(c, [Math.sin(t * .08) * 10, 60, 120], [6, 4, 0], .06); },
+      acc: {
+        // vuelo desde el lago y los rascacielos de Chicago hasta la casa marcada con el alfiler rojo
+        vuelo_lago(lt, dur, t) { const k = ss(clamp(lt / Math.min(dur, 4.5), 0, 1)); mira(c, [lerp(-30, 4, k), lerp(70, 42, k), lerp(-40, 92, k)], [lerp(-20, 10, k), lerp(30, 8, k), lerp(-320, 18, k)], .05); },
+      } };
+  },
+});
+
+Object.assign(FABE, {
+  // —— F1 1: la recta del Strip de noche, con muros, vallas y torres iluminadas; vuelta rápida, crono y parrilla ——
+  strip: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.plum, P.rose]); s.fog = new THREE.Fog(0x3a2a4a, 120, 330);
+    luces(s, { cielo: 0x9a8ac8, suelo: 0x5a5a80, amb: 1.4, sol: 0xc8d0ff, int: 1.2, dir: [30, 70, 40], sombra: 120 });
+    const v = new Vox(); v.box(-60, -1, -260, 60, 0, 80, (x, y, z) => Math.abs(x) < 11 ? (Math.abs(x) === 10 ? P.white : (z === 0 || z === 1) ? ((x + z) % 2 ? P.white : P.ink) : P.night) : P.dslate);
+    for (let z = -260; z < 80; z += 2) for (const x of [-11, 11]) v.set(x, -1, z, (z >> 1) % 2 ? P.red : P.white);
+    for (const x of [-14, 13]) { v.box(x, 0, -260, x + 1, 2, 80, P.silver); v.box(x, 2, -260, x + 1, 6, 80, (X, Y, Z) => (Z % 3 === 0 || Y === 5) ? P.steel : P.navy); }
+    for (let i = 0; i < 22; i++) { const lado = i % 2 ? 1 : -1, z = -250 + (i >> 1) * 30, x0 = lado > 0 ? 22 : -42, w = 20, h = 30 + (hsh(i, 2, 2) * 60 | 0), col = [P.rose, P.cyan, P.amber, P.yellow, P.pink][i % 5];
+      v.box(x0, 0, z, x0 + w, h, z + 20, P.night); for (let y = 3; y < h - 2; y += 3) for (let zz = z + 1; zz < z + 19; zz += 2) if (hsh(i, y, zz) > .35) v.set(lado > 0 ? x0 - 1 : x0 + w, y, zz, hsh(i, y, zz + 1) > .5 ? col : P.amber);
+      v.box(x0, h, z, x0 + w, h + 2, z + 20, col); }
+    v.luz(P.rose, P.cyan, P.amber, P.yellow, P.pink); s.add(v.build());
+    const coches = [[P.silver, P.cyan], [P.navy, P.red], [P.silver, P.teal], [P.orange, P.ink], [P.red, P.yellow], [P.green, P.white]].map(([a, b]) => { const m = f1(a, b); m.scale.setScalar(.36); s.add(m); return m; });
+    const torre = pantalla(12, 18, 96, 144); torre.m.position.set(-19, 18, -4); torre.m.rotation.y = .7; s.add(torre.m); const pie = new Vox(); pie.box(-20, 0, -5, -18, 9, -3, P.slate); s.add(pie.build());
+    const tags = [0, 1, 2].map(() => { const p = pantalla(5, 2.5, 60, 30); s.add(p.m); return p; });
+    const B = new Bloques(200, true); s.add(B.im);
+    const parrilla = i => [i % 2 ? 4 : -4, -10 - i * 9];
+    const coloca = (m, x, z, yaw = -Math.PI / 2) => { m.visible = true; m.position.set(x, .4, z); m.rotation.set(0, yaw, 0); };
+    const tabla = filas => rotular(torre, filas, ['#fee761', '#ffffff', '#ffffff', '#c0cbdc'], '#181425', 20, { borde: '#e43b44' });
+    const c = cam(46);
+    return { s, c, upd(t) { coches.forEach(m => m.visible = false); tags.forEach(p => p.m.visible = false); B.ini(); B.fin(); tabla(['LAS VEGAS', 'CLASIF.']); mira(c, [5, 7, 50], [0, 6, -40], .04); },
+      acc: {
+        // un coche plateado viene a toda velocidad por la recta y pasa junto a la cámara
+        vuelta_rapida(lt, dur, t) { const z = -90 + lt * 55; coloca(coches[0], 0, z, Math.PI / 2 * -1 + Math.PI); coches[0].rotation.y = -Math.PI / 2;
+          coches[0].rotation.y = Math.PI / 2 * -1; coches[0].position.y = .4 + Math.sin(t * 40) * .05; B.ini(); for (let i = 0; i < 30; i++) B.pon((hsh(i, 1, 1) - .5) * 20, 1 + hsh(i, 2, 1) * 8, z - 6 - ((t * 120 + i * 7) % 40), .2, .2, 5, P.white); B.fin();
+          const sh = z > 20 ? Math.sin(t * 50) * .3 : 0; mira(c, [5 + sh, 5, 48], [lerp(0, 0, 0), 4, Math.min(z, 30) - 30], .02); },
+        // cruza la meta y el panel de tiempos pone a Antonelli el primero
+        cronometro(lt, dur, t) { const z = -60 + lt * 70; coloca(coches[0], 0, Math.min(z, 70)); coches[0].rotation.y = -Math.PI / 2;
+          tabla(lt < 1 ? ['LAS VEGAS', 'CLASIF.'] : ['1 ANT', '2 VER', '3 RUS', 'TOP 3']); mira(c, [6, 15, 46], [-14, 14, -6], .04); },
+        // la parrilla: el plateado (el más rápido) se va del primer puesto al sexto y todos los demás suben uno
+        parrilla(lt, dur, t) { const k = ss(clamp((lt - .6) / 2.2, 0, 1)); coloca(coches[0], lerp(-4, 6, Math.sin(k * Math.PI) * 1.4 > 1 ? 1 : 0) * 0 + lerp(parrilla(0)[0], parrilla(5)[0], k), lerp(parrilla(0)[1], parrilla(5)[1], k));
+          for (let i = 1; i < 6; i++) { const [x0, z0] = parrilla(i), [x1, z1] = parrilla(i - 1); coloca(coches[i], lerp(x0, x1, k), lerp(z0, z1, k)); }
+          [[coches[1], 'VER', '#124e89'], [coches[2], 'RUS', '#3a4466'], [coches[0], 'ANT', '#e43b44']].forEach(([m, txt, bg], i) => { const p = tags[i]; p.m.visible = true; p.m.position.set(m.position.x, 6, m.position.z); p.m.lookAt(c.position); rotular(p, [txt], '#ffffff', bg, 20); });
+          mira(c, [8, 42, 34], [0, 0, -28], .03); },
+        // primer plano del plateado, ahora sexto, con una luz roja que parpadea encima
+        retroceso(lt, dur, t) { coloca(coches[0], parrilla(5)[0], parrilla(5)[1]); for (let i = 1; i < 6; i++) { const [x, z] = parrilla(i - 1); coloca(coches[i], x, z); }
+          const p = tags[0]; p.m.visible = true; p.m.position.set(parrilla(5)[0], 6 + Math.sin(t * 4) * .3, parrilla(5)[1]); p.m.lookAt(c.position); rotular(p, [Math.floor(t * 4) % 2 ? '?' : '¿?'], '#ffffff', Math.floor(t * 4) % 2 ? '#e43b44' : '#a22633', 22);
+          mira(c, [parrilla(5)[0] + 14, 10, parrilla(5)[1] + 24], [parrilla(5)[0], 3, parrilla(5)[1]], .05); },
+      } };
+  },
+  // —— F1 2: el garaje del equipo; los motores de la temporada en un banco… y llega el sexto ——
+  garaje: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.ink); s.fog = new THREE.Fog(P.ink, 80, 160);
+    luces(s, { cielo: 0xdfe8ff, suelo: 0x3a4466, amb: 1.4, sol: 0xffffff, int: 1.6, dir: [10, 60, 60], sombra: 60 });
+    const v = new Vox(); v.box(-50, -1, -40, 50, 0, 60, (x, y, z) => (x % 8 === 0 || z % 8 === 0) ? P.slate : P.steel); v.box(-50, 0, -42, 50, 40, -40, (x, y) => y > 30 ? P.dslate : (x % 10 === 0 ? P.slate : P.night));
+    for (const x of [-50, 49]) v.box(x, 0, -40, x + 1, 40, 60, P.night); for (let x = -40; x < 40; x += 10) v.box(x, 38, -40, x + 6, 39, 40, P.white);
+    v.box(-36, 0, 0, 36, 7, 6, P.dslate); v.box(-37, 7, -1, 37, 8, 7, P.silver); for (let x = -34; x < 34; x += 4) v.box(x, 2, 6, x + 3, 6, 7, P.slate);   // banco de trabajo
+    for (let x = -44; x < -30; x += 3) v.box(x, 10, -40, x + 2, 30, -39, [P.red, P.amber, P.blue, P.lime, P.orange][(x + 44) / 3 | 0]);   // herramientas en la pared
+    v.luz(P.white); s.add(v.build());
+    const coche = f1(P.silver, P.cyan); coche.scale.setScalar(.6); coche.position.set(4, 3, -24); coche.rotation.y = -.25; s.add(coche); const gato = new Vox(); gato.box(-6, 0, -26, 14, 3, -22, P.red); s.add(gato.build());
+    const motores = Array.from({ length: 6 }, (_, i) => { const m = actor('motor', .5); s.add(m); return m; });
+    const etis = Array.from({ length: 6 }, () => { const p = pantalla(4, 3, 40, 30); s.add(p.m); return p; });
+    const sirena = bola(P.red, 1.6); sirena.position.set(34, 20, -36); s.add(sirena); const carro = new Vox(); carro.box(-6, 0, -4, 6, 1, 4, P.dslate); for (const x of [-5, 4]) for (const z of [-4, 3]) carro.box(x, -2, z, x + 1, 0, z + 1, P.ink); const gc = carro.build(); s.add(gc);
+    const X = i => -20 + i * 8;
+    const pon = (i, x, y, z, rojo, sc = 1) => { const m = motores[i]; m.visible = true; m.position.set(x, y, z); m.scale.setScalar(.5 * sc); m.rotation.y = .4;
+      const p = etis[i]; p.m.visible = sc > .5; p.m.position.set(x, 1.5, 7.2); rotular(p, [String(i + 1)], '#ffffff', rojo ? '#e43b44' : '#3e8948', 22); };
+    const c = cam(46);
+    return { s, c, upd(t) { motores.forEach(m => m.visible = false); etis.forEach(p => p.m.visible = false); sirena.visible = false; gc.visible = false; mira(c, [Math.sin(t * .1) * 6, 32, 100], [0, 8, -4], .08); },
+      acc: {
+        // los motores de la temporada aparecen uno a uno sobre el banco
+        motores(lt, dur, t) { for (let i = 0; i < 5; i++) { const p = clamp((lt - .3 - i * (dur * .14)) / .35, 0, 1); if (p > 0) pon(i, X(i), 11 + (1 - ss(p)) * 8, 3, false, ss(p)); }
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-8, 4, k), 30, 96], [0, 9, 0], .08); },
+        // llega el sexto en un carro: la etiqueta se pone roja y la sirena gira
+        sexto(lt, dur, t) { for (let i = 0; i < 5; i++) pon(i, X(i), 11, 3, false); const k = ss(clamp(lt / (dur * .45), 0, 1)), x = lerp(60, X(5), k);
+          gc.visible = true; gc.position.set(x, 2, 18); pon(5, x, 6.6, 18, k > .95); if (k > .95) { sirena.visible = Math.floor(t * 6) % 2 === 0; } mira(c, [10, 30, 100], [6, 8, 4], .08); },
+      } };
+  },
+  // —— F1 3: los casinos de noche desde el aire, con la estela de luz de los coches por la avenida ——
+  casinos: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.plum]); s.fog = new THREE.Fog(0x262b44, 140, 380);
+    luces(s, { cielo: 0x8a7ab8, suelo: 0x3a4466, amb: 1.1, sol: 0xb8c0ff, int: .9, dir: [30, 70, 40], sombra: 150 });
+    const v = new Vox(); v.box(-90, -1, -340, 90, 0, 100, (x, y, z) => Math.abs(x) < 9 ? (Math.abs(x) > 7 ? P.white : P.ink) : P.night);
+    for (let i = 0; i < 30; i++) { const lado = i % 2 ? 1 : -1, z = -330 + (i >> 1) * 28, w = 16 + (hsh(i, 1, 4) * 8 | 0), x0 = lado > 0 ? 14 : -14 - w, h = 24 + (hsh(i, 2, 4) * 80 | 0), col = [P.rose, P.cyan, P.amber, P.yellow, P.pink, P.lime][i % 6];
+      for (let y = 0; y < h; y++) { const r = y > h * .7 ? 1 : 0; v.box(x0 + r, y, z + r, x0 + w - r, y + 1, z + 18 - r, (X, Y, Z) => ((Y % 3 === 1) && hsh(X, Y, Z) > .45) ? col : (hsh(X, Y, Z + 3) > .93 ? P.amber : P.night)); }
+      v.box(x0, h, z, x0 + w, h + 1, z + 18, col); }
+    v.luz(P.rose, P.cyan, P.amber, P.yellow, P.pink, P.lime); s.add(v.build());
+    const letreros = [[12, -40], [-12, -110], [12, -180], [-12, -250]].map(([x, z]) => { const m = actor('letrero', .7); m.position.set(x, 10, z); m.rotation.y = x > 0 ? -.5 : .5; s.add(m); return m; });
+    const B = new Bloques(260, true); s.add(B.im);
+    const estela = t => { B.ini(); for (let k = 0; k < 3; k++) { const cab = 100 - ((t * 140 + k * 140) % 440); for (let i = 0; i < 60; i++) B.pon(k - 1, .6, cab + i * 1.2, .7, .5, 1.3, i < 3 ? P.white : (i < 25 ? P.red : P.crimson)); } B.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { estela(t); letreros.forEach((m, i) => m.visible = true); mira(c, [Math.sin(t * .1) * 10, 80, 120], [0, 10, -60], .06); },
+      acc: {
+        // la cámara vuela por encima de la avenida; los letreros parpadean y pasan las estelas de los coches
+        neones(lt, dur, t) { estela(t); letreros.forEach((m, i) => m.visible = Math.floor(t * 3 + i) % 4 !== 0); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-10, 6, k), lerp(90, 46, k), lerp(140, 30, k)], [0, 10, lerp(-60, -120, k)], .06); },
+      } };
+  },
+});

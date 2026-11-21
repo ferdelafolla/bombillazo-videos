@@ -111,3 +111,10 @@ En `audio_rpg.py` la música va a 0,09 (antes 0,22) y baja un 75 % cuando habla 
 - Con 2 CPU el render de un Short de ~48 s tarda ~20 min (4 trozos en paralelo); lánzalos encadenados con `setsid nohup`.
 - Encuadre: fachadas y objetos anchos necesitan distancia ≥ ancho / 0,48; con `mira(c, p, q, sube)` un `sube` de 0,1-0,12 deja el objeto entre el 15 y el 55 % de la altura. El texto del gancho ocupa ~27-40 %: no pongas letreros 3D ahí en la primera escena.
 - Metricool: el 19/11 por la tarde se agotó el cupo («account limit»): 8 publicaciones en error.
+
+## 21/11/2026 (tarea diaria): lluvia en Galicia, «Solo en casa» y F1 en Las Vegas
+- Recursos nuevos en `voxel.js`: modelos `nube`, `faro`, `horreo`, `termometro` (con parte 'mercurio' que se escala), `casa_ladrillo`, `claqueta` (con 'palo' que se cierra), `camara_cine`, `monoplaza`, `motor`, `letrero`; escenas `costa`, `atlantico` (vista aérea con viento del oeste, evaporación y frente), `ladera` (montaña en corte: el aire sube, se enfría, nube y lluvia), `nevada`, `plato` (rodaje con grúa), `winnetka`, `strip` (recta nocturna, crono y parrilla), `garaje` (motores de la temporada) y `casinos`.
+- Utilidades nuevas: `llueve(B, x0, x1, z0, z1, y0, y1, t, n, col, v, {inc, copo})` (lluvia o nieve), `nubarron(B, …)` (nube de bloques que se puede oscurecer), `f1(color, color2)` (monoplaza genérico sin marcas, morro hacia +x), `casaLad(v, x0, z0, puerta)` y `abeto(v, x, z, h)`.
+- La fuente pixel no tiene «º»: en rótulos usa «P1» o «SEXTO», no «1.º».
+- Encuadre: no metas la cámara dentro de un edificio (en `strip` los bloques empiezan en |x| = 22); en escenas anchas separa menos los objetos (8 unidades) en vez de alejar la cámara.
+- Ritmo: con voces de 35-37 s se aceleró un 8 % / 5 % (`voces/<id>_ritmo.mp3`) para quedar en ~40 s.

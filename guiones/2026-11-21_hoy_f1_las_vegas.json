@@ -28,7 +28,7 @@
     "lugar": "garaje",
     "era": "snes",
     "nombre": "EL GARAJE",
-    "nota": "6.º MOTOR"
+    "nota": "SEXTO"
    },
    {
     "lugar": "casinos",
@@ -59,7 +59,7 @@
       "mejor"
      ],
      "accion": "cronometro",
-     "rotulo": "1.º ANTONELLI"
+     "rotulo": "P1 ANTONELLI"
     },
     {
      "texto": "Pero la pole es para Max Verstappen, y George Russell saldrá segundo.",
