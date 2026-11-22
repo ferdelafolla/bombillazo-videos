@@ -118,3 +118,11 @@ En `audio_rpg.py` la música va a 0,09 (antes 0,22) y baja un 75 % cuando habla 
 - La fuente pixel no tiene «º»: en rótulos usa «P1» o «SEXTO», no «1.º».
 - Encuadre: no metas la cámara dentro de un edificio (en `strip` los bloques empiezan en |x| = 22); en escenas anchas separa menos los objetos (8 unidades) en vez de alejar la cámara.
 - Ritmo: con voces de 35-37 s se aceleró un 8 % / 5 % (`voces/<id>_ritmo.mp3`) para quedar en ~40 s.
+
+## 22/11/2026 (tarea diaria, domingo): la luz de noche, las medallas y el penalti de once metros
+- Recursos nuevos en `voxel.js`: modelos `placa`, `molino` (con 'aspas' que giran), `central` (ciclo combinado), `medalla`, `sello`, `carpeta`, `porteria`, `balon`, `balon_cuero`; escenas `anochecer` (ciudad que pasa de día a noche), `parque_solar` (placas + central de gas + ciudad unidas por torres), `eolico`, `vitrina`, `archivo` (libro de la ley que se abre, alegaciones, sello), `imprenta`, `estadio`, `medida` (cinta métrica, yardas contra metros, la línea de 1891 y el punto de 1902) y `milford`.
+- Utilidades nuevas: `grafica(pantalla, hasta, sel, título)` (24 barras de precio por horas), `pisos(v, …)` + `ventanas(L, edificios, frac, t)` (bloques de pisos con ventanas que se encienden; el cristal está en z0 + fondo + 1), `flujo(B, ruta, n, t, v, col)` (cubos que viajan por una polilínea: energía, tráfico…), `cesped(v, …)` (campo a escala 1 m = 2 unidades con áreas) y `colLerp`.
+- Cielo que cambia de día a noche: `s.background = new THREE.Color()` y cambiarlo en cada fotograma (también `s.fog.color`).
+- Rótulos 3D (pantallas) que miran a cámara: tamaño ≤ 6 × 2,6 unidades a ~40 de distancia; si el `rotulo` del guion dice lo mismo, quita uno de los dos (se tapan).
+- No se hizo vídeo largo de domingo: con 2 CPU cada Short tarda ~25-30 min y se prefirió cerrar los 3 Shorts.
+- Las vistas previas `--png` de otro Short mientras se renderiza uno ralentizan los dos (carga 16); mejor revisar todo antes del primer render final.
