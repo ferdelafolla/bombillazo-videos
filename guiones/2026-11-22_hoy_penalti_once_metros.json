@@ -1,0 +1,139 @@
+{
+ "id": "2026-11-22_hoy_penalti_once_metros",
+ "titulo": "¿Por qué el penalti se tira desde 11 metros? ⚽",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «penalti» (2000+), 21/11/2026: penalti fallado por Mbappé en el Real Madrid 2-1 Celta",
+ "fuentes": [
+  "Realmadrid.com (21/11/2026): crónica Real Madrid-Celta, J13 de LaLiga, remontada y novena victoria seguida",
+  "Latinus y El Debate (21/11/2026): Mbappé falla un penalti y Carlos Espí, desde el banquillo, da la victoria (2-1)",
+  "IFAB e historia del reglamento: el penalti nace en 1891 a propuesta de William McCrum (Milford, Irlanda); se tiraba desde una línea a 12 yardas y el punto llegó en 1902"
+ ],
+ "remate": "¿POR QUÉ 11 METROS?",
+ "rpg": {
+  "gancho_lugar": "estadio",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "estadio",
+    "era": "snes",
+    "nombre": "EL ESTADIO",
+    "nota": "2-1"
+   },
+   {
+    "lugar": "medida",
+    "era": "snes",
+    "nombre": "EL ÁREA",
+    "nota": "12 YARDAS"
+   },
+   {
+    "lugar": "milford",
+    "era": "snes",
+    "nombre": "MILFORD",
+    "nota": "1891"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "estadio",
+   "escenas": [
+    {
+     "texto": "Mbappé falló un penalti, y el Madrid ganó igual.",
+     "tipo": "titulo",
+     "destacar": [
+      "falló"
+     ],
+     "accion": "chut_alto",
+     "texto_grande": "¡PENALTI FALLADO!"
+    },
+    {
+     "texto": "El Real Madrid remontó al Celta, dos a uno, con un gol de Carlos Espí al final.",
+     "tipo": "icono",
+     "destacar": [
+      "Espí"
+     ],
+     "accion": "gol_final",
+     "rotulo": "2-1"
+    }
+   ]
+  },
+  {
+   "id": "medida",
+   "lugar": "medida",
+   "escenas": [
+    {
+     "texto": "¿Y por qué el penalti se tira desde once metros?",
+     "tipo": "icono",
+     "destacar": [
+      "once"
+     ],
+     "accion": "medir"
+    },
+    {
+     "texto": "Porque el fútbol nació en Inglaterra, y allí se medía en yardas.",
+     "tipo": "icono",
+     "destacar": [
+      "yardas."
+     ],
+     "accion": "yardas"
+    },
+    {
+     "texto": "Doce yardas son casi once metros: diez con noventa y siete.",
+     "tipo": "icono",
+     "destacar": [
+      "noventa"
+     ],
+     "accion": "equivale",
+     "rotulo": [
+      "12 YARDAS",
+      "10,97 M"
+     ]
+    },
+    {
+     "texto": "Pero al principio no había punto: se chutaba desde cualquier sitio de una línea.",
+     "tipo": "icono",
+     "destacar": [
+      "línea."
+     ],
+     "accion": "linea"
+    },
+    {
+     "texto": "El punto de penalti llegó en mil novecientos dos.",
+     "tipo": "icono",
+     "destacar": [
+      "punto"
+     ],
+     "accion": "punto",
+     "rotulo": "1902"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "milford",
+   "escenas": [
+    {
+     "texto": "Curiosidad: lo inventó un portero irlandés, William McCrum, en mil ochocientos noventa y uno.",
+     "tipo": "icono",
+     "destacar": [
+      "portero"
+     ],
+     "accion": "portero"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

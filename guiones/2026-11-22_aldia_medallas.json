@@ -1,0 +1,134 @@
+{
+ "id": "2026-11-22_aldia_medallas",
+ "titulo": "¿Se puede quitar una medalla a quien ya murió? 🏅",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «empresario» (200+), 21/11/2026: retirada de la Medalla al Mérito en el Trabajo a Pedro Barrié de la Maza",
+ "fuentes": [
+  "Europa Press/Infobae (20/11/2026): el Gobierno inicia la revocación de la Medalla del Trabajo de siete figuras de la dictadura y del sindicato vertical",
+  "Civio, El BOE nuestro de cada día (20/11/2026) y El Correo Gallego (20/11/2026): ocho expedientes, entre ellos Pilar Primo de Rivera y Pedro Barrié de la Maza",
+  "Ley 20/2022, de Memoria Democrática; BOE de 18/07/2023 y Diario de León (2023): retirada de la Medalla al Mérito en el Trabajo a Franco"
+ ],
+ "remate": "¿SE PUEDE QUITAR?",
+ "rpg": {
+  "gancho_lugar": "vitrina",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "vitrina",
+    "era": "snes",
+    "nombre": "LA VITRINA",
+    "nota": "8 MEDALLAS"
+   },
+   {
+    "lugar": "archivo",
+    "era": "snes",
+    "nombre": "EL ARCHIVO",
+    "nota": "EXPEDIENTE"
+   },
+   {
+    "lugar": "imprenta",
+    "era": "snes",
+    "nombre": "LA IMPRENTA",
+    "nota": "2023"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "vitrina",
+   "escenas": [
+    {
+     "texto": "El Gobierno ha abierto ocho expedientes para quitar medallas de la dictadura.",
+     "tipo": "titulo",
+     "destacar": [
+      "ocho"
+     ],
+     "accion": "ocho",
+     "texto_grande": "¡8 MEDALLAS, A REVISIÓN!"
+    },
+    {
+     "texto": "Son Medallas al Mérito en el Trabajo de siete personas y del sindicato vertical.",
+     "tipo": "icono",
+     "destacar": [
+      "siete"
+     ],
+     "accion": "siete_uno",
+     "rotulo": "7 + 1"
+    },
+    {
+     "texto": "Entre ellas, Pilar Primo de Rivera y el empresario gallego Pedro Barrié de la Maza.",
+     "tipo": "icono",
+     "destacar": [
+      "Barrié"
+     ],
+     "accion": "nombres"
+    }
+   ]
+  },
+  {
+   "id": "ley",
+   "lugar": "archivo",
+   "escenas": [
+    {
+     "texto": "¿Se puede quitar una medalla a alguien que ya murió?",
+     "tipo": "icono",
+     "destacar": [
+      "murió?"
+     ],
+     "accion": "silla_vacia"
+    },
+    {
+     "texto": "Sí: la Ley de Memoria Democrática, de dos mil veintidós, permite retirar honores de la dictadura.",
+     "tipo": "icono",
+     "destacar": [
+      "Ley"
+     ],
+     "accion": "ley"
+    },
+    {
+     "texto": "Pero no es automático: antes hay un plazo para presentar alegaciones.",
+     "tipo": "icono",
+     "destacar": [
+      "alegaciones."
+     ],
+     "accion": "alegaciones"
+    },
+    {
+     "texto": "Solo al final, el ministerio decide si la medalla se retira.",
+     "tipo": "icono",
+     "destacar": [
+      "decide"
+     ],
+     "accion": "sello"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "imprenta",
+   "escenas": [
+    {
+     "texto": "Curiosidad: en dos mil veintitrés, esta misma medalla ya se le retiró a Franco.",
+     "tipo": "icono",
+     "destacar": [
+      "veintitrés,"
+     ],
+     "accion": "imprenta"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

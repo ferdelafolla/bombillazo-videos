@@ -1,0 +1,138 @@
+{
+ "id": "2026-11-22_curiosidades_luz_noche",
+ "titulo": "¿Por qué la luz es más cara de noche? 💡",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «tarifa luz hoy» (100+), 21-22/11/2026",
+ "fuentes": [
+  "El Demócrata (10, 16 y 18/11/2026): la hora más cara del día, de 20:00 a 21:00; la más barata, a mediodía o de madrugada",
+  "Selectra (precio de la luz por horas, noviembre de 2026): picos al anochecer y valles con la producción solar",
+  "Red Eléctrica/OMIE: el precio mayorista lo fija la última central que entra (marginalista); en abril de 2024 hubo por primera vez precios negativos en España"
+ ],
+ "remate": "¿POR QUÉ DE NOCHE?",
+ "rpg": {
+  "gancho_lugar": "anochecer",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "anochecer",
+    "era": "snes",
+    "nombre": "LA CIUDAD",
+    "nota": "20-21 H"
+   },
+   {
+    "lugar": "parque_solar",
+    "era": "snes",
+    "nombre": "LA RED",
+    "nota": "SOL Y GAS"
+   },
+   {
+    "lugar": "eolico",
+    "era": "snes",
+    "nombre": "LOS MOLINOS",
+    "nota": "0 EUROS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "anochecer",
+   "escenas": [
+    {
+     "texto": "La hora más cara de la luz llega casi siempre de noche.",
+     "tipo": "titulo",
+     "destacar": [
+      "cara"
+     ],
+     "accion": "anochecer",
+     "texto_grande": "¡LA LUZ, MÁS CARA DE NOCHE!"
+    },
+    {
+     "texto": "Este mes, muchos días, la más cara es de ocho a nueve.",
+     "tipo": "icono",
+     "destacar": [
+      "ocho"
+     ],
+     "accion": "reloj",
+     "rotulo": [
+      "DE 20 A 21 H"
+     ]
+    },
+    {
+     "texto": "¿Por qué pagamos más justo cuando encendemos la casa?",
+     "tipo": "icono",
+     "destacar": [
+      "encendemos"
+     ],
+     "accion": "encender"
+    }
+   ]
+  },
+  {
+   "id": "red",
+   "lugar": "parque_solar",
+   "escenas": [
+    {
+     "texto": "Por el sol: a mediodía, las placas solares llenan la red de energía barata.",
+     "tipo": "icono",
+     "destacar": [
+      "placas"
+     ],
+     "accion": "placas"
+    },
+    {
+     "texto": "Pero al anochecer, el sol se apaga justo cuando volvemos a casa.",
+     "tipo": "icono",
+     "destacar": [
+      "anochecer,"
+     ],
+     "accion": "puesta"
+    },
+    {
+     "texto": "Encendemos luces, cocina y calefacción, y la demanda sube de golpe.",
+     "tipo": "icono",
+     "destacar": [
+      "demanda"
+     ],
+     "accion": "demanda"
+    },
+    {
+     "texto": "Entonces entran las centrales de gas, más caras, y fijan el precio.",
+     "tipo": "icono",
+     "destacar": [
+      "gas,"
+     ],
+     "accion": "gas",
+     "rotulo": "GAS"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "eolico",
+   "escenas": [
+    {
+     "texto": "Curiosidad: en primavera, con mucho sol y viento, el precio mayorista ha llegado a bajar de cero.",
+     "tipo": "icono",
+     "destacar": [
+      "cero."
+     ],
+     "accion": "molinos",
+     "rotulo": "MENOS DE 0"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1293,3 +1293,357 @@ Object.assign(FABE, {
       } };
   },
 });
+
+// ———————————————————— 22/11/2026: la luz de noche, las medallas y el penalti de once metros ————————————————————
+const colLerp = (a, b, k) => new THREE.Color(a).lerp(new THREE.Color(b), clamp(k, 0, 1));
+const PERFIL = [5, 4, 4, 3, 3, 4, 6, 8, 7, 5, 3, 2, 2, 2, 2, 3, 5, 7, 8, 9, 10, 9, 8, 6];   // precio relativo por horas: valle al mediodía, pico de 20 a 21 h
+// gráfica de 24 barras en una pantalla; `hasta` = barras ya dibujadas, `sel` = hora resaltada
+function grafica(P2, hasta, sel, titulo, parpadeo = false) { const k = `${hasta | 0}|${sel}|${titulo}|${parpadeo}`; if (P2._k === k) return; P2._k = k; const { g, cv, tex } = P2, W2 = cv.width, H2 = cv.height;
+  g.fillStyle = '#181425'; g.fillRect(0, 0, W2, H2); g.strokeStyle = '#feae34'; g.lineWidth = 3; g.strokeRect(2, 2, W2 - 4, H2 - 4);
+  g.font = 'bold 16px monospace'; g.textAlign = 'center'; g.fillStyle = '#ffffff'; g.fillText(titulo, W2 / 2, 18);
+  const bw = (W2 - 16) / 24; for (let h = 0; h < Math.min(24, hasta); h++) { const v = PERFIL[h] / 10, bh = v * (H2 - 44);
+    g.fillStyle = h === sel ? (parpadeo ? '#ffffff' : '#e43b44') : (v > .75 ? '#f77622' : v > .45 ? '#feae34' : '#63c74d'); g.fillRect(8 + h * bw + 1, H2 - 14 - bh, bw - 2, bh); }
+  g.fillStyle = '#c0cbdc'; g.font = 'bold 11px monospace'; ['0', '12', '20', '24'].forEach((s, i) => g.fillText(s, 8 + [0, 12, 20.5, 23.6][i] * bw, H2 - 3)); tex.needsUpdate = true; }
+// bloque de pisos español: fachada clara con balcones y tejado de teja
+function pisos(v, x0, z0, w, h, col, fondo = 8) { v.box(x0, 0, z0, x0 + w, h, z0 + fondo, (x, y) => (y % 4 === 0) ? P.silver : col);
+  for (let y = 4; y < h - 1; y += 4) for (let x = x0 + 1; x < x0 + w - 1; x += 3) { v.box(x, y - 3, z0 + fondo, x + 2, y - 1, z0 + fondo + 1, P.dslate); if ((x + y) % 2) v.box(x, y - 4, z0 + fondo, x + 2, y - 3, z0 + fondo + 2, P.steel); }
+  for (let k = 0; k < 3; k++) v.box(x0 - 1 + k, h + k, z0 - 1 + k, x0 + w + 1 - k, h + k + 1, z0 + fondo + 1 - k, k % 2 ? P.crimson : P.brown); }
+// ventanas de una fachada como bloques que se encienden (frac 0..1)
+function ventanas(L, edificios, frac, t, colOn = P.amber) { L.ini(); edificios.forEach(([x0, z0, w, h, fondo], e) => { for (let y = 4; y < h - 1; y += 4) for (let x = x0 + 1; x < x0 + w - 1; x += 3) { const r = hsh(x, y, e);
+  if (r < frac) L.pon(x + 1, y - 2, z0 + fondo + 1.12, 2, 2, .2, r > .85 ? P.yellow : (r > frac - .05 && Math.floor(t * 8) % 2 ? P.white : colOn)); } }); L.fin(); }
+// trazo de energía: cubos que viajan por una polilínea (ruta de puntos), n cubos, velocidad v
+function flujo(B, ruta, n, t, v, col, sz = 1.1) { const seg = []; let L = 0; for (let i = 1; i < ruta.length; i++) { const d = Math.hypot(...ruta[i].map((c, j) => c - ruta[i - 1][j])); seg.push(d); L += d; }
+  for (let k = 0; k < n; k++) { let s = ((t * v + k * L / n) % L), i = 0; while (i < seg.length - 1 && s > seg[i]) { s -= seg[i]; i++; } const a = ruta[i], b = ruta[i + 1], u = s / seg[i];
+    B.pon(lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u), sz, sz, sz, col); } }
+// pitch de fútbol: césped a franjas y líneas (1 m = 2 unidades; portería en z = zg mirando a +z)
+function cesped(v, x0, x1, z0, z1, zg, o = {}) { v.box(x0, -1, z0, x1, 0, z1, (x, y, z) => { const ax = Math.abs(x), dz = z - zg;
+  if (o.lineas !== false && ((ax === 40 && dz >= 0 && dz <= 33) || (dz === 33 && ax <= 40) || (ax === 18 && dz >= 0 && dz <= 11) || (dz === 11 && ax <= 18) || (dz === 0))) return P.white;
+  if (o.punto && ax <= 0 && dz === 22) return P.white; return ((z - zg) >> 3) % 2 ? P.green : 0x4a9a52; }); }
+
+Object.assign(FAB, {
+  // —— la luz de noche ——
+  placa: () => {   // placa solar: celdas azules con rejilla plateada, sobre un poste
+    const v = new Vox(); v.box(-8, 0, -5, 8, 1, 5, (x, y, z) => (x % 4 === 0 || z % 3 === 0) ? P.silver : ((x + z) % 2 ? P.navy : P.blue)); v.box(-8, -1, -5, 8, 0, 5, P.slate);
+    const g = v.build({ jit: .03 }); g.rotation.x = .5; const w = new THREE.Group(); w.add(g); const p = new Vox(); p.box(0, -8, 0, 1, -1, 1, P.steel); w.add(p.build()); return centra(w); },
+  molino: () => {   // aerogenerador: torre blanca, góndola y tres aspas ('aspas') que giran
+    const v = new Vox(); for (let y = 0; y < 44; y++) v.cyl(0, 0, y, y + 1, 1.6 - y * .015, y < 2 ? P.steel : P.white); v.box(-2, 44, -3, 3, 47, 4, P.white); v.box(-1, 45, 4, 2, 46, 5, P.silver);
+    const w = new THREE.Group(); w.add(v.build({ jit: .02 }));
+    const a = new Vox(); for (let k = 0; k < 3; k++) { const an = k * Math.PI * 2 / 3; for (let r = 1; r < 20; r++) { const x = Math.round(Math.cos(an) * r), y = Math.round(Math.sin(an) * r); a.set(x, y, 0, r > 16 ? P.red : P.white); if (r < 12) a.set(x + Math.round(-Math.sin(an)), y + Math.round(Math.cos(an)), 0, P.white); } }
+    a.set(0, 0, 0, P.silver); a.set(0, 0, 1, P.silver); const ga = a.build({ jit: 0 }); const piv = new THREE.Group(); piv.position.set(.5, 45.5, 5.5); ga.position.set(-.5, -.5, -.5); piv.add(ga); piv.name = 'aspas'; w.add(piv); return w; },
+  central: () => {   // central de ciclo combinado: nave gris, dos chimeneas a franjas y la turbina naranja
+    const v = new Vox(); v.box(-14, 0, -8, 14, 12, 8, (x, y) => y % 4 === 0 ? P.silver : P.steel); for (let x = -12; x < 12; x += 4) v.box(x, 4, 8, x + 2, 9, 9, P.dslate);
+    for (let k = 0; k < 5; k++) v.box(-15 + k, 12 + k, -9, 15 - k, 13 + k, 9, k % 2 ? P.slate : P.dslate);
+    for (const x of [-8, 6]) v.cyl(x, -2, 12, 38, 2.4, (X, y) => ((y >> 2) % 2) ? P.red : P.white); v.box(15, 0, -4, 24, 8, 4, P.slate); v.cyl(19, 0, 8, 10, 3, P.orange); v.luz(P.orange);
+    const w = new THREE.Group(); w.add(v.build({ centrar: false })); return w; },
+  // —— las medallas ——
+  medalla: () => {   // medalla: cinta roja con franja dorada, disco de oro y estrella en relieve
+    const v = new Vox(); v.box(-3, 8, 0, 4, 18, 1, (x) => Math.abs(x) < 1 ? P.yellow : P.crimson); v.box(-4, 7, -1, 5, 8, 2, P.amber);
+    for (let x = -6; x <= 6; x++) for (let y = -6; y <= 6; y++) if (x * x + y * y <= 40) { v.set(x, y, 0, x * x + y * y > 28 ? P.amber : P.yellow); v.set(x, y, -1, P.amber); }
+    for (const [x, y] of [[0, 4], [0, 3], [-1, 2], [0, 2], [1, 2], [-3, 1], [-2, 1], [-1, 1], [0, 1], [1, 1], [2, 1], [3, 1], [-1, 0], [0, 0], [1, 0], [-2, -1], [2, -1], [-2, -2], [2, -2]]) v.set(x, y, 1, P.orange);
+    v.luz(P.yellow); const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .03 })); return w; },
+  sello: () => {   // sello de caucho: pomo de madera, mango y base con la goma roja
+    const v = new Vox(); v.ball(0, 16, 0, 3, P.brown); v.cyl(0, 0, 5, 14, 1.4, P.dbrown); v.box(-6, 2, -4, 7, 5, 5, P.brown); v.box(-6, 0, -4, 7, 2, 5, P.red);
+    const w = new THREE.Group(); w.add(v.build({ centrar: false })); return w; },
+  carpeta: () => {   // carpeta de expediente: cartón beige con pestaña, papeles y goma
+    const v = new Vox(); v.box(-8, 0, -6, 8, 1, 6, P.tan); v.box(-7, 1, -5, 7, 2, 5, P.white); v.box(-8, 2, -6, 8, 3, 6, P.sand); v.box(-3, 2, 6, 3, 3, 7, P.sand); v.box(-8, 3, -1, 8, 3.5, 0, P.red);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .02 })); return w; },
+  // —— el penalti ——
+  porteria: () => {   // portería: postes blancos y red de malla gris (7,32 × 2,44 m a escala 2:1)
+    const v = new Vox(); for (const x of [-8, 7]) v.box(x, 0, 0, x + 1, 5, 1, P.white); v.box(-8, 5, 0, 8, 6, 1, P.white);
+    for (let x = -7; x < 7; x++) for (let y = 0; y < 5; y++) for (let z = -5; z < 0; z++) { const lado = x === -7 || x === 6, fondo = z === -5, techo = y === 4; if ((lado || fondo || techo) && (x + y + z) % 2 === 0) v.set(x, y, z, P.silver); }
+    const w = new THREE.Group(); w.add(v.build({ centrar: false, jit: .02 })); return w; },
+  balon: () => { const v = new Vox(); v.ball(0, 0, 0, 3, (x, y, z) => ((x + 4) % 3 === 0 && (y + 4) % 3 === 0) || (Math.abs(x) + Math.abs(y) + Math.abs(z)) === 4 && (x + z) % 2 === 0 ? P.ink : P.white);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .02 })); return w; },
+  balon_cuero: () => { const v = new Vox(); v.ball(0, 0, 0, 3, (x, y, z) => (y === 0 || x === 0) ? P.dbrown : (hsh(x, y, z) > .5 ? P.brown : 0xa0603f)); v.set(0, 3, 3, P.sand); v.set(0, 2, 3, P.sand);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .02 })); return w; },
+});
+
+Object.assign(FABE, {
+  // —— luz 1: una ciudad española al anochecer; se encienden las ventanas y el panel de precios marca la hora punta ——
+  anochecer: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.rose); s.fog = new THREE.Fog(0x3a2a4a, 140, 330);
+    const sol = luces(s, { cielo: 0xffd8b0, suelo: 0x3a4466, amb: 1.3, sol: 0xffb070, int: 1.4, dir: [60, 40, -20], sombra: 90 });
+    const v = new Vox(); v.box(-110, -1, -120, 110, 0, 80, (x, y, z) => (z > 0 && z < 12) ? (z === 6 && x % 6 < 3 ? P.white : P.dslate) : ((x % 30 === 0) ? P.dslate : P.steel));
+    const edif = []; const fila = (z0, alto, sem) => { let x = -78; let i = 0; while (x < 70) { const w = 10 + (hsh(i, sem, 1) * 6 | 0), h = alto + (hsh(i, sem, 2) * 14 | 0); edif.push([x, z0, w, h, 8]); pisos(v, x, z0, w, h, [P.sand, P.tan, 0xf2e6c8, P.pink, P.silver][(i + sem) % 5]); x += w + 2; i++; } };
+    fila(-10, 16, 1); fila(-34, 26, 2); fila(-60, 34, 3);
+    for (let x = -70; x < 70; x += 16) { v.box(x, 0, 13, x + 1, 9, 14, P.ink); v.box(x - 1, 9, 12, x + 2, 10, 15, P.dslate); }   // farolas
+    const pv = new Vox(); pv.box(17, 0, -5, 19, 36, -3, P.slate); pv.box(15, 36, -5, 21, 37, -3, P.dslate); s.add(pv.build());   // poste del panel de precios
+    s.add(v.build());
+    const L = new Bloques(1600, true), F = new Bloques(20, true), Pp = new Bloques(40); s.add(L.im, F.im, Pp.im);
+    const sun = bola(P.orange, 7); s.add(sun); const panel = pantalla(22, 15, 240, 164); panel.m.position.set(18, 44, -3.4); s.add(panel.m);
+    const cieloK = k => { s.background = k < .5 ? colLerp(0xf6a070, P.rose, k * 2) : colLerp(P.rose, P.night, (k - .5) * 2); s.fog.color.copy(s.background); sol.intensity = 1.4 * (1 - k * .7);
+      sun.position.set(40, lerp(34, -12, k), -200); };
+    const farolas = on => { F.ini(); if (on) for (let x = -70; x < 70; x += 16) F.pon(x + .5, 9.3, 13.5, 2.4, .8, 2.4, P.yellow); F.fin(); };
+    const gente = t => { Pp.ini(); for (let i = 0; i < 5; i++) { const d = i % 2 ? 1 : -1, x = d * (((t * 5 + i * 31) % 140) - 70); persona(Pp, x, 0, 3 + i * 1.6, [P.navy, P.red, P.teal, P.plum, P.amber][i], { s: 1.1 }); } Pp.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { cieloK(.55); ventanas(L, edif, .25, t); farolas(true); gente(t); panel.m.visible = false; mira(c, [Math.sin(t * .08) * 4, 34, 128], [0, 16, -20], .1); },
+      acc: {
+        // el sol se pone tras los bloques, el cielo pasa de naranja a noche y se van encendiendo las ventanas
+        anochecer(lt, dur, t) { const k = ss(clamp(lt / (dur * 1.15), 0, 1)); cieloK(k * .9); ventanas(L, edif, .05 + .55 * k, t); farolas(k > .45); mira(c, [lerp(-6, 2, k), lerp(30, 36, k), lerp(140, 122, k)], [0, 16, -20], .12); },
+        // el panel de precios dibuja las 24 horas y la barra de 20 a 21 h se pone roja
+        reloj(lt, dur, t) { cieloK(.9); ventanas(L, edif, .6, t); farolas(true); panel.m.visible = true; const k = clamp(lt / (dur * .6), 0, 1);
+          grafica(panel, 2 + k * 22, k > .9 ? 20 : -1, 'PRECIO DE HOY', Math.floor(t * 4) % 2 === 0); const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(10, 16, kc), 42, lerp(70, 52, kc)], [18, 42, -3], .1); },
+        // primer plano de una fachada: las ventanas se encienden por plantas, de abajo arriba
+        encender(lt, dur, t) { cieloK(.95); const k = clamp(lt / (dur * .8), 0, 1); L.ini(); edif.forEach(([x0, z0, w, h, fo], e) => { for (let y = 4; y < h - 1; y += 4) for (let x = x0 + 1; x < x0 + w - 1; x += 3) { const on = (y / 36) < k * 1.2 - hsh(x, 3, e) * .2 || hsh(x, y, e) < .2;
+            if (on) L.pon(x + 1, y - 2, z0 + fo + 1.12, 2, 2, .2, hsh(x, y, e) > .7 ? P.yellow : P.amber); } }); L.fin(); farolas(true); gente(t);
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-2, 4, kc), lerp(12, 18, kc), lerp(62, 54, kc)], [2, 13, -6], .1); },
+      } };
+  },
+  // —— luz 2: la red eléctrica: el campo de placas, la central de gas y la ciudad al fondo, unidos por torres ——
+  parque_solar: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x7fc8ff); s.fog = new THREE.Fog(0xbfe8ff, 160, 360);
+    const sol = luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.4, sol: 0xfff1d6, int: 1.9, dir: [-30, 80, 40], sombra: 110 });
+    const v = new Vox(); v.box(-110, -1, -130, 110, 0, 70, (x, y, z) => (x < -4 && x > -56 && z > -18 && z < 40) ? P.sand : (hsh(x >> 2, 1, z >> 2) > .7 ? P.dgreen : P.green));
+    const edif = []; let x = -40, i = 0; while (x < 40) { const w = 10 + (hsh(i, 9, 1) * 5 | 0), h = 18 + (hsh(i, 9, 2) * 22 | 0); edif.push([x, -100, w, h, 8]); pisos(v, x, -100, w, h, [P.sand, P.tan, P.silver, P.pink][i % 4]); x += w + 2; i++; }
+    const torre = (tx, tz) => { for (let y = 0; y < 22; y++) { const r = Math.max(1, 3 - y * .1) | 0; v.set(tx - r, y, tz, P.steel); v.set(tx + r, y, tz, P.steel); if (y % 4 === 0) v.box(tx - r, y, tz, tx + r + 1, y + 1, tz + 1, P.silver); } v.box(tx - 5, 22, tz, tx + 6, 23, tz + 1, P.steel); };
+    const T = [[-30, -24], [-18, -56], [-6, -84], [30, -32], [18, -62]]; T.forEach(([a, b]) => torre(a, b)); s.add(v.build());
+    const placas = []; for (const pz of [-8, 4, 16, 28]) for (const px of [-46, -32, -18]) { const m = actor('placa', .72); m.position.set(px, 5, pz); s.add(m); placas.push(m); }
+    const cen = actor('central', .85); cen.position.set(32, 0, -4); s.add(cen);
+    const B = new Bloques(400, true), L = new Bloques(700, true), Hm = new Bloques(80); s.add(B.im, L.im, Hm.im);
+    const sun = bola(P.yellow, 8); s.add(sun); const turb = new THREE.PointLight(0xf77622, 0, 50, 1.4); turb.position.set(48, 10, -4); s.add(turb);
+    const cartel = pantalla(26, 11, 208, 88); cartel.m.position.set(-12, 40, -90); s.add(cartel.m);
+    const rS = [[-30, 22, -24], [-18, 22, -56], [-6, 22, -84], [0, 16, -92]], rG = [[40, 12, -4], [30, 22, -32], [18, 22, -62], [-6, 22, -84], [0, 16, -92]];
+    const cieloK = k => { s.background = k < .5 ? colLerp(0x7fc8ff, 0xf6a070, k * 2) : colLerp(0xf6a070, P.night, (k - .5) * 2); s.fog.color.copy(s.background); sol.intensity = 1.9 * (1 - k * .75);
+      sun.position.set(lerp(-40, 80, k), lerp(110, -10, k), -220); sun.material.color.set(k > .3 ? P.orange : P.yellow); };
+    const precio = (txt, col) => rotular(cartel, txt, '#ffffff', col, 30, { borde: '#ffffff' });
+    const humo = (t, n) => { Hm.ini(); for (let k = 0; k < n; k++) for (const cx of [25.2, 37.1]) { const u = ((t * .4 + k / n) % 1); Hm.pon(cx + Math.sin(k * 3 + t) * u * 3, 33 + u * 24, -5.7, 2 + u * 4, 2 + u * 4, 2 + u * 4, u > .6 ? P.silver : P.steel); } Hm.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { cieloK(0); B.ini(); B.fin(); ventanas(L, edif, 0, t); humo(t, 0); turb.intensity = 0; precio(['PRECIO', 'BAJO'], '#3e8948'); placas.forEach(m => m.rotation.y = 0); mira(c, [Math.sin(t * .08) * 6, 64, 100], [-4, 6, -30], .08); },
+      acc: {
+        // sol de mediodía: las placas brillan y una corriente de cubos amarillos viaja por las torres hasta la ciudad
+        placas(lt, dur, t) { cieloK(.05); B.ini(); flujo(B, rS, 70, t, 40, P.yellow); B.fin(); placas.forEach((m, j) => m.rotation.y = Math.sin(t * .5 + j) * .05);
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-34, -14, k), lerp(52, 62, k), lerp(86, 104, k)], [lerp(-30, -10, k), 2, lerp(4, -36, k)], .08); },
+        // el sol baja, el cielo se vuelve naranja y la corriente amarilla se va apagando
+        puesta(lt, dur, t) { const k = ss(clamp(lt / dur, 0, 1)); cieloK(.1 + .8 * k); B.ini(); flujo(B, rS, Math.round(70 * (1 - k)), t, 40, P.yellow); B.fin(); ventanas(L, edif, .4 * k, t);
+          mira(c, [lerp(-10, 4, k), lerp(60, 52, k), lerp(116, 104, k)], [-4, 14, -44], .08); },
+        // de noche en la ciudad todas las ventanas se encienden y una columna roja de demanda crece a su lado
+        demanda(lt, dur, t) { cieloK(.95); const k = ss(clamp(lt / (dur * .8), 0, 1)); ventanas(L, edif, .4 + .6 * k, t); B.ini(); for (let y = 0; y < 30 * k; y += 2) B.pon(14, y + 1, -86, 6, 1.6, 6, y > 20 ? P.red : y > 10 ? P.orange : P.amber); B.fin();
+          precio(['DEMANDA', '+ + +'], '#a22633'); mira(c, [lerp(-4, 6, k), 34, lerp(-24, -36, k)], [4, 18, -96], .1); },
+        // la central de gas arranca: humo en las chimeneas, la turbina brilla y llega una corriente naranja; el cartel se pone en rojo
+        gas(lt, dur, t) { cieloK(.95); ventanas(L, edif, 1, t); humo(t, 10); turb.intensity = 80; B.ini(); flujo(B, rG, 60, t, 40, P.orange); B.fin();
+          const k = ss(clamp(lt / dur, 0, 1)); precio(lt > dur * .55 ? ['PRECIO', 'ALTO'] : ['GAS', 'ON'], lt > dur * .55 ? '#e43b44' : '#f77622');
+          mira(c, [lerp(86, 40, k), lerp(44, 56, k), lerp(96, 74, k)], [lerp(30, 6, k), lerp(26, 26, k), lerp(-4, -70, k)], .1); },
+      } };
+  },
+  // —— luz 3: primavera, colinas con molinos girando deprisa y placas al sol; el cartel del precio baja de cero ——
+  eolico: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 160, 380);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 2.0, dir: [-40, 80, 50], sombra: 120 });
+    const alt = (x, z) => Math.max(0, 8 + Math.sin(x * .05) * 7 + Math.cos(z * .06 + x * .02) * 6);
+    const v = new Vox(); for (let x = -100; x < 100; x += 1) for (let z = -160; z < 60; z += 1) { const h = Math.round(alt(x, z)); for (let y = Math.max(0, h - 2); y <= h; y++) v.set(x, y, z, y < h ? P.dgreen : (hsh(x, z, 3) > .93 ? [P.yellow, P.pink, P.white, P.rose][(hsh(x, z, 4) * 4) | 0] : (hsh(x >> 2, 5, z >> 2) > .5 ? P.green : P.lime))); }
+    s.add(v.build({ jit: .04 }));
+    const mol = [[-36, -40], [-8, -70], [22, -46], [48, -90], [-60, -100], [6, -130]].map(([x, z]) => { const m = actor('molino', .8); m.position.set(x, alt(x, z), z); m.rotation.y = .2; s.add(m); return m; });
+    const asp = mol.map(m => m.getObjectByName('aspas'));
+    for (const [x, z] of [[-20, 10], [-6, 14], [8, 10], [22, 14]]) { const m = actor('placa', .6); m.position.set(x, alt(x, z) + 4, z); s.add(m); }
+    const cartel = pantalla(20, 12, 160, 96); cartel.m.position.set(-2, 34, -20); s.add(cartel.m); const pp = new Vox(); pp.box(-3, Math.round(alt(-2, -20)), -21, -1, 28, -20, P.dbrown); s.add(pp.build());
+    const B = new Bloques(200, true); s.add(B.im);
+    const viento = (t, n) => { B.ini(); for (let i = 0; i < n; i++) { const z = -120 + hsh(i, 2, 5) * 150, y = 20 + hsh(i, 3, 5) * 30, x = -110 + ((t * 40 + hsh(i, 4, 5) * 220) % 220); B.pon(x, y, z, 8, .35, .35, P.white); } B.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { asp.forEach((a, i) => a.rotation.z = t * 1.2 + i); viento(t, 30); rotular(cartel, ['PRECIO', '40 €'], '#ffffff', '#3e8948', 28, { borde: '#fee761' }); mira(c, [Math.sin(t * .08) * 6, 44, 96], [0, 22, -40], .08); },
+      acc: {
+        // los molinos giran cada vez más rápido con el viento y el cartel del precio baja hasta pasar de cero
+        molinos(lt, dur, t) { const k = clamp(lt / (dur * .8), 0, 1); asp.forEach((a, i) => a.rotation.z = t * (1.5 + 5 * k) + i); viento(t, 120);
+          const p = Math.round(lerp(40, -2, ss(k))); rotular(cartel, ['PRECIO', `${p} €`], '#ffffff', p > 0 ? '#3e8948' : '#124e89', 28, { borde: '#fee761' });
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-30, 10, kc), lerp(50, 38, kc), lerp(110, 60, kc)], [lerp(-16, -2, kc), lerp(26, 30, kc), lerp(-50, -20, kc)], .08); },
+      } };
+  },
+});
+
+Object.assign(FABE, {
+  // —— medallas 1: sala de honores con una vitrina de ocho medallas sobre cojines rojos ——
+  vitrina: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.umber); s.fog = new THREE.Fog(P.umber, 100, 200);
+    luces(s, { cielo: 0xffe8c8, suelo: 0x733e39, amb: 1.4, sol: 0xfff1d6, int: 1.6, dir: [10, 60, 70], sombra: 60 });
+    const v = new Vox(); v.box(-70, -1, -40, 70, 0, 60, (x, y, z) => ((x >> 3) + (z >> 3)) % 2 ? P.white : P.silver);
+    v.box(-70, 0, -42, 70, 60, -40, (x, y) => y < 12 ? (x % 6 === 0 ? P.umber : P.dbrown) : (y === 12 ? P.amber : P.crimson));
+    for (const x of [-46, -26, 24, 44]) { v.box(x, 0, -40, x + 4, 50, -36, (X, Y) => X === x + 1 ? P.silver : P.white); v.box(x - 1, 50, -41, x + 5, 52, -35, P.sand); }
+    for (const x of [-60, 52]) for (let y = 14; y < 56; y++) v.box(x, y, -40, x + 8, y + 1, -39, (y % 6 < 3) ? P.crimson : 0x8a2a32);   // cortinajes
+    v.box(-28, 0, -6, 28, 10, 6, (x, y) => y === 9 ? P.amber : P.dbrown); for (let i = 0; i < 8; i++) v.box(-24 + i * 6.5 | 0, 10, -2, (-24 + i * 6.5 | 0) + 5, 11, 2, P.crimson);
+    v.box(-30, 0, 16, 30, 6, 24, P.dbrown); v.box(-31, 6, 15, 31, 7, 25, P.brown);   // mesa delante
+    v.luz(P.amber); s.add(v.build());
+    const vidrio = new THREE.Mesh(new THREE.BoxGeometry(56, 18, 12), new THREE.MeshBasicMaterial({ color: 0xbfe8ff, transparent: true, opacity: .12, depthWrite: false })); vidrio.position.set(0, 20, 0); s.add(vidrio);
+    const marco = new Vox(); for (const x of [-28, 27]) for (const z of [-6, 5]) marco.box(x, 10, z, x + 1, 29, z + 1, P.amber); marco.box(-28, 29, -6, 28, 30, 6, P.amber); s.add(marco.build());
+    const X = i => -21.5 + i * 6.5;
+    const med = Array.from({ length: 8 }, (_, i) => { const m = actor('medalla', .38); s.add(m); return m; });
+    const car = Array.from({ length: 8 }, () => { const m = actor('carpeta', .36); s.add(m); return m; });
+    const tags = Array.from({ length: 8 }, () => { const p = pantalla(4, 3, 40, 30); s.add(p.m); return p; });
+    const plaq = [0, 1].map(() => { const p = pantalla(12, 4.3, 196, 70); s.add(p.m); return p; });
+    const pon = (i, x, y, z, sc = 1, ry = 0) => { const m = med[i]; m.visible = true; m.position.set(x, y, z); m.scale.setScalar(.38 * sc); m.rotation.y = ry; };
+    const base = t => { for (let i = 0; i < 8; i++) pon(i, X(i), 17, 0, 1, Math.sin(t * .8 + i) * .25); };
+    const c = cam(46);
+    return { s, c, upd(t) { car.forEach(m => m.visible = false); tags.forEach(p => p.m.visible = false); plaq.forEach(p => p.m.visible = false); base(t); mira(c, [Math.sin(t * .1) * 4, 30, 100], [0, 24, 0], .1); },
+      acc: {
+        // las ocho medallas salen una a una de la vitrina y bajan a una carpeta de expediente, numerada, sobre la mesa
+        ocho(lt, dur, t) { for (let i = 0; i < 8; i++) { const p = ss(clamp((lt - .2 - i * dur * .09) / .5, 0, 1)); const x = X(i);
+            if (p <= 0) { pon(i, x, 17, 0, 1, Math.sin(t * .8 + i) * .25); continue; }
+            pon(i, x, lerp(17, 12, p) + Math.sin(p * Math.PI) * 8, lerp(0, 20, p), 1, p * 6.28); car[i].visible = true; car[i].position.set(x, 7.6, 20); car[i].rotation.set(0, 0, 0);
+            const tg = tags[i]; tg.m.visible = true; tg.m.position.set(x, 4, 25.3); rotular(tg, [String(i + 1)], '#ffffff', '#a22633', 22); }
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-4, 2, k), lerp(30, 34, k), lerp(104, 96, k)], [0, 21, 8], .06); },
+        // siete medallas en fila (personas) y la octava, más grande, aparte (el sindicato)
+        siete_uno(lt, dur, t) { const k = ss(clamp((lt - .3) / 1.2, 0, 1)); for (let i = 0; i < 7; i++) pon(i, X(i) - 5 * k, 17, 0, 1, Math.sin(t * .8 + i) * .25);
+          pon(7, lerp(X(7), 19, k), lerp(17, 20, k), lerp(0, 14, k), 1 + .5 * k, t * .8);
+          tags.forEach((p, i) => { p.m.visible = k > .5; if (i < 7) { p.m.position.set(X(i) - 5 * k, 26, 0); rotular(p, [String(i + 1)], '#ffffff', '#124e89', 22); } else { p.m.position.set(19, 30, 14); rotular(p, ['+1'], '#ffffff', '#a22633', 22); } });
+          mira(c, [4, 30, 108], [2, 24, 2], .06); },
+        // la cámara se acerca a dos medallas con su placa: Pilar Primo de Rivera y Pedro Barrié de la Maza
+        nombres(lt, dur, t) { base(t); const ps = [[2, 'PILAR PRIMO', 'DE RIVERA'], [5, 'PEDRO BARRIÉ', 'DE LA MAZA']];
+          ps.forEach(([i, a, b], j) => { const p = plaq[j]; p.m.visible = true; p.m.position.set(X(i), 27.5, 6.2); rotular(p, [a, b], '#fee761', '#3e2731', 22, { borde: '#feae34' }); pon(i, X(i), 18 + Math.sin(t * 2 + j) * .4, 0, 1.2, Math.sin(t) * .3); });
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-2, 4, k), 22, 78], [1.25, 22, 0], .06); },
+      } };
+  },
+  // —— medallas 2: el archivo del ministerio: estanterías de expedientes, la mesa, el libro de la ley y el sello ——
+  archivo: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.ink); s.fog = new THREE.Fog(P.ink, 90, 180);
+    luces(s, { cielo: 0xfff1d6, suelo: 0x733e39, amb: 1.3, sol: 0xfff1d6, int: 1.7, dir: [-20, 60, 60], sombra: 60 });
+    const v = new Vox(); v.box(-60, -1, -40, 60, 0, 50, (x, y, z) => (z % 4 === 0) ? P.dbrown : P.brown); v.box(-60, 0, -42, 60, 50, -40, P.dslate);
+    for (let y = 0; y < 40; y += 8) { v.box(-56, y, -40, 56, y + 1, -34, P.dbrown); for (let x = -55; x < 55; x += 2) if (hsh(x, y, 1) > .15) v.box(x, y + 1, -39, x + 2, y + 6 + (hsh(x, y, 2) * 2 | 0), -35, [P.tan, P.sand, P.navy, P.crimson, P.dgreen][(hsh(x, y, 3) * 5) | 0]); }
+    v.box(-22, 0, -6, 22, 10, 8, P.dbrown); v.box(-23, 10, -7, 23, 11, 9, P.brown);   // mesa
+    v.box(14, 11, -4, 22, 13, 4, P.slate); v.box(14, 13, -4, 22, 14, -3, P.slate);   // bandeja de entrada
+    v.box(-20, 11, -5, -18, 12, -3, P.ink); v.box(-19, 12, -4, -18, 22, -3, P.ink); v.box(-21, 22, -5, -15, 24, -2, P.dgreen); v.luz(P.yellow);   // flexo
+    v.box(-6, 0, 20, 6, 7, 26, P.crimson); v.box(-6, 7, 25, 6, 20, 26, P.crimson); for (const x of [-6, 5]) for (const z of [20, 25]) v.box(x, -1, z, x + 1, 0, z + 1, P.ink);   // silla vacía
+    s.add(v.build());
+    const lamp = new THREE.PointLight(0xfee761, 60, 40, 1.4); lamp.position.set(-17, 20, -2); s.add(lamp);
+    // libro de la ley: hojas blancas y tapa azul que se abre ('tapa')
+    const lb = new Vox(); lb.box(0, 0, 0, 12, 2, 9, P.white); lb.box(0, -1, 0, 12, 0, 9, P.navy); const gl = lb.build({ jit: .02 }); const libro = new THREE.Group(); libro.add(gl); libro.position.set(-10, 11, -2); s.add(libro);
+    const tv = new Vox(); tv.box(0, 0, 0, 12, 1, 9, P.navy); tv.box(4, 1, 3, 8, 1.2, 6, P.amber); const gt = tv.build({ jit: .02 }); const tapa = new THREE.Group(); tapa.position.set(-10, 13, -2); tapa.add(gt); s.add(tapa);
+    const pag = pantalla(11, 8.4, 132, 100); pag.m.rotation.x = -Math.PI / 2; pag.m.position.set(-4, 13.15, 2.5); s.add(pag.m);
+    const med = actor('medalla', .5); s.add(med); const preg = pantalla(6, 4, 60, 40); s.add(preg.m);
+    const car = actor('carpeta', .7); car.position.set(4, 12.5, 2); s.add(car); const sel = actor('sello', .6); s.add(sel); const marca = pantalla(9, 4, 120, 52); marca.m.rotation.x = -Math.PI / 2; s.add(marca.m);
+    const cal = pantalla(16, 12, 128, 96); cal.m.position.set(30, 30, -33.8); s.add(cal.m);
+    const C = new Bloques(40); s.add(C.im);
+    const c = cam(46);
+    return { s, c, upd(t) { tapa.rotation.z = 0; pag.m.visible = false; med.visible = false; preg.m.visible = false; sel.position.set(4, 24, 2); marca.m.visible = false; C.ini(); C.fin();
+        rotular(cal, ['PLAZO', 'NOV'], ['#fee761', '#ffffff'], '#a22633', 26); mira(c, [Math.sin(t * .1) * 5, 30, 80], [0, 12, 0], .1); },
+      acc: {
+        // la medalla flota sobre la silla vacía y gira, con un signo de interrogación encima
+        silla_vacia(lt, dur, t) { med.visible = true; med.position.set(0, 26 + Math.sin(t * 2) * .8, 23); med.rotation.y = t * 1.5; preg.m.visible = true; preg.m.position.set(0, 33, 23);
+          rotular(preg, [Math.floor(t * 3) % 2 ? '¿?' : '?'], '#ffffff', '#a22633', 26); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(18, 8, k), 30, lerp(86, 76, k)], [0, 25, 18], .08); },
+        // el libro de la ley se abre sobre la mesa y aparece la página con el título
+        ley(lt, dur, t) { const k = ss(clamp((lt - .2) / 1.2, 0, 1)); tapa.rotation.z = Math.PI * .98 * k; pag.m.visible = k > .7;
+          rotular(pag, ['LEY 20/2022', 'MEMORIA', 'DEMOCRÁTICA'], ['#a22633', '#181425', '#181425'], '#ffffff', 16); const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-14, -6, kc), lerp(44, 38, kc), lerp(52, 40, kc)], [-5, 14, 2], .02); },
+        // llegan cartas de alegaciones volando a la bandeja y el calendario del plazo pasa sus días
+        alegaciones(lt, dur, t) { tapa.rotation.z = Math.PI * .98; pag.m.visible = true; C.ini(); for (let i = 0; i < 9; i++) { const p = clamp((lt - i * .3) / .9, 0, 1); if (p <= 0) continue; const e = ss(p);
+            C.pon(lerp(-40 + i * 3, 18, e), lerp(36, 13.6 + Math.min(i, 8) * .35, e) + Math.sin(e * Math.PI) * 8, lerp(30, 0, e), 4, .3, 3, i % 2 ? P.white : P.sand, (1 - e) * 4); } C.fin();
+          rotular(cal, ['PLAZO', `DÍA ${1 + Math.min(10, Math.floor(lt * 3))}`], ['#fee761', '#ffffff'], '#a22633', 26); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(10, 22, k), 30, lerp(60, 66, k)], [lerp(14, 24, k), lerp(14, 22, k), -6], .06); },
+        // el sello baja sobre la carpeta y deja la marca roja de la resolución
+        sello(lt, dur, t) { tapa.rotation.z = Math.PI * .98; pag.m.visible = true; const g = clamp((lt - .4) / .5, 0, 1), up = lt > 1.1 ? ss(clamp((lt - 1.1) / .6, 0, 1)) : 0;
+          sel.position.set(4, lerp(24, 13.6, g * g) + up * 10, 2); marca.m.visible = lt > .9; marca.m.position.set(4, 14.6, 2); rotular(marca, ['RESOLUCIÓN'], '#e43b44', '#ead4aa', 18, { borde: '#e43b44' });
+          mira(c, [10, 30, 34], [4, 13, 2], .04); },
+      } };
+  },
+  // —— medallas 3: la imprenta del boletín: rodillos que giran, pliegos que salen y la página de 2023 ——
+  imprenta: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.night); s.fog = new THREE.Fog(P.night, 100, 220);
+    luces(s, { cielo: 0xdfe8ff, suelo: 0x3a4466, amb: 1.4, sol: 0xffffff, int: 1.6, dir: [-30, 60, 60], sombra: 70 });
+    const v = new Vox(); v.box(-70, -1, -50, 70, 0, 60, (x, y, z) => (x % 10 === 0 || z % 10 === 0) ? P.dslate : P.slate); v.box(-70, 0, -52, 70, 50, -50, P.dslate);
+    for (const z of [-12, 10]) v.box(-30, 0, z, -10, 24, z + 2, P.steel); v.box(-30, 24, -12, -10, 26, 12, P.slate); v.box(-34, 0, -12, -30, 18, 12, P.dslate);   // bastidor de la rotativa
+    v.box(-10, 4, -8, 40, 6, 8, P.ink); for (let x = -8; x < 40; x += 6) v.box(x, 0, -8, x + 1, 4, -7, P.steel), v.box(x, 0, 7, x + 1, 4, 8, P.steel);   // cinta
+    v.box(42, 0, -9, 58, 3, 9, P.dbrown); s.add(v.build());
+    const rod = [8, 14, 20].map(y => { const r = new Vox(); r.cyl(0, 0, -10, 10, 3, (x, Y, z) => (x + z) % 3 === 0 ? P.silver : P.steel); const g = r.build({ jit: .02 }); const p = new THREE.Group(); p.add(g); p.rotation.x = Math.PI / 2; const q = new THREE.Group(); q.add(p); q.position.set(-20, y, 0); s.add(q); return q; });
+    const B = new Bloques(160); s.add(B.im);
+    const hoja = pantalla(22, 30, 176, 240); hoja.m.position.set(14, 30, -10); s.add(hoja.m); const med = actor('medalla', .55); s.add(med);
+    const c = cam(46);
+    return { s, c, upd(t) { rod.forEach((r, i) => r.rotation.z = -t * 3 * (i % 2 ? -1 : 1)); B.ini(); for (let i = 0; i < 12; i++) { const u = ((t * .4 + i / 12) % 1); B.pon(lerp(-10, 40, u), 6.4, 0, 9, .25, 12, P.white); } B.fin();
+        hoja.m.visible = true; med.position.set(24, 40, -6); med.rotation.y = Math.sin(t) * .4;
+        rotular(hoja, ['BOLETÍN', '— 2023 —', '', 'MEDALLA', 'RETIRADA', 'A FRANCO'], ['#181425', '#a22633', '#181425', '#181425', '#181425', '#181425'], '#ffffff', 22, { borde: '#181425' }); mira(c, [Math.sin(t * .1) * 5, 34, 86], [6, 16, -2], .08); },
+      acc: {
+        // los rodillos giran, los pliegos salen por la cinta y se apilan; la cámara sube hasta la página de 2023
+        imprenta(lt, dur, t) { const n = Math.min(14, Math.floor(lt * 4)); B.ini(); for (let i = 0; i < 12; i++) { const u = ((t * .5 + i / 12) % 1); B.pon(lerp(-10, 42, u), 6.4, 0, 9, .25, 12, P.white); }
+            for (let i = 0; i < n; i++) B.pon(50, 3.3 + i * .5, 0, 10, .4, 13, i % 2 ? P.white : P.silver); B.fin(); rod.forEach((r, i) => r.rotation.z = -t * 6 * (i % 2 ? -1 : 1));
+          const k = ss(clamp(lt / dur, 0, 1)); med.position.set(24, 40, -6); mira(c, [lerp(-10, 14, k), lerp(26, 34, k), lerp(80, 74, k)], [lerp(-4, 14, k), lerp(14, 34, k), -6], .06); },
+      } };
+  },
+});
+
+Object.assign(FABE, {
+  // —— penalti 1: el estadio de noche con la grada llena; el penalti se va por encima del larguero y luego llega el 2-1 ——
+  estadio: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.ink, P.night, P.navy]); s.fog = new THREE.Fog(0x262b44, 130, 300);
+    luces(s, { cielo: 0xdfe8ff, suelo: 0x265c42, amb: 1.5, sol: 0xffffff, int: 1.8, dir: [20, 80, 50], sombra: 90 });
+    const zg = -30, v = new Vox(); cesped(v, -64, 64, -40, 70, zg);
+    for (let k = 0; k < 12; k++) { v.box(-80, k * 2.5, -44 - k * 3, 80, k * 2.5 + 2.5, -41 - k * 3, k % 4 === 3 ? P.white : P.slate); for (const sx of [-1, 1]) v.box(sx > 0 ? 66 + k * 3 : -69 - k * 3, k * 2.5, -44, sx > 0 ? 69 + k * 3 : -66 - k * 3, k * 2.5 + 2.5, 80, P.slate); }
+    for (const [x, z] of [[-70, -48], [70, -48]]) { v.box(x - 1, 0, z, x + 1, 60, z + 2, P.steel); v.box(x - 6, 60, z - 1, x + 6, 66, z + 2, P.white); } v.luz(P.white); s.add(v.build());
+    const por = actor('porteria', 1); por.position.set(0, 0, zg); s.add(por); const bal = actor('balon', .45); s.add(bal);
+    const marcador = pantalla(30, 12, 240, 96); marcador.m.position.set(-36, 44, -66); marcador.m.rotation.x = -.2; s.add(marcador.m);
+    const G = new Bloques(1500), Pp = new Bloques(60); s.add(G.im, Pp.im);
+    const COLS = [P.white, P.white, P.white, P.silver, P.navy, P.amber, P.red, P.purple || P.plum, P.skin];
+    const grada = (t, salto) => { G.ini(); for (let k = 0; k < 12; k++) for (let x = -78; x < 78; x += 2.2) { const j = salto ? Math.abs(Math.sin(t * 9 + x * .7 + k)) * 1.2 : 0; G.pon(x, k * 2.5 + 3 + j, -42.5 - k * 3, 1.4, 1.6, 1.2, COLS[(hsh(x * 10 | 0, k, 1) * COLS.length) | 0]); }
+      for (const sx of [-1, 1]) for (let k = 0; k < 8; k++) for (let z = -40; z < 78; z += 2.4) G.pon(sx * (67.5 + k * 3), k * 2.5 + 3 + (salto ? Math.abs(Math.sin(t * 9 + z + k)) : 0), z, 1.2, 1.6, 1.4, COLS[(hsh(z * 10 | 0, k, 2) * COLS.length) | 0]); G.fin(); };
+    const score = (a, b) => rotular(marcador, [`RMA ${a}-${b} CEL`], '#ffffff', '#181425', 30, { borde: '#fee761' });
+    const spot = zg + 22;
+    const c = cam(46);
+    return { s, c, upd(t) { grada(t, false); score(1, 1); bal.position.set(0, .9, spot); Pp.ini(); Pp.fin(); mira(c, [Math.sin(t * .1) * 4, 10, 24], [0, 3, zg], .06); },
+      acc: {
+        // carrera, disparo y el balón se va alto por encima del larguero hacia la grada; el portero se tira al otro lado
+        chut_alto(lt, dur, t) { grada(t, false); score(1, 1); const tk = .9; const run = clamp(lt / tk, 0, 1); Pp.ini();
+          persona(Pp, lerp(-3, -.8, run), 0, lerp(spot + 8, spot + 1.2, run), P.white, { s: .58, pelo: P.ink });
+          const dv = clamp((lt - tk) / .5, 0, 1); persona(Pp, lerp(0, -5, ss(dv)), Math.sin(dv * Math.PI) * 1.4, zg + 1, P.lime, { s: .58, ag: dv * .5 });
+          for (const [x, z, col] of [[-14, spot + 12, P.white], [12, spot + 10, P.blue], [-20, spot + 4, P.blue], [18, spot + 6, P.white]]) persona(Pp, x, 0, z, col, { s: .58 }); Pp.fin();
+          const f = clamp((lt - tk) / 1.4, 0, 1); bal.position.set(lerp(0, 4, f), .9 + f * 16 - f * f * 3, lerp(spot, zg - 24, f)); bal.rotation.x = f * 12;
+          mira(c, [lerp(26, 22, f), lerp(8, 11, f), spot + 8], [-2, lerp(3, 6, f), zg + 9], .02); },
+        // otro disparo desde el borde del área: el balón entra por la escuadra, la red se mueve y la grada salta; 2-1
+        gol_final(lt, dur, t) { const f = clamp((lt - .4) / .8, 0, 1), dentro = f >= 1; grada(t, dentro); score(dentro ? 2 : 1, 1); Pp.ini();
+          persona(Pp, -12, 0, zg + 28, P.white, { s: .58 }); persona(Pp, lerp(0, 5, ss(f)), 0, zg + 1, P.lime, { s: .58, ag: f * .4 }); persona(Pp, -4, 0, zg + 12, P.blue, { s: .58 }); persona(Pp, 6, 0, zg + 16, P.blue, { s: .58 });
+          if (dentro) for (let i = 0; i < 3; i++) persona(Pp, -12 + i * 2.5, Math.abs(Math.sin(t * 8 + i)) * 1.5, zg + 26 - i, P.white, { s: .58 }); Pp.fin();
+          bal.position.set(lerp(-11, 6.4, f), lerp(.9, 4.2, f) + Math.sin(f * Math.PI) * 2, lerp(zg + 27, zg - 2 - (dentro ? 1.5 : 0), f)); bal.rotation.y = f * 8; por.position.z = zg - (dentro && lt < 1.6 ? Math.sin((lt - 1.2) * 12) * .3 : 0);
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(24, 10, k), lerp(14, 22, k), lerp(zg + 40, zg + 50, k)], [lerp(-2, -10, k), lerp(3, 14, k), lerp(zg + 6, zg - 30, k)], .06); },
+      } };
+  },
+  // —— penalti 2: el área vista desde arriba, de día: la cinta métrica, las yardas, la línea antigua y el punto ——
+  medida: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 140, 300);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 1.9, dir: [-30, 80, 40], sombra: 80 });
+    const zg = -20, v = new Vox(); cesped(v, -70, 70, -40, 70, zg); v.box(-70, 0, -42, 70, 6, -40, P.navy); for (let x = -70; x < 70; x += 12) v.box(x, 6, -42, x + 6, 7, -40, P.white); s.add(v.build());
+    const por = actor('porteria', 1); por.position.set(0, 0, zg); s.add(por); const bal = actor('balon', .45); s.add(bal); const cue = actor('balon_cuero', .5); s.add(cue);
+    const B = new Bloques(220, true), Pp = new Bloques(20); s.add(B.im, Pp.im);
+    const et = pantalla(6, 2.6, 168, 72); s.add(et.m); const spot = zg + 22, YD = 1.8288;
+    const rotEt = (txt, x, y, z, bg = '#181425') => { et.m.visible = true; et.m.position.set(x, y, z); et.m.lookAt(c.position); rotular(et, txt, '#ffffff', bg, 28, { borde: '#fee761' }); };
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); B.pon(0, .06, spot, 1.4, .12, 1.4, P.white); B.fin(); bal.visible = true; bal.position.set(0, .9, spot); cue.visible = false; et.m.visible = false; Pp.ini(); Pp.fin(); mira(c, [26, 30, 20], [0, 0, zg + 10], .06); },
+      acc: {
+        // una cinta métrica amarilla se desenrolla desde la línea de gol hasta el punto: 11 metros
+        medir(lt, dur, t) { const k = ss(clamp((lt - .2) / (dur * .6), 0, 1)), L = 22 * k; B.ini(); B.pon(0, .06, spot, 1.4, .12, 1.4, P.white); B.pon(0, .15, zg + L / 2, .9, .1, L, P.yellow);
+            for (let m = 0; m <= L; m += 2) B.pon(0, .22, zg + m, 1.3, .08, .2, P.ink); B.pon(0, .6, zg + L, 1.6, 1.2, 1.2, P.amber); B.fin(); bal.position.set(0, .9, spot);
+          if (k > .95) rotEt(['11 M'], 5, 3, spot - 9); mira(c, [lerp(6, 2, k), 36, spot + 20], [0, 0, zg + 7], .04); },
+        // aparecen doce bloques de una yarda, rojos y blancos, uno detrás de otro
+        yardas(lt, dur, t) { const n = Math.min(12, Math.floor(lt / (dur * .7) * 12) + 1); B.ini(); for (let i = 0; i < n; i++) B.pon(0, .5, zg + YD * (i + .5), 2.2, 1, YD * .96, i % 2 ? P.white : P.red); B.fin(); bal.visible = false;
+          rotEt([`${n} YARDA${n > 1 ? 'S' : ''}`], 5, 3, zg + YD * n - 2); mira(c, [2, 36, spot + 20], [0, 0, zg + 7], .04); },
+        // al lado de las 12 yardas, 11 bloques azules de un metro: el último se queda en 0,97
+        equivale(lt, dur, t) { const k = clamp((lt - .3) / (dur * .6), 0, 1), n = Math.ceil(11 * k); B.ini(); for (let i = 0; i < 12; i++) B.pon(-1.5, .5, zg + YD * (i + .5), 2, 1, YD * .96, i % 2 ? P.white : P.red);
+            for (let i = 0; i < n; i++) { const l = i === 10 ? 1.94 : 2; B.pon(1.5, .5, zg + i * 2 + l / 2, 2, 1, l * .96, i % 2 ? P.white : P.blue); } B.fin(); bal.visible = false;
+          mira(c, [2, 36, spot + 20], [0, 0, zg + 7], .04); },
+        // sin punto: una línea blanca cruza todo el campo y el balón de cuero se mueve por ella; el jugador elige su sitio
+        linea(lt, dur, t) { const k = ss(clamp(lt / 1.2, 0, 1)); B.ini(); B.pon(0, .08, spot, 130 * k, .14, 1, P.white); B.fin(); bal.visible = false; cue.visible = true; const x = Math.sin(lt * 1.6) * 12;
+          cue.position.set(x, .9, spot); cue.rotation.z = -x; Pp.ini(); persona(Pp, x - 1.5, 0, spot + 3, P.white, { s: .58, pelo: P.dbrown }); Pp.fin();
+          mira(c, [0, 24, spot + 34], [0, 0, spot - 4], .06); },
+        // la línea se encoge hasta convertirse en el punto, que destella, y el balón cae encima
+        punto(lt, dur, t) { const k = ss(clamp(lt / 1.1, 0, 1)); B.ini(); B.pon(0, .08, spot, lerp(130, 1.4, k), .14, lerp(1, 1.4, k), P.white); if (k > .9) { const r = 1.4 + ((lt * 6) % 4); B.pon(0, .05, spot, r, .05, r, P.yellow); } B.fin();
+          bal.visible = false; cue.visible = true; const f = clamp((lt - 1.1) / .5, 0, 1); cue.position.set(0, lerp(10, .9, f * f), spot); Pp.ini(); Pp.fin();
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(0, 12, kc), lerp(24, 18, kc), lerp(spot + 34, spot + 22, kc)], [0, 0, spot - 4], .06); },
+      } };
+  },
+  // —— penalti 3: Milford (Irlanda), 1891: un prado entre muros de piedra, casas encaladas y un portero con gorra ——
+  milford: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.steel, P.silver, 0xe8eef6]); s.fog = new THREE.Fog(0xdfe6ee, 120, 280);
+    luces(s, { cielo: 0xe8eef6, suelo: 0x3e8948, amb: 1.6, sol: 0xfff1d6, int: 1.5, dir: [-30, 70, 50], sombra: 90 });
+    const alt = (x, z) => z < -40 ? Math.max(0, (-40 - z) * .18 + Math.sin(x * .06) * 4) : 0;
+    const v = new Vox(); for (let x = -90; x < 90; x++) for (let z = -130; z < 60; z++) { const h = Math.round(alt(x, z)); v.set(x, h, z, hsh(x >> 1, 7, z >> 1) > .5 ? P.green : 0x4a9a52); if (h > 0) v.set(x, h - 1, z, P.dgreen); }
+    for (const [x0, z0, x1, z1] of [[-60, -30, 60, -29], [-60, -30, -59, 40], [59, -30, 60, 40]]) v.box(x0, 1, z0, x1, 3, z1, (x, y, z) => hsh(x, y, z) > .5 ? P.silver : P.steel);
+    const casita = (x, z) => { v.box(x, 1, z, x + 14, 8, z + 8, P.white); v.box(x + 6, 1, z + 8, x + 9, 6, z + 9, P.dbrown); v.box(x + 2, 4, z + 8, x + 4, 6, z + 9, P.navy); v.box(x + 10, 4, z + 8, x + 12, 6, z + 9, P.navy);
+      for (let k = 0; k < 4; k++) v.box(x - 1, 8 + k, z - 1 + k, x + 15, 9 + k, z + 9 - k, k % 2 ? P.amber : P.sand); v.box(x + 11, 8, z + 2, x + 13, 14, z + 4, P.slate); };
+    casita(-50, -48); casita(-28, -56); casita(30, -50); casita(48, -44);
+    for (const x of [-8, 7]) v.box(x, 1, -16, x + 1, 6, -15, P.white); v.box(-8, 6, -16, 8, 7, -15, P.white);   // portería antigua con larguero
+    for (const [x, z] of [[-70, -10], [72, 0], [-40, -90], [60, -100]]) { v.box(x, 1, z, x + 2, 9, z + 2, P.dbrown); v.ball(x + 1, 13, z + 1, 5, P.dgreen); }
+    v.box(16, 1, 6, 17, 7, 7, P.dbrown); s.add(v.build());
+    const letrero = pantalla(8, 3.4, 168, 72); letrero.m.position.set(16.5, 8.5, 7.2); letrero.m.rotation.y = -.5; s.add(letrero.m);
+    const cue = actor('balon_cuero', .3); s.add(cue); const Pp = new Bloques(30); s.add(Pp.im);
+    const c = cam(46);
+    return { s, c, upd(t) { rotular(letrero, ['MILFORD', '1891'], '#fee761', '#733e39', 26, { borde: '#3e2731' }); Pp.ini(); persona(Pp, 0, 1, -14, P.lime, { s: .6, pelo: P.ink }); Pp.fin(); cue.position.set(0, 1.9, 4); mira(c, [Math.sin(t * .1) * 4, 14, 40], [0, 4, -14], .08); },
+      acc: {
+        // el portero salta de un poste al otro; un jugador chuta el balón de cuero desde la línea y el portero lo atrapa
+        portero(lt, dur, t) { const dv = Math.sin(lt * 3); Pp.ini(); const px = dv * 5, py = 1 + Math.abs(Math.cos(lt * 3)) * 1.2; persona(Pp, px, py, -14, P.lime, { s: .6, pelo: P.ink });
+          persona(Pp, -2, 1, 10, P.crimson, { s: .6, pelo: P.dbrown }); persona(Pp, -40, 1, 14, P.navy, { s: .6 }); persona(Pp, 36, 1, 18, P.navy, { s: .6 }); Pp.fin();
+          const f = ((lt * .5) % 1); cue.position.set(lerp(-1, px, f), 1.9 + Math.sin(f * Math.PI) * 3, lerp(9, -13, f)); cue.rotation.x = -f * 10;
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(22, 6, k), lerp(16, 12, k), lerp(44, 30, k)], [lerp(14, 0, k), lerp(7, 4, k), lerp(4, -12, k)], .08); },
+      } };
+  },
+});
