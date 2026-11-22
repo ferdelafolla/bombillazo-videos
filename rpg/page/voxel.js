@@ -1579,7 +1579,7 @@ Object.assign(FABE, {
           const dv = clamp((lt - tk) / .5, 0, 1); persona(Pp, lerp(0, -5, ss(dv)), Math.sin(dv * Math.PI) * 1.4, zg + 1, P.lime, { s: .58, ag: dv * .5 });
           for (const [x, z, col] of [[-14, spot + 12, P.white], [12, spot + 10, P.blue], [-20, spot + 4, P.blue], [18, spot + 6, P.white]]) persona(Pp, x, 0, z, col, { s: .58 }); Pp.fin();
           const f = clamp((lt - tk) / 1.4, 0, 1); bal.position.set(lerp(0, 4, f), .9 + f * 16 - f * f * 3, lerp(spot, zg - 24, f)); bal.rotation.x = f * 12;
-          mira(c, [lerp(26, 22, f), lerp(8, 11, f), spot + 8], [-2, lerp(3, 6, f), zg + 9], .02); },
+          mira(c, [lerp(8, 5, f), lerp(4.5, 7, f), spot + 28], [0, lerp(3, 6, f), zg + 3], .0); },
         // otro disparo desde el borde del área: el balón entra por la escuadra, la red se mueve y la grada salta; 2-1
         gol_final(lt, dur, t) { const f = clamp((lt - .4) / .8, 0, 1), dentro = f >= 1; grada(t, dentro); score(dentro ? 2 : 1, 1); Pp.ini();
           persona(Pp, -12, 0, zg + 28, P.white, { s: .58 }); persona(Pp, lerp(0, 5, ss(f)), 0, zg + 1, P.lime, { s: .58, ag: f * .4 }); persona(Pp, -4, 0, zg + 12, P.blue, { s: .58 }); persona(Pp, 6, 0, zg + 16, P.blue, { s: .58 });
@@ -1612,7 +1612,7 @@ Object.assign(FABE, {
             for (let i = 0; i < n; i++) { const l = i === 10 ? 1.94 : 2; B.pon(1.5, .5, zg + i * 2 + l / 2, 2, 1, l * .96, i % 2 ? P.white : P.blue); } B.fin(); bal.visible = false;
           mira(c, [2, 36, spot + 20], [0, 0, zg + 7], .04); },
         // sin punto: una línea blanca cruza todo el campo y el balón de cuero se mueve por ella; el jugador elige su sitio
-        linea(lt, dur, t) { const k = ss(clamp(lt / 1.2, 0, 1)); B.ini(); B.pon(0, .08, spot, 130 * k, .14, 1, P.white); B.fin(); bal.visible = false; cue.visible = true; const x = Math.sin(lt * 1.6) * 12;
+        linea(lt, dur, t) { const k = ss(clamp(lt / 1.2, 0, 1)); B.ini(); B.pon(0, .08, spot, 130 * k, .14, 1, P.white); B.fin(); bal.visible = false; cue.visible = true; const x = Math.sin(lt * 1.6) * 7;
           cue.position.set(x, .9, spot); cue.rotation.z = -x; Pp.ini(); persona(Pp, x - 1.5, 0, spot + 3, P.white, { s: .58, pelo: P.dbrown }); Pp.fin();
           mira(c, [0, 24, spot + 34], [0, 0, spot - 4], .06); },
         // la línea se encoge hasta convertirse en el punto, que destella, y el balón cae encima
