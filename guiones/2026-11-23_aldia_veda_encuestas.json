@@ -1,0 +1,128 @@
+{
+ "id": "2026-11-23_aldia_veda_encuestas",
+ "titulo": "¿Por qué no hay encuestas la última semana? 🗳️",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «pedro sánchez» (10.000+), 22-23/11/2026, por las entrevistas de campaña antes de las elecciones generales del 29-N",
+ "fuentes": [
+  "LOREG (Ley Orgánica 5/1985), art. 69.7: prohibida la publicación y difusión de sondeos electorales durante los cinco días anteriores a la votación",
+  "Artículo14 (17/11/2026): calendario electoral del 29N, fechas clave",
+  "Mapaelectoral.es: «Veda de encuestas: hasta cuándo se pueden publicar las del 29N»",
+  "Diari d'Andorra / Diario de León / RT: las «encuestas prohibidas» publicadas desde Andorra, con nombres de frutas en clave"
+ ],
+ "remate": "¿POR QUÉ SE PROHÍBEN?",
+ "rpg": {
+  "gancho_lugar": "redaccion",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "redaccion",
+    "era": "snes",
+    "nombre": "LA REDACCIÓN",
+    "nota": "SIN ENCUESTAS"
+   },
+   {
+    "lugar": "colegio",
+    "era": "snes",
+    "nombre": "EL COLEGIO",
+    "nota": "5 DÍAS"
+   },
+   {
+    "lugar": "andorra",
+    "era": "snes",
+    "nombre": "ANDORRA",
+    "nota": "FRUTAS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "redaccion",
+   "escenas": [
+    {
+     "texto": "Desde mañana, en España no se pueden publicar encuestas.",
+     "tipo": "titulo",
+     "destacar": [
+      "encuestas."
+     ],
+     "accion": "sellar",
+     "texto_grande": "¡SIN ENCUESTAS!"
+    },
+    {
+     "texto": "Las elecciones generales son este domingo, veintinueve de noviembre.",
+     "tipo": "icono",
+     "destacar": [
+      "veintinueve"
+     ],
+     "accion": "calendario",
+     "rotulo": "29-N"
+    }
+   ]
+  },
+  {
+   "id": "veda",
+   "lugar": "colegio",
+   "escenas": [
+    {
+     "texto": "¿Y por qué se prohíben justo al final de la campaña?",
+     "tipo": "icono",
+     "destacar": [
+      "final"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "La ley electoral prohíbe publicarlas los cinco días antes de votar.",
+     "tipo": "icono",
+     "destacar": [
+      "cinco"
+     ],
+     "accion": "cinco_dias",
+     "rotulo": "5 DÍAS"
+    },
+    {
+     "texto": "La idea es que un sondeo de última hora no condicione el voto.",
+     "tipo": "icono",
+     "destacar": [
+      "condicione"
+     ],
+     "accion": "condicionar"
+    },
+    {
+     "texto": "Pero las encuestas se siguen haciendo: lo prohibido es publicarlas en España.",
+     "tipo": "icono",
+     "destacar": [
+      "publicarlas"
+     ],
+     "accion": "encuestar"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "andorra",
+   "escenas": [
+    {
+     "texto": "Curiosidad: por eso salen en medios de Andorra, a veces con los partidos disfrazados de frutas.",
+     "tipo": "icono",
+     "destacar": [
+      "frutas."
+     ],
+     "accion": "frutas"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

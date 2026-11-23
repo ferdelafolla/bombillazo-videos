@@ -1,0 +1,142 @@
+{
+ "id": "2026-11-23_curiosidades_viento_sur",
+ "titulo": "¿Por qué el viento sur da calor en Bilbao? 🌬️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «tiempo bilbao» (200+), 23/11/2026: sol, viento sur y máximas de 16 grados en Euskadi; nieblas persistentes en la meseta (Castilla y León)",
+ "fuentes": [
+  "Europa Press (22/11/2026): «Ambiente soleado, viento sur y máximas de 16 grados este lunes en Euskadi»",
+  "ORAIN (22/11/2026): «Del sol del lunes al frío y la lluvia a partir del martes»",
+  "Noticias de Castilla y León (22-23/11/2026): alerta por nieblas persistentes en la meseta",
+  "AEMET Blog: «El efecto Foehn en la Península Ibérica» (el aire que desciende seco se calienta ~1 °C cada 100 m)",
+  "ORAIN (euskera): «hegohaizea», el viento sur"
+ ],
+ "remate": "¿POR QUÉ CALIENTA?",
+ "rpg": {
+  "gancho_lugar": "ria",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "ria",
+    "era": "snes",
+    "nombre": "LA RÍA",
+    "nota": "16 GRADOS"
+   },
+   {
+    "lugar": "cordillera",
+    "era": "snes",
+    "nombre": "LA MONTAÑA",
+    "nota": "FOEHN"
+   },
+   {
+    "lugar": "caserio",
+    "era": "snes",
+    "nombre": "EL CASERÍO",
+    "nota": "HEGOHAIZEA"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "ria",
+   "escenas": [
+    {
+     "texto": "Hoy, en Bilbao, el viento del sur trae calor.",
+     "tipo": "titulo",
+     "destacar": [
+      "calor."
+     ],
+     "accion": "llega_sur",
+     "texto_grande": "¡VIENTO SUR!"
+    },
+    {
+     "texto": "Este lunes hay sol y dieciséis grados en Euskadi, y niebla en la meseta.",
+     "tipo": "icono",
+     "destacar": [
+      "dieciséis"
+     ],
+     "accion": "dos_mundos",
+     "rotulo": "16 GRADOS"
+    }
+   ]
+  },
+  {
+   "id": "montana",
+   "lugar": "cordillera",
+   "escenas": [
+    {
+     "texto": "¿Por qué el aire que viene de la meseta llega más templado?",
+     "tipo": "icono",
+     "destacar": [
+      "templado?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Porque antes tiene que cruzar las montañas.",
+     "tipo": "icono",
+     "destacar": [
+      "montañas."
+     ],
+     "accion": "cruzar"
+    },
+    {
+     "texto": "Al subir, el aire se enfría y deja su humedad en nubes sobre las cumbres.",
+     "tipo": "icono",
+     "destacar": [
+      "nubes"
+     ],
+     "accion": "subir"
+    },
+    {
+     "texto": "Pero al bajar, ya seco, se calienta más rápido: un grado cada cien metros.",
+     "tipo": "icono",
+     "destacar": [
+      "grado"
+     ],
+     "accion": "bajar",
+     "rotulo": [
+      "+1 GRADO",
+      "CADA 100 M"
+     ]
+    },
+    {
+     "texto": "Así llega a la costa más caliente que al salir: es el efecto Foehn.",
+     "tipo": "icono",
+     "destacar": [
+      "Foehn."
+     ],
+     "accion": "foehn",
+     "rotulo": "EFECTO FOEHN"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "caserio",
+   "escenas": [
+    {
+     "texto": "Curiosidad: en euskera, a este viento lo llaman hegohaizea.",
+     "tipo": "icono",
+     "destacar": [
+      "hegohaizea."
+     ],
+     "accion": "veleta",
+     "rotulo": "HEGOHAIZEA"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

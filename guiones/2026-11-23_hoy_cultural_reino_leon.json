@@ -1,0 +1,120 @@
+{
+ "id": "2026-11-23_hoy_cultural_reino_leon",
+ "titulo": "¿Por qué el estadio de la Cultural se llama Reino de León? ⚽",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "ElevenLabs eleven_v4, Lucía",
+ "tendencia": "Google Trends ES «cultural leonesa - zamora» (500+), 22-23/11/2026: Cultural 2-0 Zamora en el debut de Fernando Estévez (J13 de Primera Federación)",
+ "fuentes": [
+  "Ahora León (22/11/2026): «La Cultural Leonesa gana 2-0 al Zamora en el debut de Fernando Estévez»",
+  "VAVEL (22/11/2026): «Cultural 2-0 Zamora: la cura comienza con victoria»",
+  "Leonoticias y MARCA (22-23/11/2026): la era Estévez arranca con triunfo en el Reino",
+  "Historia: en 910 la corte del reino se traslada a León; Zamora formaba parte del Reino de León; Decreta de León de 1188, reconocidos por la UNESCO (2013) como el testimonio documental más antiguo del parlamentarismo europeo"
+ ],
+ "remate": "¿POR QUÉ REINO DE LEÓN?",
+ "rpg": {
+  "gancho_lugar": "reino",
+  "fin": [
+   "MÁS DATOS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "reino",
+    "era": "snes",
+    "nombre": "EL REINO",
+    "nota": "2-0"
+   },
+   {
+    "lugar": "corte",
+    "era": "snes",
+    "nombre": "LA CORTE",
+    "nota": "AÑO 910"
+   },
+   {
+    "lugar": "cortes",
+    "era": "snes",
+    "nombre": "LAS CORTES",
+    "nota": "1188"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "reino",
+   "escenas": [
+    {
+     "texto": "La Cultural estrenó entrenador con un dos a cero al Zamora.",
+     "tipo": "titulo",
+     "destacar": [
+      "cero"
+     ],
+     "accion": "goles",
+     "texto_grande": "¡DOS A CERO!"
+    },
+    {
+     "texto": "Fernando Estévez debutó en el banquillo y ganó en el Reino de León.",
+     "tipo": "icono",
+     "destacar": [
+      "debutó"
+     ],
+     "accion": "banquillo"
+    },
+    {
+     "texto": "¿Pero por qué su estadio se llama Reino de León?",
+     "tipo": "icono",
+     "destacar": [
+      "Reino"
+     ],
+     "accion": "letrero"
+    }
+   ]
+  },
+  {
+   "id": "reino",
+   "lugar": "corte",
+   "escenas": [
+    {
+     "texto": "Porque hace más de mil años, León fue la capital de un reino.",
+     "tipo": "icono",
+     "destacar": [
+      "capital"
+     ],
+     "accion": "capital",
+     "rotulo": "AÑO 910"
+    },
+    {
+     "texto": "Un reino que también incluía Zamora, el rival de ayer.",
+     "tipo": "icono",
+     "destacar": [
+      "Zamora,"
+     ],
+     "accion": "mapa"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "cortes",
+   "escenas": [
+    {
+     "texto": "Curiosidad: en mil ciento ochenta y ocho, León reunió unas de las primeras Cortes de Europa.",
+     "tipo": "icono",
+     "destacar": [
+      "Cortes"
+     ],
+     "accion": "cortes",
+     "rotulo": "1188"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
