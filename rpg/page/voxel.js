@@ -1647,3 +1647,324 @@ Object.assign(FABE, {
       } };
   },
 });
+
+// ———————————— 23/11/2026: el viento sur en Bilbao (Foehn), la veda de encuestas del 29-N y el Reino de León ————————————
+// viento: rayas blancas que viajan por una caja en la dirección (dx, dz)
+function rachas(B, x0, x1, y0, y1, z0, z1, t, n, v = 40, dir = 'z', col = P.white, L = 7) {
+  for (let i = 0; i < n; i++) { const a = hsh(i, 21, 1), b = hsh(i, 22, 2), y = y0 + hsh(i, 23, 3) * (y1 - y0);
+    if (dir === 'z') { const z = z0 + ((t * v * (.8 + b * .4) + a * (z1 - z0)) % (z1 - z0)); B.pon(x0 + b * (x1 - x0), y, z, .3, .3, L, col); }
+    else { const x = x0 + ((t * v * (.8 + b * .4) + a * (x1 - x0)) % (x1 - x0)); B.pon(x, y, z0 + b * (z1 - z0), L, .3, .3, col); } } }
+// bola de aire hecha de cubos (se recolorea en cada fotograma)
+function parcela(B, x, y, z, r, col) { for (let a = -r; a <= r; a++) for (let b = -r; b <= r; b++) for (let c = -r; c <= r; c++) { const d = a * a + b * b + c * c; if (d <= r * r + .5 && d >= (r - 1.3) ** 2) B.pon(x + a, y + b, z + c, 1, 1, 1, col); } }
+
+Object.assign(FAB, {
+  // —— viento sur ——
+  veleta: () => {   // veleta de hierro: mástil, cruz de los puntos cardinales y flecha con cola ('flecha') que gira
+    const v = new Vox(); v.box(0, 0, 0, 1, 14, 1, P.ink); v.box(-4, 9, 0, 5, 10, 1, P.dslate); v.box(0, 9, -4, 1, 10, 5, P.dslate); v.set(0, 9, 5, P.red); v.luz(P.red);
+    const w = new THREE.Group(); w.add(v.build({ centrar: false, jit: .02 }));
+    const f = new Vox(); f.box(-6, 0, 0, 6, 1, 1, P.ink); for (const [x, y] of [[6, 0], [5, 1], [5, -1], [4, 2], [4, -2]]) f.set(x, y, 0, P.amber); for (let y = -2; y <= 2; y++) f.box(-7, y, 0, -5, y + 1, 1, P.ink); f.luz(P.amber);
+    const gf = f.build({ jit: 0 }); const piv = new THREE.Group(); piv.position.set(.5, 14.5, .5); gf.position.set(0, 0, -.5); piv.add(gf); piv.name = 'flecha'; w.add(piv); return w; },
+  puente_ria: () => {   // puente blanco de arco sobre la ría: tablero, arco inclinado y tirantes
+    const v = new Vox(); v.box(-16, 4, -3, 16, 5, 3, P.silver); v.box(-16, 5, -3, 16, 6, -2, P.white); v.box(-16, 5, 2, 16, 6, 3, P.white);
+    for (let x = -14; x <= 14; x++) { const y = 5 + Math.round(10 * (1 - (x / 14) ** 2)); v.box(x, y, -1, x + 1, y + 2, 1, P.white); if (x % 3 === 0) v.box(x, 6, 0, x + 1, y, 1, P.steel); }
+    for (const x of [-17, 16]) v.box(x, 0, -4, x + 2, 5, 4, P.steel);
+    const w = new THREE.Group(); w.add(v.build({ centrar: false, jit: .02 })); return w; },
+  caserio: () => {   // caserío vasco: muros blancos, entramado de madera, balcón, contraventanas verdes y tejado de teja a dos aguas
+    const v = new Vox(); v.box(-15, 0, -10, 15, 14, 10, (x, y, z) => (z === 9 && (x % 6 === 0 || y === 7)) ? P.dbrown : P.white);
+    for (const x of [-10, -4, 4, 10]) { v.box(x - 1, 9, 10, x + 2, 13, 11, P.navy); v.box(x - 2, 9, 10, x - 1, 13, 11, P.dgreen); v.box(x + 2, 9, 10, x + 3, 13, 11, P.dgreen); }
+    v.box(-6, 0, 10, 6, 6, 11, P.dbrown); v.box(-7, 6, 10, 7, 7, 11, P.umber); v.box(-14, 7, 10, 14, 8, 13, P.brown); for (let x = -14; x < 14; x += 2) v.box(x, 8, 12, x + 1, 10, 13, P.dbrown);
+    for (let k = 0; k < 9; k++) v.box(-17, 14 + k, -12 + k * 1.2 | 0, 17, 15 + k, 12 - k * 1.2 | 0, k % 2 ? P.red : P.crimson);
+    v.box(8, 14, -2, 11, 24, 1, P.silver); const w = new THREE.Group(); w.add(v.build({ centrar: false })); return w; },
+});
+
+Object.assign(FABE, {
+  // —— viento sur 1: la ría de Bilbao con sol, el puente blanco, los montes al sur y, detrás, la meseta bajo la niebla ——
+  ria: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 160, 360);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 2.0, dir: [-30, 70, 60], sombra: 110 });
+    const alt = (x, z) => z < -100 ? Math.min(46, (-100 - z) * .9 + Math.sin(x * .07) * 5 + 2) : 0;
+    const v = new Vox(); for (let x = -90; x < 90; x++) for (let z = -260; z < 60; z++) { if (z >= -100) { const rio = Math.abs(x + Math.sin(z * .03) * 3) < 8; v.set(x, -1, z, rio ? (hsh(x, z, 1) > .8 ? P.cyan : P.blue) : (Math.abs(x + Math.sin(z * .03) * 3) < 10 ? P.silver : P.steel)); continue; }
+      let h = Math.round(alt(x, z)); if (z < -150) h = Math.max(30, Math.round(46 - (-150 - z) * .5)); v.set(x, h, z, z < -150 ? (hsh(x >> 2, 3, z >> 2) > .5 ? P.tan : P.sand) : (hsh(x >> 2, 4, z >> 2) > .55 ? P.dgreen : P.green)); if (h > 0) v.set(x, h - 1, z, P.dgreen); }
+    const edif = []; for (const sd of [-1, 1]) { let z = -96, i = 0; while (z < 30) { const w = 8 + (hsh(i, sd + 5, 1) * 4 | 0), h = 14 + (hsh(i, sd + 5, 2) * 22 | 0), x0 = sd > 0 ? 14 + (i % 2) * 2 : -14 - 10 - (i % 2) * 2; pisos(v, x0, z, 10, h, [P.sand, P.tan, 0xf2e6c8, P.silver, P.pink][(i + (sd > 0 ? 2 : 0)) % 5], w); edif.push([x0, z, 10, h, w]); z += w + 2; i++; } }
+    s.add(v.build());
+    const pu = actor('puente_ria', 1); pu.position.set(0, -1, -20); s.add(pu); const pu2 = actor('puente_ria', 1); pu2.position.set(0, -1, -70); s.add(pu2);
+    const B = new Bloques(500, true), Nb = new Bloques(900, true), Pp = new Bloques(120), F = new Bloques(40); s.add(B.im, Nb.im, Pp.im, F.im);
+    const sun = bola(P.yellow, 8); sun.position.set(-60, 120, -300); s.add(sun);
+    const niebla = () => { Nb.ini(); for (let x = -90; x < 90; x += 6) for (let z = -258; z < -160; z += 6) Nb.pon(x + hsh(x, z, 2) * 3, 38 + hsh(x, z, 3) * 3, z, 7, 3 + hsh(x, z, 4) * 3, 7, hsh(x, z, 5) > .5 ? P.white : 0xe8eef6); Nb.fin(); };
+    const banderas = (t, f) => { F.ini(); for (const x of [-11, 11]) for (let z = -90; z < 30; z += 24) { F.pon(x, 4, z, .4, 8, .4, P.ink); for (let k = 0; k < 4; k++) F.pon(x, 7.2 + Math.sin(t * 9 + k + z) * .4 * f, z + 1 + k * 1.1 * f + .2, .3, 2, 1.1, k % 2 ? P.red : P.white); } F.fin(); };
+    const gente = t => { Pp.ini(); for (let i = 0; i < 10; i++) { const sd = i % 2 ? 1 : -1, z = -90 + ((t * 3 * sd + i * 23) % 120 + 120) % 120; persona(Pp, sd * 11.5, 0, z, [P.red, P.yellow, P.lime, P.cyan, P.pink, P.orange][i % 6], { s: .7 }); } Pp.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { s.fog.far = 360; niebla(); banderas(t, .3); gente(t); B.ini(); rachas(B, -40, 40, 6, 40, -150, 50, t, 30, 30); B.fin(); mira(c, [Math.sin(t * .1) * 4, 34, 80], [0, 14, -50], .1); },
+      acc: {
+        // el viento del sur baja de los montes y barre la ría: rachas hacia la cámara, banderas que ondean y la gente en manga corta
+        llega_sur(lt, dur, t) { const k = clamp(lt / (dur * .6), 0, 1); banderas(t, .3 + k * .7); B.ini(); rachas(B, -40, 40, 6, 44, -150, -150 + 210 * Math.max(.15, k), t, 30 + 90 * k, 45); B.fin();
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 0, kc), lerp(36, 28, kc), lerp(88, 66, kc)], [0, 14, -50], .1); },
+        // la cámara sube por encima de los montes: delante la ría con sol; detrás, la meseta tapada por la niebla
+        dos_mundos(lt, dur, t) { s.fog.far = 600; banderas(t, 1); B.ini(); rachas(B, -40, 40, 30, 60, -200, 40, t, 40, 45); B.fin(); const k = ss(clamp(lt / (dur * .9), 0, 1));
+          mira(c, [0, lerp(36, 150, k), lerp(80, 110, k)], [0, lerp(14, 30, k), lerp(-50, -190, k)], .1); },
+      } };
+  },
+  // —— viento sur 2: la montaña en corte, de la meseta (izquierda) al mar (derecha); una bola de aire la cruza ——
+  cordillera: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 220, 420);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 2.0, dir: [10, 70, 60], sombra: 120 });
+    const h = x => x < -26 ? 18 : x < 0 ? 18 + (x + 26) / 26 * 28 : x < 32 ? 46 * (1 - x / 32) ** 1.3 : 0;
+    const v = new Vox(); for (let x = -90; x < 100; x++) { const H2 = Math.round(h(x)); for (let z = -30; z < 10; z++) { if (x >= 34) { v.set(x, -1, z, hsh(x, z, 1) > .85 ? P.cyan : P.blue); continue; }
+      for (let y = -2; y <= H2; y++) { const sup = y === H2; v.set(x, y, z, sup ? (x < -26 ? (hsh(x, z, 2) > .5 ? P.tan : P.sand) : (H2 > 38 ? P.slate : (hsh(x >> 1, 3, z >> 1) > .5 ? P.green : P.dgreen))) : (z === 9 ? (y % 6 < 3 ? P.brown : P.dbrown) : P.dbrown)); } } }
+    for (const x of [24, 28]) v.box(x, Math.round(h(x)) + 1, -6, x + 3, Math.round(h(x)) + 5, -2, P.white);   // casitas de la costa
+    for (let x = 34; x < 42; x += 3) v.box(x - 10, 1, 2, x - 7, 6, 6, P.white);
+    s.add(v.build({ jit: .05 }));
+    const A = new Bloques(520), Nb = new Bloques(500, true), B = new Bloques(300, true), M = new Bloques(60, true); s.add(A.im, Nb.im, B.im, M.im);
+    const sun = bola(P.yellow, 7); sun.position.set(70, 110, -260); s.add(sun);
+    const et = pantalla(9, 4.5, 180, 90); s.add(et.m); const marcas = [0, 1, 2, 3].map(() => { const p = pantalla(9, 4.5, 112, 56); s.add(p.m); return p; });
+    const ruta = u => { if (u < .25) { const x = lerp(-62, -26, u / .25); return [x, 30 + Math.sin(u * 30) * .4]; } if (u < .5) { const k = (u - .25) / .25, x = lerp(-26, -1, k); return [x, h(x) + 6]; }
+      if (u < .9) { const k = (u - .5) / .4, x = lerp(-1, 28, k); return [x, h(x) + 6]; } const x = lerp(28, 40, (u - .9) / .1); return [x, 7]; };
+    const colU = u => u < .5 ? colLerp(0x4fb0ff, 0x1a4fd0, u / .5) : colLerp(0x2c7fd6, 0xff6a3a, (u - .5) / .45);
+    const bolaAire = (u, t) => { const [x, y] = ruta(u); A.ini(); parcela(A, x, y + Math.sin(t * 3) * .3, -10, 4, colU(u)); for (let i = 1; i < 7; i++) { const [tx, ty] = ruta(Math.max(0, u - i * .012)); if (u - i * .012 > 0) A.pon(tx, ty, -10, 1.2, 1.2, 1.2, colU(u - i * .012)); } A.fin(); return [x, y]; };
+    const nieblaM = (o) => { Nb.ini(); for (let x = -88; x < -24; x += 5) for (let z = -28; z < 8; z += 6) Nb.pon(x, 21 + hsh(x, z, 3) * 2, z, 6, 4 + hsh(x, z, 4) * 2, 6, hsh(x, z, 5) > .5 ? P.white : 0xe8eef6); Nb.fin(); };
+    const capa = (k, t) => { B.ini(); if (k > 0) { nubarron(B, -6, 52, -10, 9 * k, P.white, 3, P.silver); nubarron(B, -14, 46, -8, 7 * k, P.white, 5, P.silver); llueve(B, -22, -4, -14, -6, 26, 44, t, Math.round(50 * k), P.cyan, 30); } B.fin(); };
+    const lbl = (txt, x, y, bg = '#124e89') => { et.m.visible = true; et.m.position.set(x, y, -6); rotular(et, txt, '#ffffff', bg, 46, { borde: '#ffffff' }); };
+    const c = cam(46);
+    return { s, c, upd(t) { nieblaM(); capa(0, t); M.ini(); M.fin(); et.m.visible = false; marcas.forEach(p => p.m.visible = false); bolaAire(0, t); mira(c, [-10, 70, 190], [-10, 24, -10], .06); },
+      acc: {
+        // la bola de aire, fresca, flota sobre la meseta tapada de niebla, con un interrogante encima
+        pregunta(lt, dur, t) { const [x, y] = bolaAire(0, t); lbl([Math.floor(t * 2) % 2 ? '?' : '¿?'], x, y + 8); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-58, -50, k), lerp(44, 40, k), lerp(80, 66, k)], [x + 4, y - 2, -10], .1); },
+        // la bola sale hacia la montaña y la cámara se aleja hasta ver la meseta, la sierra y el mar
+        cruzar(lt, dur, t) { const u = .25 * ss(clamp(lt / dur, 0, 1)); const [x, y] = bolaAire(u, t); const k = ss(clamp(lt / (dur * .8), 0, 1)); mira(c, [lerp(-50, -12, k), lerp(40, 80, k), lerp(66, 200, k)], [lerp(x, -12, k), lerp(y, 24, k), -10], .06); },
+        // sube por la ladera, se enfría (azul) y deja una nube con lluvia sobre la cumbre
+        subir(lt, dur, t) { const p = clamp(lt / (dur * .9), 0, 1), u = .25 + .25 * ss(p); const [x, y] = bolaAire(u, t); capa(clamp(p * 1.5, 0, 1), t);
+          if (p > .6) lbl(['FRÍO'], x - 10, y + 6, '#124e89'); mira(c, [lerp(-30, -8, p), lerp(66, 76, p), 130], [lerp(-18, -4, p), lerp(30, 38, p), -10], .08); },
+        // baja por el otro lado ya seco: se va poniendo naranja y aparecen las marcas +1 cada cien metros
+        bajar(lt, dur, t) { const p = clamp(lt / (dur * .95), 0, 1), u = .5 + .4 * p; const [x, y] = bolaAire(u, t); capa(1, t); marcas.forEach((m, i) => { const ui = .52 + i * .1; m.m.visible = u > ui; if (u > ui) { const [mx, my] = ruta(ui); m.m.position.set(mx + 6, my + 7, -4); rotular(m, ['+1'], '#ffffff', '#f77622', 34, { borde: '#fee761' }); } });
+          mira(c, [lerp(4, 18, p), lerp(76, 56, p), 150], [lerp(4, 18, p), lerp(38, 22, p), -10], 0); },
+        // llega a la costa caliente, roja, junto a las casas; brilla y el sol luce
+        foehn(lt, dur, t) { const p = clamp(lt / (dur * .5), 0, 1), u = .9 + .1 * ss(p); const [x, y] = bolaAire(u, t); capa(1, t); M.ini(); for (let i = 0; i < 14; i++) { const a = i / 14 * 6.28 + t; M.pon(x + Math.cos(a) * (6 + Math.sin(t * 4) * .5), y + Math.sin(a) * 6, -10, .8, .8, .8, P.yellow); } M.fin();
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(14, 34, k), lerp(52, 34, k), lerp(116, 84, k)], [lerp(14, 34, k), lerp(16, 9, k), -10], .1); },
+      } };
+  },
+  // —— viento sur 3: el caserío en la ladera verde, ovejas, montes y la veleta del tejado que gira al sur ——
+  caserio: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 140, 320);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 2.0, dir: [-40, 70, 60], sombra: 80 });
+    const alt = (x, z) => Math.max(0, z < -40 ? (-40 - z) * .5 + Math.sin(x * .05) * 6 : 0);
+    const v = new Vox(); for (let x = -90; x < 90; x++) for (let z = -180; z < 60; z++) { const H2 = Math.round(alt(x, z)); v.set(x, H2, z, hsh(x >> 1, 9, z >> 1) > .9 ? P.yellow : (hsh(x >> 2, 8, z >> 2) > .5 ? P.green : P.lime)); if (H2 > 0) v.set(x, H2 - 1, z, P.dgreen); }
+    for (let x = -60; x < 60; x += 3) v.box(x, 1, 30, x + 1, 4, 31, P.dbrown); v.box(-60, 3, 30, 60, 4, 31, P.brown);   // cercado
+    for (const [x, z] of [[-40, -10], [44, -20], [-56, -60], [60, -70]]) { v.box(x, 0, z, x + 2, 10, z + 2, P.dbrown); v.ball(x + 1, 14, z + 1, 5, P.dgreen); }
+    s.add(v.build());
+    const ca = actor('caserio', 1); ca.position.set(0, 0, -10); s.add(ca); const ve = actor('veleta', 1); ve.position.set(9, 24, -11); s.add(ve); const fl = ve.getObjectByName('flecha');
+    const B = new Bloques(200, true), O = new Bloques(60); s.add(B.im, O.im);
+    const ovejas = t => { O.ini(); for (let i = 0; i < 6; i++) { const x = -30 + i * 11 + Math.sin(t * .3 + i) * 2, z = 14 + (i % 2) * 6; O.pon(x, 1.6, z, 3.2, 2.2, 2, P.white); O.pon(x + 2, 2.2, z, 1.2, 1.4, 1.2, P.ink); for (const dx of [-1, 1]) O.pon(x + dx, .4, z, .5, .8, .5, P.ink); } O.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { ovejas(t); fl.rotation.y = Math.sin(t) * .4; B.ini(); rachas(B, -50, 50, 6, 40, -100, 25, t, 40, 40); B.fin(); mira(c, [Math.sin(t * .1) * 6, 26, 66], [0, 16, -10], .1); },
+      acc: {
+        // la veleta gira deprisa con las rachas y se queda apuntando al sur, hacia los montes de donde viene el viento
+        veleta(lt, dur, t) { ovejas(t); const k = clamp(lt / (dur * .55), 0, 1); fl.rotation.y = k < 1 ? lt * 9 * (1 - k) + ss(k) * (Math.PI / 2) : Math.PI / 2 + Math.sin(t * 6) * .06;
+          B.ini(); rachas(B, -50, 50, 6, 40, -100, 25, t, 70, 50); B.fin(); const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-8, 8, kc), lerp(30, 40, kc), lerp(80, 84, kc)], [lerp(0, 6, kc), lerp(24, 44, kc), -10], .1); },
+      } };
+  },
+});
+
+Object.assign(FAB, {
+  // —— veda de encuestas ——
+  candado: () => {   // candado rojo: arco de acero y cuerpo con ojo de cerradura
+    const v = new Vox(); v.box(-6, 0, -2, 7, 10, 3, (x, y) => y === 9 || y === 0 ? P.crimson : P.red); v.box(0, 3, 3, 1, 7, 4, P.ink); v.box(-1, 3, 3, 2, 5, 4, P.ink);
+    for (let a = 0; a <= 16; a++) { const an = Math.PI * a / 16, x = Math.round(Math.cos(an) * 4.5), y = 10 + Math.round(Math.sin(an) * 5.5); v.box(x, y, -1, x + 1, y + 1, 2, P.silver); }
+    for (const x of [-5, 4]) v.box(x, 10, -1, x + 1, 12, 2, P.silver);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .02 })); return w; },
+  periodico: () => {   // periódico doblado: cabecera negra, columnas grises y una gráfica de barras de colores neutros
+    const v = new Vox(); v.box(-10, 0, -7, 10, 1, 7, P.white); v.box(-10, 1, -7, 10, 2, -5, P.ink);
+    for (let z = -3; z < 7; z += 2) v.box(-9, 1, z, -1, 1.2, z + 1, P.steel); [[1, 3, P.blue], [3, 6, P.amber], [5, 4, P.lime], [7, 2, P.plum]].forEach(([x, h, c]) => v.box(x, 1, 5 - h * 1.5 | 0, x + 2, 2, 6, c));
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .02 })); return w; },
+  sandia: () => { const v = new Vox(); v.ball(0, 0, 0, 5, (x, y, z) => (Math.abs(Math.round(Math.atan2(z, x) * 3)) % 2 ? P.green : P.dgreen), .8); const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .03 })); return w; },
+  naranja: () => { const v = new Vox(); v.ball(0, 0, 0, 3, P.orange); v.set(0, 3, 0, P.green); v.set(1, 3, 0, P.lime); const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .05 })); return w; },
+  // —— Reino de León ——
+  corona: () => {   // corona real de oro con piedras rojas y verdes
+    const v = new Vox(); for (let a = 0; a < 40; a++) { const an = a / 40 * 6.283, x = Math.round(Math.cos(an) * 7), z = Math.round(Math.sin(an) * 7); v.box(x, 0, z, x + 1, 4, z + 1, P.amber); if (a % 5 === 0) { v.box(x, 4, z, x + 1, 8, z + 1, P.yellow); v.set(x, 8, z, P.white); } if (a % 10 === 2) v.set(x, 2, z, P.red); if (a % 10 === 7) v.set(x, 2, z, P.lime); }
+    v.box(-1, 0, -1, 2, 10, 2, P.yellow); v.box(-2, 8, 0, 3, 9, 1, P.yellow); v.luz(P.red, P.lime);
+    const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .03 })); return w; },
+  pergamino: () => {   // pergamino con rodillos de madera y renglones de tinta
+    const v = new Vox(); v.box(-10, 0, -8, 10, 1, 8, P.sand); for (let z = -6; z < 7; z += 2) v.box(-8, 1, z, 6 - (z * 7 % 5), 1.2, z + 1, P.dbrown); v.box(-6, 1, -7, 6, 1.2, -6, P.crimson);
+    for (const z of [-9, 8]) v.box(-12, 0, z, 12, 2, z + 1, P.brown); const w = new THREE.Group(); w.add(v.build({ centrar: true, jit: .03 })); return w; },
+  estandarte: () => {   // estandarte morado con un león rampante sencillo, en su mástil
+    const v = new Vox(); v.box(0, 0, 0, 1, 24, 1, P.dbrown); v.set(0, 24, 0, P.amber); v.box(1, 12, 0, 11, 23, 1, P.plum);
+    for (const [x, y] of [[4, 14], [5, 15], [6, 15], [5, 16], [6, 16], [7, 16], [5, 17], [6, 17], [6, 18], [7, 19], [6, 20], [7, 20], [8, 21], [4, 16], [8, 17], [8, 15]]) v.set(x, y, 1, P.white);
+    const w = new THREE.Group(); w.add(v.build({ centrar: false, jit: .02 })); return w; },
+});
+
+Object.assign(FABE, {
+  // —— encuestas 1: la redacción de un periódico: mesas, pantallas y la gran pantalla de la encuesta ——
+  redaccion: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.night); s.fog = new THREE.Fog(P.night, 120, 240);
+    luces(s, { cielo: 0xeef4ff, suelo: 0x3a4466, amb: 1.4, sol: 0xffffff, int: 1.6, dir: [-20, 70, 60], sombra: 70 });
+    const v = new Vox(); v.box(-70, -1, -50, 70, 0, 60, (x, y, z) => ((x >> 3) + (z >> 3)) % 2 ? P.slate : P.dslate); v.box(-70, 0, -52, 70, 60, -50, (x, y) => y % 12 === 0 ? P.slate : P.steel);
+    for (let x = -66; x < 66; x += 12) v.box(x, 44, -50, x + 8, 56, -49, P.cyan); v.luz(P.cyan);   // ventanales con la ciudad
+    for (const z of [-10, 12]) for (const x of [-36, -12, 12, 36]) { v.box(x - 8, 0, z, x + 8, 8, z + 6, P.dbrown); v.box(x - 9, 8, z - 1, x + 9, 9, z + 7, P.brown); v.box(x - 3, 9, z, x + 3, 14, z + 1, P.ink); v.box(x - 1, 9, z + 1, x + 1, 10, z + 3, P.ink); }
+    s.add(v.build());
+    const mon = []; for (const z of [-10, 12]) for (const x of [-36, -12, 12, 36]) { const p = pantalla(5, 4, 40, 32); p.m.position.set(x, 11.6, z + 1.1); s.add(p.m); mon.push(p); }
+    const big = pantalla(44, 24, 352, 192); big.m.position.set(0, 30, -49); s.add(big.m); const cal = pantalla(14, 16, 112, 128); cal.m.position.set(46, 26, -49); s.add(cal.m);
+    const cand = actor('candado', 1.1); s.add(cand); const per = actor('periodico', .8); per.position.set(-12, 10, 15); s.add(per);
+    const Pp = new Bloques(40), H = new Bloques(60); s.add(Pp.im, H.im);
+    const barras = (k, gris) => { const { g, cv, tex } = big; const kk = `${(k * 40) | 0}${gris}`; if (big._k === kk) return; big._k = kk; g.fillStyle = gris ? '#3a4466' : '#ffffff'; g.fillRect(0, 0, cv.width, cv.height);
+      g.fillStyle = gris ? '#8b9bb4' : '#181425'; g.font = 'bold 26px monospace'; g.textAlign = 'center'; g.fillText('ENCUESTA', cv.width / 2, 30);
+      ['#0099db', '#feae34', '#63c74d', '#b55088', '#e43b44'].forEach((c, i) => { const hh = [.7, .55, .4, .3, .2][i] * 130 * k; g.fillStyle = gris ? '#5a6988' : c; g.fillRect(40 + i * 60, 180 - hh, 44, hh); }); tex.needsUpdate = true; };
+    const gente = t => { Pp.ini(); [[-36, 18], [-12, -4], [12, 18], [36, -4], [24, 30]].forEach(([x, z], i) => persona(Pp, x + (i === 4 ? Math.sin(t * .6) * 20 : 0), 0, z, [P.navy, P.teal, P.plum, P.crimson, P.amber][i], { s: .9 })); Pp.fin(); };
+    const dia = d => rotular(cal, ['NOV', d], ['#ffffff', '#181425'], '#e43b44', 34, { borde: '#ffffff' });
+    const c = cam(46);
+    return { s, c, upd(t) { gente(t); barras(1, false); cand.visible = false; H.ini(); H.fin(); dia('LUN 23'); mon.forEach((p, i) => rotular(p, [i % 2 ? '▮▮' : '▮'], '#2ce8f5', '#124e89', 14)); mira(c, [Math.sin(t * .1) * 5, 30, 96], [0, 22, -20], .1); },
+      acc: {
+        // la gráfica de la encuesta crece en la gran pantalla y un candado rojo cae encima: la pantalla se apaga en gris
+        sellar(lt, dur, t) { const k = clamp(lt / 1, 0, 1), f = clamp((lt - 1.2) / .5, 0, 1); barras(ss(k), f >= 1); cand.visible = lt > 1.2; cand.position.set(0, lerp(70, 28, f * f), -45); cand.rotation.z = (1 - f) * .6 + (f >= 1 ? Math.sin((lt - 1.7) * 18) * Math.exp(-(lt - 1.7) * 5) * .2 : 0);
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 0, kc), lerp(30, 30, kc), lerp(100, 78, kc)], [0, 26, -40], .1); },
+        // el calendario de la pared pasa sus hojas, que salen volando, hasta el domingo 29
+        calendario(lt, dur, t) { barras(1, true); cand.visible = true; cand.position.set(0, 28, -45); const DIAS = ['LUN 23', 'MAR 24', 'MIÉ 25', 'JUE 26', 'VIE 27', 'SÁB 28', 'DOM 29'], n = Math.min(6, Math.floor(lt / (dur * .7) * 6.99)); dia(DIAS[n]);
+          H.ini(); for (let i = 0; i < n; i++) { const u = clamp((lt - i * dur * .7 / 7) / 1.2, 0, 1); if (u < 1) H.pon(46 + u * 20 - i, 26 - u * 30, -48 + u * 30, 12, .3, 10, P.white, u * 5); } H.fin();
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(10, 40, k), 34, lerp(90, 66, k)], [lerp(20, 44, k), 32, -48], .1); },
+      } };
+  },
+  // —— encuestas 2: el colegio electoral en un gimnasio: canasta, mesas con urnas de cristal, cabinas y la tira de días ——
+  colegio: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.umber); s.fog = new THREE.Fog(P.umber, 120, 240);
+    luces(s, { cielo: 0xfff1d6, suelo: 0x733e39, amb: 1.5, sol: 0xfff1d6, int: 1.6, dir: [20, 70, 60], sombra: 70 });
+    const v = new Vox(); v.box(-70, -1, -50, 70, 0, 60, (x, y, z) => (z % 5 === 0) ? P.brown : P.tan); for (let x = -60; x < 60; x++) { v.set(x, 0, 20, P.white); } v.box(-70, 0, -52, 70, 50, -50, (x, y) => y < 14 ? P.navy : P.sand);
+    v.box(-2, 26, -50, 2, 40, -46, P.steel); v.box(-8, 30, -46, 8, 40, -45, P.white); v.box(-3, 30, -45, 3, 31, -40, P.orange);   // canasta
+    for (const x of [-28, 0, 28]) { v.box(x - 10, 0, -8, x + 10, 8, 0, P.white); v.box(x - 11, 8, -9, x + 11, 9, 1, P.silver); }
+    for (const x of [50, 58]) { v.box(x - 3, 0, -30, x + 3, 16, -24, P.steel); v.box(x - 3, 2, -24, x + 3, 15, -23, (X, y) => (X + y) % 3 ? P.navy : P.blue); }
+    s.add(v.build());
+    const vid = new THREE.MeshBasicMaterial({ color: 0xd8f6ff, transparent: true, opacity: .35, depthWrite: false }); const urnas = [-28, 0, 28].map(x => { const m = new THREE.Mesh(new THREE.BoxGeometry(6, 6, 6), vid); m.position.set(x, 12, -4); s.add(m); return m; });
+    const tiras = ['MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'].map((d, i) => { const p = pantalla(9, 7, 72, 56); p.m.position.set(-27.5 + i * 11, 22, -49); s.add(p.m); return [p, d]; });
+    const preg = pantalla(10, 8, 80, 64); s.add(preg.m); const panel = pantalla(26, 15, 208, 120); s.add(panel.m); const cand = actor('candado', .5); s.add(cand);
+    const Pp = new Bloques(80), Pa = new Bloques(80); s.add(Pp.im, Pa.im);
+    const dias = n => tiras.forEach(([p, d], i) => rotular(p, [d, i === 5 ? 'VOTO' : (i < n ? 'NO' : '')], '#ffffff', i === 5 ? '#3e8948' : (i < n ? '#e43b44' : '#5a6988'), 20, { borde: '#ffffff' }));
+    const cola = (t, mueve) => { Pp.ini(); Pa.ini(); for (let i = 0; i < 9; i++) { const x = -28 + (i % 3) * 28, u = mueve ? ((t * .25 + i * .37) % 1) : (i / 9); const z = lerp(40, 3, u); persona(Pp, x + (i % 2 ? 2 : -2), 0, z, [P.navy, P.red, P.teal, P.plum, P.amber, P.green, P.pink, P.slate, P.dbrown][i], { s: .9 });
+        if (mueve && u > .85) Pa.pon(x, lerp(14, 10, (u - .85) / .15), -4, 2, .2, 1.4, P.white); } Pp.fin(); Pa.fin(); };
+    const grafico = (k, x) => { const { g, cv, tex } = panel; const kk = `${(k * 30) | 0}${x}`; if (panel._k === kk) return; panel._k = kk; g.fillStyle = '#ffffff'; g.fillRect(0, 0, cv.width, cv.height);
+      ['#0099db', '#feae34', '#63c74d', '#b55088'].forEach((c, i) => { const hh = [.8, .6, .45, .3][(i + ((k * 3) | 0)) % 4] * 90 * Math.min(1, k * 2); g.fillStyle = c; g.fillRect(24 + i * 44, 110 - hh, 32, hh); });
+      if (x) { g.strokeStyle = '#e43b44'; g.lineWidth = 12; g.beginPath(); g.moveTo(10, 10); g.lineTo(198, 110); g.moveTo(198, 10); g.lineTo(10, 110); g.stroke(); } tex.needsUpdate = true; };
+    const c = cam(46);
+    return { s, c, upd(t) { dias(0); cola(t, true); preg.m.visible = false; panel.m.visible = false; cand.visible = false; mira(c, [Math.sin(t * .1) * 5, 44, 110], [0, 10, 0], .05); },
+      acc: {
+        // el gimnasio vacío; sobre las urnas aparece un gran interrogante
+        pregunta(lt, dur, t) { cola(t, false); Pp.ini(); Pp.fin(); preg.m.visible = true; preg.m.position.set(0, 24 + Math.sin(t * 2), -2); rotular(preg, [Math.floor(t * 2) % 2 ? '?' : '¿?'], '#ffffff', '#e43b44', 40, { borde: '#ffffff' });
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-30, 0, k), lerp(46, 40, k), lerp(116, 96, k)], [0, 12, -6], .06); },
+        // la tira de la pared: de martes a sábado las casillas se ponen en rojo una a una; el domingo, en verde
+        cinco_dias(lt, dur, t) { cola(t, false); dias(Math.min(5, Math.floor(lt / (dur * .75) * 5) + 1)); const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-14, 0, k), 26, lerp(60, 48, k)], [lerp(-14, 0, k), 22, -49], .08); },
+        // un panel de encuesta se acerca a la fila de votantes, lo tacha una X roja y desaparece; la gente vota tranquila
+        condicionar(lt, dur, t) { dias(5); cola(t, true); const k = ss(clamp(lt / 1.2, 0, 1)), x = lt > 1.5, out = clamp((lt - 2.2) / .6, 0, 1); panel.m.visible = out < 1; panel.m.position.set(0, lerp(50, 30, k) + out * 30, lerp(-40, 14, k)); grafico(clamp(lt / 1.5, 0, 1), x);
+          mira(c, [6, 32, 116], [0, 24, 6], .1); },
+        // una encuestadora pregunta en la calle, las barras crecen... y el candado cierra el gráfico: no se puede publicar
+        encuestar(lt, dur, t) { dias(5); Pp.ini(); persona(Pp, -6 + Math.sin(lt) * 2, 0, 30, P.lime, { s: 1, movil: P.white }); for (let i = 0; i < 5; i++) persona(Pp, 2 + i * 4, 0, 26 + (i % 2) * 4, [P.navy, P.red, P.teal, P.plum, P.amber][i], { s: .9 }); Pp.fin(); Pa.ini(); Pa.fin();
+          panel.m.visible = true; panel.m.position.set(4, 24, 24); grafico(clamp(lt / (dur * .5), .05, 1), false); cand.visible = lt > dur * .55; const f = clamp((lt - dur * .55) / .4, 0, 1); cand.position.set(4, lerp(50, 23, f * f), 25);
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-10, 6, k), 28, lerp(116, 104, k)], [2, 20, 24], .1); },
+      } };
+  },
+  // —— encuestas 3: un valle de Andorra: montañas, casas de piedra con pizarra, un puesto de fruta y el quiosco ——
+  andorra: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 150, 340);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 2.0, dir: [-30, 70, 60], sombra: 90 });
+    const alt = (x, z) => { const d = Math.abs(x) - 26; return d > 0 ? Math.min(90, d * 1.2 + Math.sin(z * .08 + x * .03) * 6) : 0; };
+    const v = new Vox(); for (let x = -100; x < 100; x++) for (let z = -200; z < 60; z++) { const zz = z < -60 ? 0 : 1; let H2 = Math.round(alt(x, z) + (z < -80 ? (-80 - z) * .6 : 0)); H2 = Math.max(0, H2);
+      v.set(x, H2, z, H2 > 60 ? P.white : H2 > 30 ? (hsh(x, z, 2) > .5 ? P.steel : P.slate) : (H2 > 0 ? (hsh(x >> 2, 4, z >> 2) > .5 ? P.dgreen : P.green) : (Math.abs(x) < 4 ? P.slate : P.green))); if (H2 > 0) v.set(x, H2 - 1, z, P.dgreen); }
+    const casa = (x, z) => { v.box(x, 0, z, x + 12, 10, z + 10, (X, Y, Z) => hsh(X, Y, Z) > .5 ? P.steel : P.silver); v.box(x + 4, 0, z + 10, x + 7, 6, z + 11, P.dbrown); v.box(x + 9, 5, z + 10, x + 11, 8, z + 11, P.amber); for (let k = 0; k < 5; k++) v.box(x - 1, 10 + k, z - 1 + k, x + 13, 11 + k, z + 11 - k, P.dslate); };
+    casa(-22, -30); casa(10, -36); casa(-18, -60); casa(12, -66);
+    v.box(-14, 0, 6, 14, 6, 12, P.dbrown); v.box(-15, 6, 5, 15, 7, 13, P.brown); for (let x = -15; x < 15; x++) v.box(x, 16, 4, x + 1, 17, 14, ((x + 15) >> 2) % 2 ? P.red : P.white); for (const x of [-15, 14]) v.box(x, 0, 12, x + 1, 16, 13, P.dbrown);   // puesto
+    v.box(20, 0, 0, 30, 14, 8, P.dgreen); v.box(19, 14, -1, 31, 15, 9, P.lime); s.add(v.build());
+    const san = Array.from({ length: 5 }, () => { const m = actor('sandia', .5); s.add(m); return m; }), nar = Array.from({ length: 8 }, () => { const m = actor('naranja', .5); s.add(m); return m; });
+    const F = new Bloques(60); s.add(F.im); const per = actor('periodico', .9); s.add(per); const hoja = pantalla(16, 11, 192, 132); s.add(hoja.m);
+    const c = cam(46);
+    const pila = (k, t) => { F.ini(); const H = [5, 3, 4, 2]; const pos = [-10, -3.5, 3.5, 10];
+      for (let i = 0; i < 5; i++) { const on = i < Math.round(H[0] * k); san[i].visible = on; san[i].position.set(pos[0], 9.5 + i * 3.6, 9); san[i].rotation.y = i; }
+      for (let i = 0; i < 8; i++) { const col = i < 4 ? 1 : 2, j = i % 4, n = col === 1 ? H[1] : H[2]; const on = j < Math.round(n * k); nar[i].visible = on; nar[i].position.set(pos[col] + (col === 2 ? 0 : 0), 8.5 + j * 2.8, 9); }
+      for (let j = 0; j < Math.round(H[3] * k); j++) F.pon(pos[3], 8.5 + j * 2.6, 9, 2.4, 2.4, 2.4, P.yellow); F.fin(); };
+    const papel = () => { const { g, cv, tex } = hoja; if (hoja._k) return; hoja._k = 1; g.fillStyle = '#ffffff'; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = '#181425'; g.fillRect(0, 0, cv.width, 26); g.fillStyle = '#ffffff'; g.font = 'bold 20px monospace'; g.textAlign = 'center'; g.fillText('MERCADO', cv.width / 2, 19);
+      [['#265c42', 4], ['#f77622', 3], ['#f77622', 3.6], ['#fee761', 2]].forEach(([c, h], i) => { for (let k = 0; k < h; k++) { g.fillStyle = c; g.beginPath(); g.arc(40 + i * 38, 118 - k * 20, 9, 0, 6.3); g.fill(); } }); tex.needsUpdate = true; };
+    return { s, c, upd(t) { pila(1, t); per.position.set(25, 15.6, 4); per.rotation.y = Math.sin(t * .5) * .2; hoja.m.visible = false; mira(c, [Math.sin(t * .1) * 6, 30, 76], [0, 16, -10], .1); },
+      acc: {
+        // en el puesto, las frutas se apilan como las barras de una encuesta; en el quiosco, el periódico sale con su «gráfica» de frutas
+        frutas(lt, dur, t) { const k = clamp(lt / (dur * .55), 0, 1); pila(k, t); papel(); const f = ss(clamp((lt - dur * .45) / .8, 0, 1)); hoja.m.visible = f > 0; hoja.m.position.set(lerp(25, 0, f), lerp(16, 30, f), lerp(4, 10, f)); hoja.m.scale.setScalar(Math.max(.05, f));
+          const kc = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-10, 2, kc), lerp(24, 28, kc), lerp(66, 84, kc)], [0, lerp(16, 24, kc), 6], .1); },
+      } };
+  },
+});
+
+Object.assign(FABE, {
+  // —— Reino de León 1: estadio de día, grada blanca, el banquillo y el letrero de la tribuna ——
+  reino: () => {
+    const s = new THREE.Scene(); s.background = cielo([P.blue, 0x7fc8ff, 0xd8f6ff]); s.fog = new THREE.Fog(0xd8f6ff, 150, 320);
+    luces(s, { cielo: 0xe8f4ff, suelo: 0x3e8948, amb: 1.5, sol: 0xfff1d6, int: 1.9, dir: [-30, 80, 50], sombra: 90 });
+    const zg = -30, v = new Vox(); cesped(v, -64, 64, -40, 70, zg);
+    for (let k = 0; k < 10; k++) { v.box(-80, k * 2.5, -44 - k * 3, 80, k * 2.5 + 2.5, -41 - k * 3, k % 3 === 2 ? P.red : P.white); for (const sx of [-1, 1]) v.box(sx > 0 ? 66 + k * 3 : -69 - k * 3, k * 2.5, -44, sx > 0 ? 69 + k * 3 : -66 - k * 3, k * 2.5 + 2.5, 80, k % 3 === 2 ? P.red : P.silver); }
+    v.box(-80, 25, -75, 80, 27, -40, P.slate); for (let x = -78; x < 80; x += 12) v.box(x, 0, -76, x + 1, 25, -75, P.steel);   // cubierta de la tribuna
+    v.box(-12, 0, 14, 12, 1, 22, P.slate); v.box(-12, 1, 21, 12, 7, 22, P.navy); v.box(-13, 7, 13, 13, 8, 23, P.cyan);   // banquillo con techo
+    for (let x = -10; x < 11; x += 3) v.box(x, 1, 18, x + 2, 3, 20, P.red); s.add(v.build());
+    const por = new Vox(); for (const x of [-8, 7]) por.box(x, 0, 0, x + 1, 5, 1, P.white); por.box(-8, 5, 0, 8, 6, 1, P.white); for (let x = -7; x < 7; x++) for (let y = 0; y < 5; y++) if ((x + y) % 2 === 0) por.set(x, y, -4, P.silver); const gp = por.build({ jit: .02 }); gp.position.set(0, 0, zg); s.add(gp);
+    const bal = new Bloques(4), G = new Bloques(1200), Pp = new Bloques(60); s.add(bal.im, G.im, Pp.im);
+    const marc = pantalla(30, 11, 240, 88); marc.m.position.set(40, 34, -52); s.add(marc.m); const letr = pantalla(38, 4.75, 448, 56); letr.m.position.set(0, 30.5, -40.2); s.add(letr.m);
+    const COLS = [P.white, P.white, P.white, P.silver, P.red, P.skin, P.navy];
+    const grada = (t, salto) => { G.ini(); for (let k = 0; k < 10; k++) for (let x = -78; x < 78; x += 2.4) { const j = salto ? Math.abs(Math.sin(t * 9 + x * .7 + k)) * 1.2 : 0; G.pon(x, k * 2.5 + 3 + j, -42.5 - k * 3, 1.4, 1.6, 1.2, COLS[(hsh(x * 10 | 0, k, 1) * COLS.length) | 0]); } G.fin(); };
+    const score = a => rotular(marc, [`CYD ${a}-0 ZAM`], '#ffffff', '#181425', 30, { borde: '#fee761' });
+    const balon = (x, y, z) => { bal.ini(); bal.pon(x, y, z, 2, 2, 2, P.white); bal.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { grada(t, false); score(2); balon(0, .7, zg + 30); Pp.ini(); persona(Pp, 0, 1, 18, P.ink, { s: .6 }); Pp.fin(); rotular(letr, ['REINO DE LEÓN'], '#fee761', '#a22633', 40, { borde: '#ffffff' }); mira(c, [Math.sin(t * .1) * 4, 18, 50], [0, 6, zg], .08); },
+      acc: {
+        // dos goles seguidos: el balón entra, la red tiembla, la grada salta y el marcador pasa a 1-0 y a 2-0
+        goles(lt, dur, t) { const g1 = clamp((lt - .3) / .7, 0, 1), g2 = clamp((lt - 1.9) / .7, 0, 1), n = (g1 >= 1 ? 1 : 0) + (g2 >= 1 ? 1 : 0); grada(t, n > 0 && (lt < 1.7 || lt > 2.6)); score(n);
+          const f = g2 > 0 ? g2 : g1, sx = g2 > 0 ? 8 : -9, ex = g2 > 0 ? -5 : 5; balon(lerp(sx, ex, f), lerp(.7, 3.5, f) + Math.sin(f * Math.PI) * 2, lerp(zg + 24, zg - 2, f));
+          Pp.ini(); persona(Pp, lerp(0, g2 > 0 ? -5 : 5, ss(f)), 0, zg + 1, P.lime, { s: .58, ag: f * .4 }); persona(Pp, sx - 1, 0, zg + 26, P.white, { s: .58 }); persona(Pp, -3, 0, zg + 12, P.red, { s: .58 }); persona(Pp, 6, 0, zg + 15, P.red, { s: .58 });
+          if (n) for (let i = 0; i < 3; i++) persona(Pp, sx - 3 + i * 2.5, Math.abs(Math.sin(t * 8 + i)) * 1.5, zg + 22 - i, P.white, { s: .58 }); Pp.fin();
+          mira(c, [lerp(-6, 6, ss(clamp(lt / dur, 0, 1))), 13, zg + 42], [0, 4, zg + 2], .04); },
+        // en el banquillo, el nuevo entrenador salta y los suplentes se levantan a celebrarlo
+        banquillo(lt, dur, t) { grada(t, true); score(2); balon(30, .7, -10); Pp.ini(); persona(Pp, 0, 1 + Math.abs(Math.sin(t * 7)) * 1.6, 25, P.ink, { s: .7, pelo: P.dslate }); for (let i = 0; i < 6; i++) persona(Pp, -9 + i * 3.6, 1 + (lt > .8 ? Math.abs(Math.sin(t * 8 + i)) : 0), 19, P.white, { s: .6, ag: lt > .8 ? 0 : .4 }); Pp.fin();
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(26, 14, k), lerp(16, 15, k), lerp(84, 76, k)], [0, 6, 18], .06); },
+        // la cámara sube por la grada hasta el letrero de la tribuna: REINO DE LEÓN, que destella
+        letrero(lt, dur, t) { grada(t, false); score(2); const fl = Math.floor(t * 4) % 2; rotular(letr, ['REINO DE LEÓN'], fl ? '#fee761' : '#ffffff', '#a22633', 40, { borde: '#fee761' });
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [0, lerp(14, 26, k), lerp(40, 52, k)], [0, lerp(8, 27, k), lerp(zg, -40, k)], .06); },
+      } };
+  },
+  // —— Reino de León 2: la ciudad amurallada de León hacia el año 910, con estandartes; al fondo, Zamora junto a su río ——
+  corte: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x7fc8ff, 0xfee0b0, 0xf6a070]); s.fog = new THREE.Fog(0xfee0b0, 200, 520);
+    luces(s, { cielo: 0xfff1d6, suelo: 0x3e8948, amb: 1.4, sol: 0xffd8a0, int: 1.9, dir: [-60, 50, 40], sombra: 100 });
+    const v = new Vox(); for (let x = -120; x < 120; x++) for (let z = -330; z < 70; z++) { const rio = Math.abs(z + 250 + Math.sin(x * .05) * 8) < 5; v.set(x, -1, z, rio ? P.blue : (hsh(x >> 3, 2, z >> 3) > .6 ? 0xc8b46a : (hsh(x >> 2, 3, z >> 2) > .5 ? P.green : 0x7a9a3a))); }
+    const muralla = (cx, cz, r, hh) => { for (let a = 0; a < 64; a++) { const an = a / 64 * 6.283, x = Math.round(cx + Math.cos(an) * r), z = Math.round(cz + Math.sin(an) * r * .8); v.box(x, 0, z, x + 2, hh, z + 2, (X, Y) => Y === hh - 1 && (X + z) % 2 ? P.sand : P.tan); if (a % 8 === 0) v.cyl(x, z, 0, hh + 3, 2.5, P.sand); }
+      for (let i = 0; i < 26; i++) { const an = hsh(i, cx, 1) * 6.283, d = hsh(i, cx, 2) * r * .75, x = Math.round(cx + Math.cos(an) * d), z = Math.round(cz + Math.sin(an) * d * .8); v.box(x, 0, z, x + 5, 5, z + 5, P.white); v.box(x, 5, z, x + 5, 6, z + 5, P.red); } };
+    muralla(0, -20, 34, 9); v.box(-8, 0, -30, 8, 18, -16, P.sand); v.box(-9, 18, -31, 9, 19, -15, P.tan); for (const [x, z] of [[-8, -30], [6, -30], [-8, -18], [6, -18]]) v.box(x, 18, z, x + 2, 24, z + 2, P.sand);   // palacio
+    muralla(-40, -250, 22, 7); s.add(v.build());
+    const cor = actor('corona', 1.4); s.add(cor); const est = [[-16, -14], [16, -14], [-30, -2], [30, -2]].map(([x, z]) => { const m = actor('estandarte', 1); m.position.set(x, 0, z); s.add(m); return m; });
+    const T = new Bloques(500, true); s.add(T.im); const lb = ['LEÓN', 'ZAMORA'].map(n => { const p = pantalla(52, 14, 208, 56); rotular(p, [n], '#ffffff', '#68386c', 34, { borde: '#fee761' }); s.add(p.m); return p; });
+    const c = cam(46);
+    return { s, c, upd(t) { cor.position.set(0, 40 + Math.sin(t * 1.5), -22); cor.rotation.y = t * .6; est.forEach(m => m.position.y = 0); T.ini(); T.fin(); lb.forEach(p => p.m.visible = false); mira(c, [Math.sin(t * .1) * 6, 50, 90], [0, 12, -22], .1); },
+      acc: {
+        // la corona baja del cielo y se posa sobre el palacio de León; los estandartes morados suben en sus mástiles
+        capital(lt, dur, t) { const f = ss(clamp(lt / (dur * .6), 0, 1)); cor.position.set(0, lerp(90, 30, f) + Math.sin(t * 1.5) * .6, -22); cor.rotation.y = t * .8; est.forEach((m, i) => m.position.y = lerp(-26, 0, ss(clamp((lt - .3 - i * .25) / .8, 0, 1))));
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-20, 6, k), lerp(50, 62, k), lerp(116, 126, k)], [0, lerp(22, 20, k), -22], .1); },
+        // la cámara sube: el reino se pinta de morado desde León hasta Zamora, junto a su río
+        mapa(lt, dur, t) { cor.position.set(0, 34, -22); cor.rotation.y = t * .8; const k = ss(clamp(lt / (dur * .8), 0, 1)); T.ini(); for (let i = 0; i < 26; i++) { const u = clamp(k * 26 - i, 0, 1); if (u <= 0) continue; const z = -20 - i * 9, x = lerp(0, -40, i / 26); T.pon(x, .2, z, 30 * u + 10, .2, 10, P.plum); } T.fin();
+          lb[0].m.visible = true; lb[0].m.position.set(0, 46, -10); lb[1].m.visible = k > .6; lb[1].m.position.set(-40, 40, -236); lb.forEach(p => p.m.lookAt(c.position));
+          mira(c, [lerp(10, 0, k), lerp(70, 200, k), lerp(70, 60, k)], [lerp(0, -20, k), 0, lerp(-30, -130, k)], .06); },
+      } };
+  },
+  // —— Reino de León 3: las Cortes de 1188 en una sala románica: el rey, los obispos, los nobles y los ciudadanos ——
+  cortes: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(P.umber); s.fog = new THREE.Fog(P.umber, 110, 220);
+    luces(s, { cielo: 0xffe8c8, suelo: 0x733e39, amb: 1.3, sol: 0xffd8a0, int: 1.7, dir: [30, 60, 60], sombra: 70 });
+    const v = new Vox(); v.box(-50, -1, -50, 50, 0, 60, (x, y, z) => ((x >> 2) + (z >> 2)) % 2 ? P.tan : P.sand); v.box(-50, 0, -52, 50, 50, -50, P.sand);
+    for (const x of [-40, -20, 0, 20, 40]) { if (x) v.box(x - 2, 0, -50, x + 2, 26, -46, P.tan); }
+    for (let x = -40; x < 40; x++) { const m = ((x + 40) % 20) - 10; const y = 26 + Math.round(Math.sqrt(Math.max(0, 100 - m * m))); v.box(x, y, -50, x + 1, y + 2, -46, (x % 2) ? P.red : P.amber); v.box(x, y + 2, -50, x + 1, 50, -49, P.sand); }
+    for (const sd of [-1, 1]) for (let k = 0; k < 3; k++) v.box(sd > 0 ? 10 + k * 5 : -13 - k * 5, 0, -20, sd > 0 ? 13 + k * 5 : -10 - k * 5, 3 + k, 30, P.dbrown);   // bancos
+    v.box(-8, 0, -46, 8, 3, -36, P.crimson); v.box(-4, 3, -44, 4, 15, -40, P.amber); v.box(-5, 3, -41, 5, 6, -38, P.amber); v.luz(P.amber);   // trono
+    v.box(-6, 0, -4, 6, 7, 6, P.dbrown); v.box(-7, 7, -5, 7, 8, 7, P.brown); s.add(v.build());
+    const rey = new Bloques(4), Pp = new Bloques(120); s.add(rey.im, Pp.im); const cor = actor('corona', .32); s.add(cor); const per = actor('pergamino', .7); s.add(per);
+    for (const [x, z] of [[-30, -40], [30, -40]]) { const m = actor('estandarte', 1.1); m.position.set(x, 0, z); s.add(m); }
+    const lamp = new THREE.PointLight(0xfeae34, 50, 60, 1.4); lamp.position.set(0, 30, 0); s.add(lamp);
+    const sentados = k => { Pp.ini(); const grupos = [[-1, P.white, P.ink], [-1, P.crimson, P.dbrown], [1, P.plum, P.amber], [1, P.green, P.dbrown], [1, P.brown, P.ink], [-1, P.navy, P.dbrown]];
+      grupos.forEach(([sd, ropa, pelo], gi) => { const fila = gi % 3; for (let i = 0; i < 6; i++) { const u = clamp(k * 1.6 - (gi * 6 + i) / 36, 0, 1); if (u <= 0) continue; const xf = sd * (11.5 + fila * 5), zf = -16 + i * 7.5; persona(Pp, xf, lerp(0, 3 + fila, u), lerp(56, zf, u), ropa, { s: .8, pelo, ag: u >= 1 ? .3 : 0 }); } }); Pp.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { rey.ini(); rey.pon(0, 7.5, -41, 3, 6, 2, P.plum); rey.pon(0, 11.6, -41, 2.4, 2.4, 2.2, P.skin); rey.pon(0, 13, -41.2, 2.5, 1, 2.3, P.white); rey.fin(); cor.position.set(0, 14.5, -41); cor.rotation.y = t * .5;
+        sentados(1); per.position.set(0, 8.8, 1); per.scale.set(.7, .7, .7); mira(c, [Math.sin(t * .1) * 4, 30, 80], [0, 12, -16], .1); },
+      acc: {
+        // entran los representantes y se sientan en los bancos; sobre la mesa se desenrolla el pergamino de los decretos
+        cortes(lt, dur, t) { sentados(clamp(lt / (dur * .7), 0, 1)); const f = ss(clamp((lt - dur * .3) / 1, 0, 1)); per.scale.set(.7 * Math.max(.05, f), .7, .7);
+          const k = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-8, 4, k), lerp(32, 26, k), lerp(90, 60, k)], [0, lerp(12, 10, k), lerp(-16, -10, k)], .1); },
+      } };
+  },
+});

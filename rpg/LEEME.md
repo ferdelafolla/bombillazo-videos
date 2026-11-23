@@ -126,3 +126,16 @@ En `audio_rpg.py` la música va a 0,09 (antes 0,22) y baja un 75 % cuando habla 
 - Rótulos 3D (pantallas) que miran a cámara: tamaño ≤ 6 × 2,6 unidades a ~40 de distancia; si el `rotulo` del guion dice lo mismo, quita uno de los dos (se tapan).
 - No se hizo vídeo largo de domingo: con 2 CPU cada Short tarda ~25-30 min y se prefirió cerrar los 3 Shorts.
 - Las vistas previas `--png` de otro Short mientras se renderiza uno ralentizan los dos (carga 16); mejor revisar todo antes del primer render final.
+
+## 23/11/2026 (tarea diaria, lunes): viento sur en Bilbao, veda de encuestas y Reino de León
+- Recursos nuevos en `voxel.js`: modelos `veleta` (con 'flecha' que gira), `puente_ria`, `caserio`, `candado`, `periodico`, `sandia`, `naranja`, `corona`, `pergamino`, `estandarte`; escenas `ria` (Bilbao con la meseta en niebla detrás de los montes), `cordillera` (montaña en corte meseta → mar con una bola de aire que se enfría y se calienta: efecto Foehn), `caserio`, `redaccion`, `colegio` (colegio electoral en un gimnasio), `andorra`, `reino` (estadio de día con banquillo y letrero), `corte` (León amurallado hacia 910 y el reino pintado hasta Zamora) y `cortes` (sala románica de 1188).
+- Utilidades nuevas: `rachas(B, …)` (viento: rayas que viajan en z o x) y `parcela(B, x, y, z, r, col)` (bola hueca de cubos que se recolorea en cada fotograma).
+- ElevenLabs se quedó sin créditos en la tercera voz (quedaban 286; hacían falta 471). El Short de deportes se hizo con la voz gratis de piper (`es_ES-sharvard-medium`, speaker 1, length_scale 0,98, 0,75 s entre frases; script en el resumen de la tarea). Hay que recargar créditos o cambiar de plan para volver a Lucía.
+- Render con 2 CPU: ~17-25 min por Short en 4 trozos. Si solo hay que corregir el final, se pueden volver a renderizar solo los trozos afectados (`--desde/--hasta`), concatenar con la lista existente y reutilizar el `.wav` (el audio no cambia).
+- Rótulo del guion y objeto 3D importante a la misma altura se tapan: deja el objeto clave por debajo del 40 % de la altura cuando la escena lleva `rotulo`.
+
+### Análisis semanal (lunes 23/11, Metricool 16-23/11)
+- Datos disponibles solo de los vídeos del 16 y 18/11 (los posteriores aún no salen en las métricas o fallaron por el cupo del 19/11).
+- TikTok: 230-290 vistas por vídeo; el mejor, la huelga de Renfe (288), luego heladas (252) y Países Bajos (239). Instagram Reels: 53-141 de alcance, tiempo medio 5-7,4 s y ~46-53 % de retención; el mejor, el de animación (141) y aviones (7,4 s de media). YouTube: 3.881 visualizaciones el 16/11 y ~1.100 diarias el 18-19/11.
+- Funciona: temas españoles prácticos del día (huelga, tiempo) y curiosidades visuales. Instagram sigue con 5-7 s de media: se mantienen Shorts de 35-43 s con la primera frase de ≤ 9 palabras y el dato en el primer segundo.
+- Ajuste: priorizar actualidad práctica española (qué cambia hoy/mañana para el espectador) y el tiempo con explicación científica; seguir evitando economía y temas extranjeros.

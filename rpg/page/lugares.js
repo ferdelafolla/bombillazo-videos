@@ -396,3 +396,6 @@ export const NOMBRE = { costa: 'LA COSTA', atlantico: 'EL ATLÁNTICO', ladera: '
 // 22/11/2026: la luz de noche, las medallas y el penalti
 Object.assign(BASE, { anochecer: hoy, parque_solar: hoy, eolico: hoy, vitrina: hoy, archivo: hoy, imprenta: hoy, estadio: hoy, medida: hoy, milford: hoy });
 Object.assign(NOMBRE, { anochecer: 'LA CIUDAD', parque_solar: 'LA RED', eolico: 'LOS MOLINOS', vitrina: 'LA VITRINA', archivo: 'EL ARCHIVO', imprenta: 'LA IMPRENTA', estadio: 'EL ESTADIO', medida: 'EL ÁREA', milford: 'MILFORD · 1891' });
+// 23/11/2026: el viento sur en Bilbao, la veda de encuestas y el Reino de León
+Object.assign(BASE, { ria: hoy, cordillera: hoy, caserio: hoy, redaccion: hoy, colegio: hoy, andorra: hoy, reino: hoy, corte: hoy, cortes: hoy });
+Object.assign(NOMBRE, { ria: 'LA RÍA', cordillera: 'LA MONTAÑA', caserio: 'EL CASERÍO', redaccion: 'LA REDACCIÓN', colegio: 'EL COLEGIO', andorra: 'ANDORRA', reino: 'EL REINO', corte: 'LA CORTE · 910', cortes: 'LAS CORTES · 1188' });
