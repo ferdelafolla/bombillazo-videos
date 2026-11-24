@@ -1,0 +1,142 @@
+{
+ "id": "2026-11-24_aldia_mundial_femenino",
+ "titulo": "¿Por qué el Mundial femenino tendrá cuatro países? ⚽",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (voz gratis: ElevenLabs sin créditos)",
+ "tendencia": "Google Trends ES «copa mundial de fútbol» (100+), 23-24/11/2026: la FIFA adjudica los Mundiales femeninos de 2031 y 2035",
+ "fuentes": [
+  "CNN en Español (23/11/2026): «México y Estados Unidos hacen historia: serán dos de las cuatro sedes del Mundial femenino de 2031»",
+  "Meridiano (23/11/2026): «Estados Unidos 2031 y Reino Unido 2035 estrenarán el formato de 48 selecciones»",
+  "Hoy Diario: «los Mundiales femeninos de 2031 y 2035 tendrán cuatro países, 48 selecciones y 104 partidos»",
+  "FIFA: el Mundial femenino de 2023 tuvo 32 selecciones y 64 partidos; sedes anteriores 1991-2027 (México nunca)"
+ ],
+ "remate": "¿POR QUÉ CUATRO?",
+ "rpg": {
+  "gancho_lugar": "oceano",
+  "fin": [
+   "MÁS ACTUALIDAD",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "oceano",
+    "era": "snes",
+    "nombre": "DOS SEDES",
+    "nota": "2031 Y 2035"
+   },
+   {
+    "lugar": "cuadro",
+    "era": "snes",
+    "nombre": "EL CUADRO",
+    "nota": "48 EQUIPOS"
+   },
+   {
+    "lugar": "mexico",
+    "era": "snes",
+    "nombre": "MÉXICO",
+    "nota": "PRIMERA VEZ"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "oceano",
+   "escenas": [
+    {
+     "texto": "Los próximos Mundiales femeninos tendrán cuarenta y ocho selecciones.",
+     "tipo": "titulo",
+     "destacar": [
+      "cuarenta"
+     ],
+     "accion": "banderas",
+     "texto_grande": "¡48 SELECCIONES!"
+    },
+    {
+     "texto": "El de dos mil treinta y uno será en Estados Unidos, México, Costa Rica y Jamaica.",
+     "tipo": "icono",
+     "destacar": [
+      "Jamaica."
+     ],
+     "accion": "america",
+     "rotulo": "2031"
+    },
+    {
+     "texto": "Y el de dos mil treinta y cinco, en el Reino Unido.",
+     "tipo": "icono",
+     "destacar": [
+      "Reino"
+     ],
+     "accion": "reino_unido",
+     "rotulo": "2035"
+    }
+   ]
+  },
+  {
+   "id": "cuadro",
+   "lugar": "cuadro",
+   "escenas": [
+    {
+     "texto": "¿Por qué cuatro países para un solo Mundial?",
+     "tipo": "icono",
+     "destacar": [
+      "países"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Porque crece: de treinta y dos selecciones pasa a cuarenta y ocho.",
+     "tipo": "icono",
+     "destacar": [
+      "cuarenta"
+     ],
+     "accion": "crece",
+     "rotulo": [
+      "DE 32",
+      "A 48"
+     ]
+    },
+    {
+     "texto": "Pero más equipos son más partidos: ciento cuatro, cuarenta más que en dos mil veintitrés.",
+     "tipo": "icono",
+     "destacar": [
+      "ciento"
+     ],
+     "accion": "partidos",
+     "rotulo": "104 PARTIDOS"
+    },
+    {
+     "texto": "Y repartirlos entre varios países reparte estadios, viajes y aficionados.",
+     "tipo": "icono",
+     "destacar": [
+      "estadios,"
+     ],
+     "accion": "reparte"
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "mexico",
+   "escenas": [
+    {
+     "texto": "Curiosidad: México nunca ha organizado un Mundial femenino; será su primera vez.",
+     "tipo": "icono",
+     "destacar": [
+      "primera"
+     ],
+     "accion": "primera",
+     "rotulo": "PRIMERA VEZ"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

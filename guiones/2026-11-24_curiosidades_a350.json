@@ -1,0 +1,149 @@
+{
+ "id": "2026-11-24_curiosidades_a350",
+ "titulo": "¿Por qué los aviones nuevos son de fibra de carbono? ✈️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (voz gratis: ElevenLabs sin créditos)",
+ "tendencia": "Google Trends ES «air europa» (500+), 23-24/11/2026: Air Europa pide a Aena más capacidad en Barajas para los A350 que ha encargado a Airbus",
+ "fuentes": [
+  "Google Trends ES 24/11/2026: «Air Europa teme no poder usar los nuevos A350 encargados a Airbus si Aena no amplía la capacidad de las terminales»",
+  "Airbus (nota de prensa): Air Europa firma un acuerdo por hasta 40 A350-900",
+  "Airbus, ficha A350: 53 % de materiales compuestos; 25 % menos de consumo y CO2 que la generación anterior; envergadura 64,75 m"
+ ],
+ "remate": "¿POR QUÉ CARBONO?",
+ "rpg": {
+  "gancho_lugar": "barajas",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "barajas",
+    "era": "snes",
+    "nombre": "BARAJAS",
+    "nota": "HASTA 40"
+   },
+   {
+    "lugar": "taller",
+    "era": "snes",
+    "nombre": "EL TALLER",
+    "nota": "53 %"
+   },
+   {
+    "lugar": "crucero",
+    "era": "snes",
+    "nombre": "EN VUELO",
+    "nota": "-25 %"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "barajas",
+   "escenas": [
+    {
+     "texto": "Más de la mitad de este avión no es de metal.",
+     "tipo": "titulo",
+     "destacar": [
+      "metal."
+     ],
+     "accion": "despega",
+     "texto_grande": "¡NO ES METAL!"
+    },
+    {
+     "texto": "Es el A350: Air Europa quiere hasta cuarenta.",
+     "tipo": "icono",
+     "destacar": [
+      "cuarenta."
+     ],
+     "accion": "flota",
+     "voz": "Es el A trescientos cincuenta: Air Europa quiere hasta cuarenta.",
+     "rotulo": "HASTA 40"
+    }
+   ]
+  },
+  {
+   "id": "carbono",
+   "lugar": "taller",
+   "escenas": [
+    {
+     "texto": "¿Por qué los aviones nuevos se fabrican con fibra de carbono?",
+     "tipo": "icono",
+     "destacar": [
+      "carbono?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Porque cada kilo de más cuesta combustible en todo el vuelo.",
+     "tipo": "icono",
+     "destacar": [
+      "kilo"
+     ],
+     "accion": "kilos"
+    },
+    {
+     "texto": "Pero, ¿no es más frágil que el aluminio?",
+     "tipo": "icono",
+     "destacar": [
+      "aluminio?"
+     ],
+     "accion": "fragil"
+    },
+    {
+     "texto": "No: hilos de carbono y resina, capa a capa, aguantan igual pesando menos.",
+     "tipo": "icono",
+     "destacar": [
+      "capa"
+     ],
+     "accion": "capas"
+    },
+    {
+     "texto": "En este avión, el cincuenta y tres por ciento son materiales compuestos.",
+     "tipo": "icono",
+     "destacar": [
+      "cincuenta"
+     ],
+     "accion": "piezas",
+     "rotulo": "53 %"
+    }
+   ]
+  },
+  {
+   "id": "vuelo",
+   "lugar": "crucero",
+   "escenas": [
+    {
+     "texto": "Así gasta un veinticinco por ciento menos de combustible que la generación anterior.",
+     "tipo": "icono",
+     "destacar": [
+      "veinticinco"
+     ],
+     "accion": "combustible",
+     "rotulo": [
+      "-25 %",
+      "COMBUSTIBLE"
+     ]
+    },
+    {
+     "texto": "Curiosidad: sus alas miden casi sesenta y cinco metros.",
+     "tipo": "icono",
+     "destacar": [
+      "sesenta"
+     ],
+     "accion": "alas",
+     "rotulo": "CASI 65 M"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

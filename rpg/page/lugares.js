@@ -399,3 +399,6 @@ Object.assign(NOMBRE, { anochecer: 'LA CIUDAD', parque_solar: 'LA RED', eolico: 
 // 23/11/2026: el viento sur en Bilbao, la veda de encuestas y el Reino de León
 Object.assign(BASE, { ria: hoy, cordillera: hoy, caserio: hoy, redaccion: hoy, colegio: hoy, andorra: hoy, reino: hoy, corte: hoy, cortes: hoy });
 Object.assign(NOMBRE, { ria: 'LA RÍA', cordillera: 'LA MONTAÑA', caserio: 'EL CASERÍO', redaccion: 'LA REDACCIÓN', colegio: 'EL COLEGIO', andorra: 'ANDORRA', reino: 'EL REINO', corte: 'LA CORTE · 910', cortes: 'LAS CORTES · 1188' });
+// 24/11/2026: A350 de fibra de carbono, Mundiales femeninos 2031-2035 y los tres 1-0 de España
+Object.assign(BASE, { barajas: hoy, taller: hoy, crucero: hoy, oceano: hoy, cuadro: hoy, mexico: hoy, salon_trofeos: hoy, finales: hoy, podio: hoy });
+Object.assign(NOMBRE, { barajas: 'BARAJAS', taller: 'EL TALLER', crucero: 'EN VUELO', oceano: 'EL ATLÁNTICO', cuadro: 'EL CUADRO', mexico: 'MÉXICO', salon_trofeos: 'LOS TROFEOS', finales: 'LAS FINALES', podio: 'EL PODIO' });

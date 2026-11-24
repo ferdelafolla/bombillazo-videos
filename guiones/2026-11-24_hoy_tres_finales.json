@@ -1,0 +1,144 @@
+{
+ "id": "2026-11-24_hoy_tres_finales",
+ "titulo": "España ganó sus 3 Mundiales por 1-0 ⚽",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (voz gratis: ElevenLabs sin créditos)",
+ "tendencia": "Google Trends ES «jorge vilda» (100+), 23-24/11/2026: MARCA reúne en MARCA Leyenda a los tres seleccionadores campeones del mundo (Del Bosque, De la Fuente y Vilda)",
+ "fuentes": [
+  "MARCA (23/11/2026, vía Google Trends): «Los tres técnicos campeones del mundo, en una foto histórica de MARCA»",
+  "Yucatán / AFP (19/07/2026): España derrotó 1-0 a Argentina en la final del Mundial 2026, gol de Ferran Torres en la prórroga",
+  "beIN Sports / Publimetro (20-21/07/2026): España, primera nación campeona del mundo masculina y femenina al mismo tiempo",
+  "FIFA: finales de 2010 (España 1-0 Países Bajos, Iniesta, prórroga) y 2023 (España 1-0 Inglaterra, Olga Carmona); Eurocopas de 2012 (Del Bosque) y 2024 (De la Fuente)"
+ ],
+ "remate": "¿QUÉ RÉCORD?",
+ "rpg": {
+  "gancho_lugar": "salon_trofeos",
+  "fin": [
+   "MÁS DEPORTE",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "salon_trofeos",
+    "era": "snes",
+    "nombre": "LOS TROFEOS",
+    "nota": "TRES 1-0"
+   },
+   {
+    "lugar": "finales",
+    "era": "snes",
+    "nombre": "LAS FINALES",
+    "nota": "2010·2023·2026"
+   },
+   {
+    "lugar": "podio",
+    "era": "snes",
+    "nombre": "EL PODIO",
+    "nota": "DOS EUROS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "salon_trofeos",
+   "escenas": [
+    {
+     "texto": "España ganó sus tres Mundiales por el mismo resultado.",
+     "tipo": "titulo",
+     "destacar": [
+      "resultado."
+     ],
+     "accion": "tres_copas",
+     "texto_grande": "¡TRES VECES 1-0!"
+    },
+    {
+     "texto": "Sus tres seleccionadores campeones acaban de reunirse en un acto de MARCA.",
+     "tipo": "icono",
+     "destacar": [
+      "reunirse"
+     ],
+     "accion": "reunion",
+     "voz": "Sus tres seleccionadores campeones acaban de reunirse en un acto de Marca.",
+     "rotulo": "3 CAMPEONES"
+    }
+   ]
+  },
+  {
+   "id": "finales",
+   "lugar": "finales",
+   "escenas": [
+    {
+     "texto": "¿Cuál es el récord que solo tiene España?",
+     "tipo": "icono",
+     "destacar": [
+      "récord"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "En dos mil diez, Iniesta marcó el uno a cero en la prórroga.",
+     "tipo": "icono",
+     "destacar": [
+      "prórroga."
+     ],
+     "accion": "f2010"
+    },
+    {
+     "texto": "En dos mil veintitrés, Olga Carmona marcó el uno a cero de la femenina.",
+     "tipo": "icono",
+     "destacar": [
+      "femenina."
+     ],
+     "accion": "f2023"
+    },
+    {
+     "texto": "Y este verano, Ferran Torres repitió el uno a cero, también en la prórroga.",
+     "tipo": "icono",
+     "destacar": [
+      "Ferran"
+     ],
+     "accion": "f2026"
+    },
+    {
+     "texto": "Así, España es el primer país campeón del mundo de hombres y mujeres a la vez.",
+     "tipo": "icono",
+     "destacar": [
+      "vez."
+     ],
+     "accion": "doble",
+     "rotulo": [
+      "DOBLE",
+      "CAMPEONA"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "curiosidad",
+   "lugar": "podio",
+   "escenas": [
+    {
+     "texto": "Curiosidad: Del Bosque y De la Fuente ganaron además una Eurocopa cada uno.",
+     "tipo": "icono",
+     "destacar": [
+      "Eurocopa"
+     ],
+     "accion": "euro",
+     "rotulo": [
+      "2012",
+      "2024"
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
