@@ -402,3 +402,6 @@ Object.assign(NOMBRE, { ria: 'LA RÍA', cordillera: 'LA MONTAÑA', caserio: 'EL 
 // 24/11/2026: A350 de fibra de carbono, Mundiales femeninos 2031-2035 y los tres 1-0 de España
 Object.assign(BASE, { barajas: hoy, taller: hoy, crucero: hoy, oceano: hoy, cuadro: hoy, mexico: hoy, salon_trofeos: hoy, finales: hoy, podio: hoy });
 Object.assign(NOMBRE, { barajas: 'BARAJAS', taller: 'EL TALLER', crucero: 'EN VUELO', oceano: 'EL ATLÁNTICO', cuadro: 'EL CUADRO', mexico: 'MÉXICO', salon_trofeos: 'LOS TROFEOS', finales: 'LAS FINALES', podio: 'EL PODIO' });
+// 25/11/2026: la caída mundial de Microsoft, el permiso por nacimiento de 20 semanas y Mario Kart World 1.9.0
+Object.assign(BASE, { oficinas: hoy, pasarelas: hoy, sala_roja: hoy, cuarto_bebe: hoy, semanario: hoy, diputacion: hoy, pista_arena: hoy, remezcla: hoy, sala_replay: hoy });
+Object.assign(NOMBRE, { oficinas: 'LA OFICINA', pasarelas: 'LAS PASARELAS', sala_roja: 'CÓDIGO ROJO', cuarto_bebe: 'EL CUARTO', semanario: 'LAS SEMANAS', diputacion: 'LA DIPUTACIÓN', pista_arena: 'LA PISTA', remezcla: 'LA REMEZCLA', sala_replay: 'LA REPETICIÓN' });

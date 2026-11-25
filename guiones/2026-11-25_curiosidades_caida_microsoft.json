@@ -1,0 +1,137 @@
+{
+ "id": "2026-11-25_curiosidades_caida_microsoft",
+ "titulo": "¿Por qué se cayó Outlook en todo el mundo? 📧",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «microsoft codigo rojo» (200+), 24-25/11/2026: Microsoft declara un «código rojo» tras la caída global de 24 horas de Outlook y Teams (12-13/11)",
+ "fuentes": [
+  "Microsoft, informe preliminar del incidente (15/11/2026), resumido por Office Watch (16/11/2026): parche de Windows en las pasarelas de red desplegado desde julio; con mucha carga los servidores se bloqueaban; el tráfico saltaba a los vecinos; en el peor momento más del 80 % no respondía; 12/11 16:20 UTC – 13/11 16:10 UTC",
+  "Wikipedia «2026 Microsoft outage» (12-14/11/2026): casi 24 horas, más de 70 países",
+  "Infobae y Reuters (24/11/2026): código rojo interno; objetivo de resolver una caída global en menos de una hora"
+ ],
+ "remate": "¿POR QUÉ CAYÓ?",
+ "rpg": {
+  "gancho_lugar": "oficinas",
+  "fin": [
+   "MÁS CIENCIA",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "oficinas",
+    "era": "snes",
+    "nombre": "LA OFICINA",
+    "nota": "CASI 24 H"
+   },
+   {
+    "lugar": "pasarelas",
+    "era": "snes",
+    "nombre": "LAS PASARELAS",
+    "nota": "+80 %"
+   },
+   {
+    "lugar": "sala_roja",
+    "era": "snes",
+    "nombre": "CÓDIGO ROJO",
+    "nota": "MENOS DE 1 H"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "oficinas",
+   "escenas": [
+    {
+     "texto": "Un fallo escondido tumbó Outlook en todo el mundo.",
+     "tipo": "titulo",
+     "destacar": [
+      "mundo."
+     ],
+     "accion": "apagon",
+     "texto_grande": "¡CAÍDA MUNDIAL!",
+     "voz": "Un fallo escondido tumbó Áutluk en todo el mundo."
+    },
+    {
+     "texto": "Fue el doce de noviembre, y duró casi veinticuatro horas.",
+     "tipo": "icono",
+     "destacar": [
+      "veinticuatro"
+     ],
+     "accion": "reloj",
+     "rotulo": "CASI 24 H"
+    }
+   ]
+  },
+  {
+   "id": "pasarelas",
+   "lugar": "pasarelas",
+   "escenas": [
+    {
+     "texto": "¿Cómo puede un solo error dejar sin correo a tantos países?",
+     "tipo": "icono",
+     "destacar": [
+      "países?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Tu correo entra por servidores puerta, que reparten el tráfico.",
+     "tipo": "icono",
+     "destacar": [
+      "puerta,"
+     ],
+     "accion": "reparto"
+    },
+    {
+     "texto": "Pero un parche de julio escondía un fallo: con mucha carga, se atascaban.",
+     "tipo": "icono",
+     "destacar": [
+      "atascaban."
+     ],
+     "accion": "atasco"
+    },
+    {
+     "texto": "Cuando uno caía, su tráfico saltaba al vecino, y el vecino también caía.",
+     "tipo": "icono",
+     "destacar": [
+      "vecino,"
+     ],
+     "accion": "cascada"
+    },
+    {
+     "texto": "Como fichas de dominó: más del ochenta por ciento dejó de responder.",
+     "tipo": "icono",
+     "destacar": [
+      "ochenta"
+     ],
+     "accion": "domino",
+     "rotulo": "+80 %"
+    }
+   ]
+  },
+  {
+   "id": "rojo",
+   "lugar": "sala_roja",
+   "escenas": [
+    {
+     "texto": "Curiosidad: Microsoft ha activado un código rojo para arreglar la próxima caída en menos de una hora.",
+     "tipo": "icono",
+     "destacar": [
+      "hora."
+     ],
+     "accion": "codigo_rojo",
+     "voz": "Curiosidad: Maicrosoft ha activado un código rojo para arreglar la próxima caída en menos de una hora."
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

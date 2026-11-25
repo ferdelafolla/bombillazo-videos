@@ -1,0 +1,142 @@
+{
+ "id": "2026-11-25_aldia_permiso_nacimiento",
+ "titulo": "El permiso por nacimiento sube a 20 semanas: qué cambia 👶",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «permiso paternidad maternidad» (10.000+), 24-25/11/2026: el Consejo de Ministros amplía el permiso por nacimiento y cuidado a 20 semanas",
+ "fuentes": [
+  "Euronews (24/11/2026): de 19 a 20 semanas por progenitor, intransferibles y retribuidas al 100 %; real decreto-ley que debe convalidarse en 30 días; con las Cortes disueltas lo hace la Diputación Permanente",
+  "Infobae (24/11/2026): «20 semanas para cada progenitor, intransferibles y retribuidas al 100 %»",
+  "Gacetín Madrid (24/11/2026): resumen del Consejo de Ministros",
+  "Real Decreto-ley 6/2019: equiparación progresiva de los permisos de madre y padre hasta 16 semanas en 2021"
+ ],
+ "remate": "¿QUÉ CAMBIA?",
+ "rpg": {
+  "gancho_lugar": "cuarto_bebe",
+  "fin": [
+   "MÁS NOTICIAS",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "cuarto_bebe",
+    "era": "snes",
+    "nombre": "EL CUARTO",
+    "nota": "20 SEMANAS"
+   },
+   {
+    "lugar": "semanario",
+    "era": "snes",
+    "nombre": "LAS SEMANAS",
+    "nota": "100 %"
+   },
+   {
+    "lugar": "diputacion",
+    "era": "snes",
+    "nombre": "LA DIPUTACIÓN",
+    "nota": "30 DÍAS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "cuarto_bebe",
+   "escenas": [
+    {
+     "texto": "El permiso por nacimiento sube a veinte semanas.",
+     "tipo": "titulo",
+     "destacar": [
+      "semanas."
+     ],
+     "accion": "llega_bebe",
+     "texto_grande": "¡20 SEMANAS!"
+    },
+    {
+     "texto": "Lo aprobó el Consejo de Ministros este martes.",
+     "tipo": "icono",
+     "destacar": [
+      "martes."
+     ],
+     "accion": "martes"
+    }
+   ]
+  },
+  {
+   "id": "semanas",
+   "lugar": "semanario",
+   "escenas": [
+    {
+     "texto": "¿Qué cambia para una familia que va a tener un bebé?",
+     "tipo": "icono",
+     "destacar": [
+      "bebé?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Cada progenitor tendrá veinte semanas, una más que ahora.",
+     "tipo": "icono",
+     "destacar": [
+      "veinte"
+     ],
+     "accion": "veinte",
+     "rotulo": "DE 19 A 20"
+    },
+    {
+     "texto": "Son intransferibles, y la prestación se cobra al cien por cien.",
+     "tipo": "icono",
+     "destacar": [
+      "cien"
+     ],
+     "accion": "cobro",
+     "rotulo": "100 %"
+    }
+   ]
+  },
+  {
+   "id": "diputacion",
+   "lugar": "diputacion",
+   "escenas": [
+    {
+     "texto": "Pero aún falta un paso: es un real decreto-ley.",
+     "tipo": "icono",
+     "destacar": [
+      "decreto-ley."
+     ],
+     "accion": "decreto",
+     "voz": "Pero aún falta un paso: es un real decreto ley."
+    },
+    {
+     "texto": "Con las Cortes disueltas, la Diputación Permanente tiene treinta días para convalidarlo.",
+     "tipo": "icono",
+     "destacar": [
+      "treinta"
+     ],
+     "accion": "votacion",
+     "rotulo": "30 DÍAS"
+    },
+    {
+     "texto": "Curiosidad: los permisos de madre y padre no se igualaron hasta dos mil veintiuno, en dieciséis semanas.",
+     "tipo": "icono",
+     "destacar": [
+      "veintiuno,"
+     ],
+     "accion": "igualdad",
+     "rotulo": [
+      "2021",
+      "16 Y 16"
+     ]
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

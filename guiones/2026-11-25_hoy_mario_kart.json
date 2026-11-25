@@ -1,0 +1,137 @@
+{
+ "id": "2026-11-25_hoy_mario_kart",
+ "titulo": "Mario Kart World estrena 8 circuitos remezclados 🏁",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «mario kart world» (200+) y EE. UU. «mario kart world patch notes» (2.000+), 24-25/11/2026: actualización 1.9.0",
+ "fuentes": [
+  "Nintendo Everything (24/11/2026): Mario Kart World 1.9.0, 8 circuitos remezclados (Desert Hills 2, Koopa Troopa Beach 2…), 2 rallies de KO Tour, repeticiones que se guardan solas y se borran las más antiguas cuando se llena la memoria",
+  "My Nintendo News (25/11/2026): «Ver. 1.9.0 (Released November 24, 2026)», mismas novedades",
+  "Wikipedia «Mario Kart World»: 24 pilotos por carrera, el doble que en Mario Kart 8 Deluxe"
+ ],
+ "remate": "¿QUÉ TIENE DE NUEVO?",
+ "rpg": {
+  "gancho_lugar": "pista_arena",
+  "fin": [
+   "MÁS CURIOSIDADES",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "pista_arena",
+    "era": "snes",
+    "nombre": "LA PISTA",
+    "nota": "8 CIRCUITOS"
+   },
+   {
+    "lugar": "remezcla",
+    "era": "snes",
+    "nombre": "LA REMEZCLA",
+    "nota": "VERSIÓN 1.9"
+   },
+   {
+    "lugar": "sala_replay",
+    "era": "snes",
+    "nombre": "LA REPETICIÓN",
+    "nota": "24 PILOTOS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "pista_arena",
+   "escenas": [
+    {
+     "texto": "Mario Kart World estrena ocho circuitos remezclados.",
+     "tipo": "titulo",
+     "destacar": [
+      "remezclados."
+     ],
+     "accion": "salida",
+     "texto_grande": "¡8 CIRCUITOS!",
+     "voz": "Mario Kart Guorld estrena ocho circuitos remezclados."
+    },
+    {
+     "texto": "Llegaron el veinticuatro de noviembre, con la versión uno punto nueve.",
+     "tipo": "icono",
+     "destacar": [
+      "versión"
+     ],
+     "accion": "carrera",
+     "rotulo": "VERSIÓN 1.9.0"
+    }
+   ]
+  },
+  {
+   "id": "remezcla",
+   "lugar": "remezcla",
+   "escenas": [
+    {
+     "texto": "¿Qué tiene de nuevo un circuito que ya te sabes de memoria?",
+     "tipo": "icono",
+     "destacar": [
+      "memoria?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Son pistas clásicas, como la playa o el desierto, con curvas y giros nuevos.",
+     "tipo": "icono",
+     "destacar": [
+      "nuevos."
+     ],
+     "accion": "remezcla"
+    },
+    {
+     "texto": "Pero hay más: ahora las carreras se guardan solas.",
+     "tipo": "icono",
+     "destacar": [
+      "solas."
+     ],
+     "accion": "grabar"
+    }
+   ]
+  },
+  {
+   "id": "replay",
+   "lugar": "sala_replay",
+   "escenas": [
+    {
+     "texto": "Puedes volver a verlas desde el menú principal.",
+     "tipo": "icono",
+     "destacar": [
+      "menú"
+     ],
+     "accion": "repeticion"
+    },
+    {
+     "texto": "Y cuando la memoria se llena, se borran primero las más antiguas.",
+     "tipo": "icono",
+     "destacar": [
+      "antiguas."
+     ],
+     "accion": "memoria"
+    },
+    {
+     "texto": "Curiosidad: en cada carrera compiten veinticuatro pilotos, el doble que en Mario Kart ocho Deluxe.",
+     "tipo": "icono",
+     "destacar": [
+      "veinticuatro"
+     ],
+     "accion": "parrilla",
+     "rotulo": "24 PILOTOS",
+     "voz": "Curiosidad: en cada carrera compiten veinticuatro pilotos, el doble que en Mario Kart ocho Delux."
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
