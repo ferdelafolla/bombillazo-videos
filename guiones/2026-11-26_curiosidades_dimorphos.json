@@ -1,0 +1,143 @@
+{
+ "id": "2026-11-26_curiosidades_dimorphos",
+ "titulo": "Un asteroide con un cráter del tamaño de un estadio ☄️",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «dimorphos» (100+), 26/11/2026: la misión Hera de la ESA muestra el cráter que dejó la nave DART",
+ "fuentes": [
+  "Space.com (25/11/2026): Hera ve un cráter «del tamaño de un estadio» que ocupa toda la cara golpeada; DART aplanó una cara y dejó a Dimorphos girando de forma caótica; cientos de rocas de pocos metros alrededor",
+  "ABC News / Reuters (26/11/2026): cráter del tamaño de un estadio, Dimorphos de unos 151 m, Didymos de 730 m, choque el 26/09/2022 a unos 22.530 km/h, el asteroide sigue dando tumbos",
+  "RTVE (26/11/2026) y La Vanguardia (25/11/2026): la misión Hera halla un enorme cráter en el asteroide que desvió la misión DART (titulares)"
+ ],
+ "remate": "¿POR QUÉ CHOCAR?",
+ "rpg": {
+  "gancho_lugar": "didymos",
+  "fin": [
+   "¡SÍGUENOS!",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "didymos",
+    "era": "snes",
+    "nombre": "EL CHOQUE",
+    "nota": "DART"
+   },
+   {
+    "lugar": "defensa",
+    "era": "snes",
+    "nombre": "LA DEFENSA",
+    "nota": "EMPUJAR"
+   },
+   {
+    "lugar": "hera_sonda",
+    "era": "snes",
+    "nombre": "LA VISITA",
+    "nota": "HERA"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "didymos",
+   "escenas": [
+    {
+     "texto": "Hay un asteroide con un cráter del tamaño de un estadio.",
+     "tipo": "titulo",
+     "destacar": [
+      "estadio."
+     ],
+     "accion": "llegada",
+     "texto_grande": "¡UN CRÁTER GIGANTE!"
+    },
+    {
+     "texto": "Lo hizo una nave de la NASA, chocando a propósito.",
+     "tipo": "icono",
+     "destacar": [
+      "propósito."
+     ],
+     "accion": "choque"
+    }
+   ]
+  },
+  {
+   "id": "defensa",
+   "lugar": "defensa",
+   "escenas": [
+    {
+     "texto": "¿Por qué estrellar una nave contra un asteroide?",
+     "tipo": "icono",
+     "destacar": [
+      "asteroide?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Pero no era un ataque: era una prueba de defensa planetaria.",
+     "tipo": "icono",
+     "destacar": [
+      "defensa"
+     ],
+     "accion": "escudo",
+     "rotulo": "DEFENSA PLANETARIA"
+    },
+    {
+     "texto": "Si una roca viniera hacia la Tierra, habría que empujarla.",
+     "tipo": "icono",
+     "destacar": [
+      "empujarla."
+     ],
+     "accion": "empujar"
+    }
+   ]
+  },
+  {
+   "id": "visita",
+   "lugar": "hera_sonda",
+   "escenas": [
+    {
+     "texto": "Y funcionó: el golpe cambió su órbita alrededor de otro asteroide.",
+     "tipo": "icono",
+     "destacar": [
+      "órbita"
+     ],
+     "accion": "orbita"
+    },
+    {
+     "texto": "Ahora la sonda europea Hera lo ha visto: el cráter cubre toda una cara.",
+     "tipo": "icono",
+     "destacar": [
+      "cara."
+     ],
+     "accion": "foto"
+    },
+    {
+     "texto": "Y el asteroide da tumbos, rodeado de cientos de rocas.",
+     "tipo": "icono",
+     "destacar": [
+      "tumbos,"
+     ],
+     "accion": "tumbos"
+    },
+    {
+     "texto": "Curiosidad: mide unos ciento cincuenta metros, más que un campo de fútbol.",
+     "tipo": "icono",
+     "destacar": [
+      "ciento"
+     ],
+     "accion": "medida",
+     "rotulo": "151 METROS"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

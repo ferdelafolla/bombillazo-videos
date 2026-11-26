@@ -1,0 +1,129 @@
+{
+ "id": "2026-11-26_hoy_ronaldo_987",
+ "titulo": "A Cristiano Ronaldo le faltan 13 goles para los 1.000 ⚽",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends MX «conference league» (1.000+), 26/11/2026: noticia «Cristiano Ronaldo Scores His 987th Goal… Al-Nassr’s 2-1 Win Over Al-Sadd»",
+ "fuentes": [
+  "Heraldo de México (24/11/2026): Cristiano Ronaldo anota su gol 987, de penalti, para adelantar al Al-Nassr ante el Al-Sadd",
+  "ESPN (24/11/2026): Cristiano marcó el primero del Al-Nassr y llegó a 987 goles como profesional (Champions asiática)",
+  "El Comercio: Cristiano Ronaldo suma 987 goles y se pone a 13 de los 1.000; Al-Nassr ganó 2-1",
+  "Real Madrid: 450 goles en 438 partidos oficiales, máximo goleador de la historia del club"
+ ],
+ "remate": "¿CÓMO SE CUENTAN?",
+ "rpg": {
+  "gancho_lugar": "estadio_noche",
+  "fin": [
+   "¡SÍGUENOS!",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "estadio_noche",
+    "era": "snes",
+    "nombre": "EL PENALTI",
+    "nota": "GOL 987"
+   },
+   {
+    "lugar": "taller_goles",
+    "era": "snes",
+    "nombre": "LA CUENTA",
+    "nota": "OFICIALES"
+   },
+   {
+    "lugar": "madrid_blanco",
+    "era": "snes",
+    "nombre": "EL MADRID",
+    "nota": "450 GOLES"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "estadio_noche",
+   "escenas": [
+    {
+     "texto": "A Cristiano Ronaldo le faltan solo trece goles para llegar a mil.",
+     "tipo": "titulo",
+     "destacar": [
+      "mil."
+     ],
+     "accion": "contador",
+     "texto_grande": "¡A 13 DE LOS 1.000!"
+    },
+    {
+     "texto": "El martes marcó el novecientos ochenta y siete, de penalti, en la Champions asiática.",
+     "tipo": "icono",
+     "destacar": [
+      "penalti,"
+     ],
+     "accion": "penalti",
+     "rotulo": "GOL 987"
+    },
+    {
+     "texto": "Y su equipo, el Al-Nassr, acabó ganando dos a uno.",
+     "tipo": "icono",
+     "destacar": [
+      "dos"
+     ],
+     "accion": "victoria",
+     "voz": "Y su equipo, el Al Nasr, acabó ganando dos a uno."
+    }
+   ]
+  },
+  {
+   "id": "cuenta",
+   "lugar": "taller_goles",
+   "escenas": [
+    {
+     "texto": "Pero, ¿cómo se llega a casi mil goles?",
+     "tipo": "icono",
+     "destacar": [
+      "mil"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "Se suman todos los de su carrera: clubes y selección, desde dos mil dos.",
+     "tipo": "icono",
+     "destacar": [
+      "suman"
+     ],
+     "accion": "suma"
+    },
+    {
+     "texto": "Eso sí, solo valen los partidos oficiales: los amistosos no cuentan.",
+     "tipo": "icono",
+     "destacar": [
+      "amistosos"
+     ],
+     "accion": "oficiales"
+    }
+   ]
+  },
+  {
+   "id": "madrid",
+   "lugar": "madrid_blanco",
+   "escenas": [
+    {
+     "texto": "Curiosidad: casi la mitad, cuatrocientos cincuenta, los marcó con el Real Madrid.",
+     "tipo": "icono",
+     "destacar": [
+      "cuatrocientos"
+     ],
+     "accion": "madrid",
+     "rotulo": "450 GOLES"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

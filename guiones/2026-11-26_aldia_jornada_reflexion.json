@@ -1,0 +1,135 @@
+{
+ "id": "2026-11-26_aldia_jornada_reflexion",
+ "titulo": "Por qué el sábado nadie puede pedirte el voto 🗳️",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «elecciones generales» (2.000+), 26/11/2026: penúltimo día de campaña del 29-N",
+ "fuentes": [
+  "El Demócrata (05/11/2026): la campaña del 29-N empieza el viernes 13 de noviembre, dura 15 días y termina el viernes 27",
+  "Artículo 14 (17/11/2026): «Calendario electoral del 29N: fechas clave de la campaña, jornada de reflexión y votación»",
+  "LOREG (arts. 51, 53 y 144), explicada por Público: terminada la campaña no se puede difundir propaganda ni hacer actos de campaña, tampoco en internet ni redes; pena de prisión de tres meses a un año o multa",
+  "Público: en Reino Unido, Estados Unidos, Alemania o Suecia no hay jornada de reflexión y se puede hacer campaña el mismo día de la votación"
+ ],
+ "remate": "¿POR QUÉ CALLAR?",
+ "rpg": {
+  "gancho_lugar": "plaza_mitin",
+  "fin": [
+   "¡SÍGUENOS!",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "plaza_mitin",
+    "era": "snes",
+    "nombre": "EL MITIN",
+    "nota": "FIN"
+   },
+   {
+    "lugar": "calle_carteles",
+    "era": "snes",
+    "nombre": "LA CALLE",
+    "nota": "15 DÍAS"
+   },
+   {
+    "lugar": "salon_voto",
+    "era": "snes",
+    "nombre": "EL VOTO",
+    "nota": "DOMINGO"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "plaza_mitin",
+   "escenas": [
+    {
+     "texto": "Este sábado, nadie puede pedirte el voto.",
+     "tipo": "titulo",
+     "destacar": [
+      "voto."
+     ],
+     "accion": "apagon",
+     "texto_grande": "¡PROHIBIDO PEDIR EL VOTO!"
+    },
+    {
+     "texto": "Es la jornada de reflexión, el día antes de las elecciones del domingo.",
+     "tipo": "icono",
+     "destacar": [
+      "reflexión,"
+     ],
+     "accion": "calendario"
+    }
+   ]
+  },
+  {
+   "id": "calle",
+   "lugar": "calle_carteles",
+   "escenas": [
+    {
+     "texto": "¿Por qué hay un día en el que los partidos tienen que callarse?",
+     "tipo": "icono",
+     "destacar": [
+      "callarse?"
+     ],
+     "accion": "pregunta"
+    },
+    {
+     "texto": "La campaña dura quince días y termina el viernes a medianoche.",
+     "tipo": "icono",
+     "destacar": [
+      "medianoche."
+     ],
+     "accion": "medianoche",
+     "rotulo": "15 DÍAS"
+    },
+    {
+     "texto": "Pero no solo en la calle: ni mítines ni anuncios, tampoco en redes sociales.",
+     "tipo": "icono",
+     "destacar": [
+      "redes"
+     ],
+     "accion": "redes"
+    }
+   ]
+  },
+  {
+   "id": "voto",
+   "lugar": "salon_voto",
+   "escenas": [
+    {
+     "texto": "La idea es que cada votante tenga un día tranquilo para decidir.",
+     "tipo": "icono",
+     "destacar": [
+      "tranquilo"
+     ],
+     "accion": "pensar"
+    },
+    {
+     "texto": "Y el domingo, por fin, se abren las urnas.",
+     "tipo": "icono",
+     "destacar": [
+      "urnas."
+     ],
+     "accion": "urnas"
+    },
+    {
+     "texto": "Curiosidad: en países como Reino Unido o Estados Unidos se puede hacer campaña hasta el mismo día de votar.",
+     "tipo": "icono",
+     "destacar": [
+      "mismo"
+     ],
+     "accion": "fuera"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

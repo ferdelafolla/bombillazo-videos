@@ -2785,3 +2785,357 @@ Object.assign(FABE, {
       } };
   },
 });
+
+// ———————————— 26/11/2026: el cráter de Dimorphos (Hera), la jornada de reflexión del 29-N y el gol 987 de Cristiano ————————————
+// roca de asteroide: tonos de gris y pardo por ruido (para Vox.ball / funciones de color)
+const roca = (x, y, z, s = 0) => { const h = hsh(x >> 1, y >> 1, (z >> 1) + s), k = hsh(x, y, z + s); return k > .93 ? P.silver : h > .66 ? P.steel : h > .33 ? P.slate : (k > .5 ? 0x6b5e58 : P.dslate); };
+// Dimorphos: roca alargada (13 × 9 × 9); con cráter = una cara entera hundida en cuenco (en +x), con fondo de roca fresca más clara
+function dimV(crater) { const v = new Vox();
+  for (let x = -7; x <= 7; x++) for (let y = -5; y <= 5; y++) for (let z = -5; z <= 5; z++) { const n = hsh(x >> 1, y >> 1, z >> 1) * .22; if ((x / 7) ** 2 + (y / 4.8) ** 2 + (z / 4.8) ** 2 <= 1 + n - .1) v.set(x, y, z, roca(x, y, z, 7)); }
+  if (crater) { for (let x = -1; x <= 8; x++) for (let y = -6; y <= 6; y++) for (let z = -6; z <= 6; z++) if ((x - 11) ** 2 + y * y + z * z < 62) v.del(x, y, z);
+    for (const [k, c] of [...v.m]) { const [x, y, z] = k.split(',').map(Number); const d = (x - 11) ** 2 + y * y + z * z; if (d < 78 && x > 1) v.m.set(k, d < 70 ? (hsh(x, y, z) > .5 ? P.silver : 0xa8a8b8) : P.sand); } }
+  const w = new THREE.Group(); w.add(v.build({ jit: .06, centrar: true })); return w; }
+Object.assign(FAB, {
+  asteroide: () => {   // Didymos: peonza de roca de ~30 cubos con una cresta en el ecuador
+    const v = new Vox(); v.ball(0, 0, 0, 14, (x, y, z) => roca(x, y, z), .82); for (let a = 0; a < 6.283; a += .05) { const r = 14.4; v.set(Math.cos(a) * r, 0, Math.sin(a) * r, P.steel); v.set(Math.cos(a) * r, 1, Math.sin(a) * r, P.slate); }
+    for (let i = 0; i < 9; i++) { const a = hsh(i, 1, 4) * 6.283, b = (hsh(i, 2, 4) - .5) * 2, cx = Math.cos(a) * Math.cos(b) * 13, cy = Math.sin(b) * 11, cz = Math.sin(a) * Math.cos(b) * 13; v.ball(cx, cy, cz, 2.2 + hsh(i, 3, 4) * 1.5, P.dslate); }
+    const w = new THREE.Group(); w.add(v.build({ jit: .05, centrar: true })); return w; },
+  dimorphos: () => dimV(true), dimorphos0: () => dimV(false),
+  dart: () => {   // nave DART: caja dorada con antena y dos paneles solares enrollables largos; morro (cámara) hacia +x
+    const v = new Vox(); v.box(-2, -2, -2, 3, 3, 3, (x, y, z) => (x + y + z) & 1 ? P.amber : P.yellow); v.box(3, -1, -1, 4, 2, 2, P.ink); v.set(4, 0, 0, P.cyan); v.luz(P.cyan);
+    for (const s of [-1, 1]) { v.box(0, 0, s > 0 ? 3 : -4, 1, 1, s > 0 ? 6 : -3, P.silver); v.cyl(.5, s * 10, 0, 1, 4.6, (x, y, z) => (Math.abs(x) + Math.abs(z)) % 3 === 0 ? P.silver : P.navy); }
+    v.box(-4, -1, -1, -2, 2, 2, P.silver); v.cyl(-4.5, 0, -1, 0, 2, P.white);
+    const w = new THREE.Group(); const g = v.build({ jit: .04, centrar: true }); w.add(g); return w; },
+  hera: () => {   // sonda europea Hera: cuerpo dorado, dos alas de paneles en cruz, antena plato y cámara (hacia +x)
+    const v = new Vox(); v.box(-3, -3, -3, 4, 4, 4, (x, y, z) => (y % 2 ? P.amber : P.orange)); v.box(4, -1, -1, 6, 2, 2, P.ink); v.set(6, 0, 0, P.cyan); v.luz(P.cyan);
+    for (const s of [-1, 1]) for (let k = 0; k < 3; k++) v.box(-2, 0, s > 0 ? 4 + k * 5 : -8 - k * 5, 3, 1, s > 0 ? 8 + k * 5 : -4 - k * 5, (x, y, z) => (x + z) % 2 ? P.navy : P.blue);
+    v.box(0, 0, 4, 1, 1, 19, P.silver); v.box(0, 0, -19, 1, 1, -4, P.silver);
+    for (let x = -4; x <= 4; x++) for (let z = -4; z <= 4; z++) if (x * x + z * z <= 18) v.set(x, 5 + Math.round((x * x + z * z) / 9), z, P.white);
+    const w = new THREE.Group(); w.add(v.build({ jit: .04, centrar: true })); return w; },
+});
+// fondo espacial común: estrellas y un Sol lejano
+function espacio(s) { s.background = new THREE.Color(0x07060e); estrellas(s, 420, 320, -200); const sol = bola(0xfff1c0, 6); sol.position.set(-220, 90, -260); s.add(sol);
+  s.add(new THREE.HemisphereLight(0x9aa8c8, 0x1a1a2a, .55)); const d = new THREE.DirectionalLight(0xfff1d6, 2.8); d.position.set(-60, 40, 30); s.add(d); return d; }
+Object.assign(FABE, {
+  // —— Dimorphos 1: el sistema doble en el espacio: Didymos grande, Dimorphos pequeño; DART se estrella y salta el polvo ——
+  didymos: () => {
+    const s = new THREE.Scene(); espacio(s);
+    const dy = actor('asteroide', 1), dm = actor('dimorphos', 1), d0 = actor('dimorphos0', 1), dt = actor('dart', .9); s.add(dy, dm, d0, dt);
+    const fl = bola(0xffffff, 1); fl.material.transparent = true; s.add(fl); const B = new Bloques(260, true); s.add(B.im);
+    const P0 = new THREE.Vector3(40, 0, 0);
+    const base = (t, crater) => { dy.rotation.y = t * .25; dm.position.copy(P0); d0.position.copy(P0); dm.visible = crater; d0.visible = !crater; dm.rotation.set(0, 0, 0); d0.rotation.set(0, 0, 0); dt.visible = false; fl.visible = false; B.ini(); B.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { base(t, true); mira(c, [P0.x + 34, 10, 30], [P0.x - 6, 0, 0], .0); },
+      acc: {
+        // la cámara llega desde lejos hasta la cara hundida de Dimorphos, con Didymos detrás
+        llegada(lt, dur, t) { base(t, true); const q = ss(clamp(lt / dur, 0, 1)), d = lerp(90, 34, q), a = lerp(.9, .55, q);
+          mira(c, [P0.x + Math.cos(a) * d, lerp(22, 6, q), Math.sin(a) * d], [P0.x - 4, -2, 0], -.02); },
+        // DART cruza el cuadro y se estrella contra la cara de Dimorphos: destello, chorro de polvo y cráter
+        choque(lt, dur, t) { const ti = dur * .5, hit = lt > ti; base(t, hit); const k = clamp(lt / ti, 0, 1);
+          if (!hit) { dt.visible = true; dt.position.set(P0.x + lerp(44, 7, k), lerp(4, 0, k), lerp(14, 0, k)); dt.lookAt(P0); dt.rotateY(-Math.PI / 2); }
+          else { const e = lt - ti; fl.visible = e < .9; fl.scale.setScalar(2 + e * 22); fl.material.opacity = clamp(1 - e / .9, 0, 1);
+            B.ini(); for (let i = 0; i < 240; i++) { const a = (hsh(i, 1, 1) - .5) * 1.9, b = (hsh(i, 2, 1) - .5) * 1.9, v = 8 + hsh(i, 3, 1) * 22, r = e * v, sz = Math.max(.2, 1.2 - e * .25);
+              B.pon(P0.x + 6 + Math.cos(a) * Math.cos(b) * r, Math.sin(b) * r, Math.sin(a) * Math.cos(b) * r, sz, sz, sz, i % 3 ? 0xd8c8b0 : P.white); } B.fin(); }
+          mira(c, [P0.x + 34, 12, 62], [P0.x + 16, 0, 6], .02); },
+      } };
+  },
+  // —— Dimorphos 2: la defensa planetaria: la Tierra, una roca que se acerca y la nave que la empuja ——
+  defensa: () => {
+    const s = new THREE.Scene(); espacio(s);
+    const v = new Vox(); v.ball(0, 0, 0, 20, (x, y, z) => { const n = hsh(x >> 2, y >> 2, z >> 2) + hsh(x >> 1, y >> 1, z >> 1) * .3; if (Math.abs(y) > 17) return P.white; return n > .95 ? P.white : n > .78 ? (Math.abs(y) < 7 ? P.sand : P.green) : n > .72 ? P.lime : (n < .2 ? P.navy : P.blue); });
+    const tierra = v.build({ jit: .04, centrar: true }); s.add(tierra); const at = bola(0x7fd0ff, 21.5); at.material.transparent = true; at.material.opacity = .14; s.add(at);
+    const rk = actor('asteroide', .45), dt = actor('dart', .9); s.add(rk, dt);
+    const B = new Bloques(420, true); s.add(B.im); const fl = bola(0xffffff, 1); fl.material.transparent = true; s.add(fl);
+    const c = cam(46);
+    const nada = (t) => { tierra.rotation.y = t * .15; rk.visible = dt.visible = fl.visible = false; B.ini(); B.fin(); };
+    // ruta de la roca: hacia la Tierra (vieja) o desviada (nueva) a partir de u = .5
+    const ruta = (u, desv) => { const x = lerp(-150, 10, u), z = lerp(-70, 5, u), y = lerp(30, 0, u) + (desv ? Math.max(0, u - .5) ** 1.6 * 110 : 0); return [x, y, z]; };
+    return { s, c, upd(t) { nada(t); mira(c, [30, 20, 90], [0, 0, 0], .02); },
+      acc: {
+        // en el espacio, la nave avanza despacio hacia una roca; la cámara las rodea (¿por qué?)
+        pregunta(lt, dur, t) { nada(t); rk.visible = dt.visible = true; const o = new THREE.Vector3(-120, 20, -40); rk.position.copy(o); rk.rotation.set(t * .3, t * .2, 0);
+          const k = clamp(lt / dur, 0, 1); dt.position.set(o.x + lerp(40, 22, k), o.y + 2, o.z + lerp(14, 6, k)); dt.lookAt(o); dt.rotateY(-Math.PI / 2);
+          const a = .6 + lt * .12; mira(c, [o.x + 12 + Math.cos(a) * 84, o.y + 18, o.z + Math.sin(a) * 84], [o.x + 12, o.y, o.z + 4], .04); },
+        // un escudo de satélites (cubos azules) se monta alrededor de la Tierra
+        escudo(lt, dur, t) { nada(t); B.ini(); const N = 140, k = clamp(lt / (dur * .8), 0, 1);
+          for (let i = 0; i < N; i++) { const f = ss(clamp(k * 1.6 - i / N * .6, 0, 1)); if (f <= 0) continue; const a = i * 2.399 + t * .2, y = 1 - 2 * (i + .5) / N, rr = Math.sqrt(1 - y * y), R2 = lerp(90, 30, f);
+            B.pon(Math.cos(a) * rr * R2, y * R2, Math.sin(a) * rr * R2, 1.4, 1.4, 1.4, i % 7 ? P.cyan : P.white); } B.fin();
+          const a = lt * .1; mira(c, [Math.sin(a) * 30 + 10, 26, 110], [0, 6, 0], -.02); },
+        // la roca viene hacia la Tierra (rastro rojo); la nave la golpea y su rastro se curva (verde) y pasa de largo
+        empujar(lt, dur, t) { nada(t); rk.visible = true; const u = clamp(lt / dur, 0, 1) * .95, hit = u > .5; const [x, y, z] = ruta(u, hit); rk.position.set(x, y, z); rk.rotation.set(t * .5, t * .3, 0);
+          B.ini(); for (let i = 0; i < 60; i++) { const w = i / 60; if (w > .5 && hit) break; const [a, b, cc] = ruta(w, false); B.pon(a, b, cc, .9, .9, .9, w < u ? 0x7a2030 : P.red); }
+          if (hit) for (let i = 30; i < 60; i++) { const w = i / 60, [a, b, cc] = ruta(w, true); B.pon(a, b, cc, 1, 1, 1, w < u ? P.dgreen : P.lime); }
+          B.fin(); if (!hit) { dt.visible = true; const k = clamp(u / .5, 0, 1), [hx2, hy, hz] = ruta(.5, false); dt.position.set(hx2 + lerp(70, 0, k), hy + lerp(-30, 0, k), hz + lerp(50, 0, k)); dt.lookAt(rk.position); dt.rotateY(-Math.PI / 2); }
+          else { const e = (u - .5) * dur; fl.visible = e < .6; const [hx2, hy, hz] = ruta(.5, false); fl.position.set(hx2, hy, hz); fl.scale.setScalar(2 + e * 18); fl.material.opacity = clamp(1 - e / .6, 0, 1); }
+          mira(c, [-24, 70, 215], [-40, 8, -20], .02); },
+      } };
+  },
+  // —— Dimorphos 3: la visita de Hera: órbitas, fotos de la cara hundida, tumbos con rocas y la comparación con un campo ——
+  hera_sonda: () => {
+    const s = new THREE.Scene(); espacio(s);
+    const dy = actor('asteroide', 1), dm = actor('dimorphos', 1), he = actor('hera', .8), big = actor('dimorphos', 5.6); s.add(dy, dm, he, big);
+    const B = new Bloques(520, true); s.add(B.im); const fl = bola(0xffffff, 1.4); fl.material.transparent = true; s.add(fl);
+    const v = new Vox(); const FX = 300; cesped(v, FX - 26, FX + 26, -34, 34, -34, { lineas: false });
+    v.box(FX - 26, 0, -34, FX + 26, 1, -33, P.white); v.box(FX - 26, 0, 33, FX + 26, 1, 34, P.white); v.box(FX - 26, 0, -34, FX - 25, 1, 34, P.white); v.box(FX + 25, 0, -34, FX + 26, 1, 34, P.white); v.box(FX - 26, 0, 0, FX + 26, 1, 1, P.white);
+    for (const z of [-34, 33]) { v.box(FX - 4, 0, z, FX - 3, 5, z + 1, P.white); v.box(FX + 3, 0, z, FX + 4, 5, z + 1, P.white); v.box(FX - 4, 5, z, FX + 4, 6, z + 1, P.white); }
+    const campo = v.build({ jit: .05 }); s.add(campo);
+    const P0 = new THREE.Vector3(40, 0, 0), c = cam(46);
+    const base = (t) => { dy.rotation.y = t * .25; dm.position.copy(P0); dm.rotation.set(0, 0, 0); he.visible = false; big.visible = false; fl.visible = false; B.ini(); B.fin(); };
+    return { s, c, upd(t) { base(t); mira(c, [P0.x + 30, 8, 26], [P0.x, 0, 0], .0); },
+      acc: {
+        // vista desde arriba: la órbita vieja (roja, más grande) y la nueva (verde, más pequeña); Dimorphos pasa de una a otra
+        orbita(lt, dur, t) { base(t); const k = clamp(lt / dur, 0, 1), sw = ss(clamp((k - .35) / .25, 0, 1)), R2 = lerp(46, 38, sw), a = lt * .9;
+          dm.position.set(Math.cos(a) * R2, 0, Math.sin(a) * R2); dm.rotation.y = -a;
+          B.ini(); for (let i = 0; i < 90; i++) { const b = i / 90 * 6.283; B.pon(Math.cos(b) * 46, 0, Math.sin(b) * 46, .9, .9, .9, P.red); if (sw > 0 && i / 90 < sw) B.pon(Math.cos(b) * 38, 0, Math.sin(b) * 38, 1.1, 1.1, 1.1, P.lime); } B.fin();
+          mira(c, [0, 150, 70], [0, 0, 0], -.05); },
+        // Hera llega junto a la cara hundida y hace fotos (destellos)
+        foto(lt, dur, t) { base(t); he.visible = true; const k = ss(clamp(lt / (dur * .5), 0, 1)); he.position.set(P0.x + lerp(40, 16, k), lerp(10, 3, k), lerp(16, 5, k)); he.lookAt(P0); he.rotateY(-Math.PI / 2);
+          const ph = (lt - dur * .45) % 1.1; if (lt > dur * .45 && ph < .25) { fl.visible = true; fl.position.copy(he.position).lerp(P0, .25); fl.scale.setScalar(1 + ph * 4); fl.material.opacity = 1 - ph / .25; }
+          mira(c, [P0.x + 54, 18, 46], [P0.x + 8, 0, 2], .02); },
+        // Dimorphos gira descontrolado, en tres ejes, rodeado de cientos de rocas pequeñas
+        tumbos(lt, dur, t) { base(t); dm.rotation.set(lt * .9, lt * .55, Math.sin(lt * .7) * 1.2); B.ini();
+          for (let i = 0; i < 380; i++) { const r = 10 + hsh(i, 1, 2) * 16, a = hsh(i, 2, 2) * 6.283 + lt * (.15 + hsh(i, 4, 2) * .2), inc = (hsh(i, 3, 2) - .5) * 1.6, sz = .3 + hsh(i, 5, 2) * .6;
+            B.pon(P0.x + Math.cos(a) * r, Math.sin(a) * r * Math.sin(inc), Math.sin(a) * r * Math.cos(inc), sz, sz, sz, hsh(i, 6, 2) > .5 ? P.steel : P.slate); } B.fin();
+          const a = .4 + lt * .1; mira(c, [P0.x + Math.cos(a) * 52, 12, Math.sin(a) * 52], [P0.x, 0, 0], .02); },
+        // tamaño: Dimorphos a escala junto a un campo de fútbol (1 m = 2 cubos: el campo mide 105 m y la roca unos 151)
+        medida(lt, dur, t) { base(t); big.visible = true; big.position.set(FX, 20, -76); big.rotation.set(0, Math.PI / 2 + Math.sin(t * .2) * .1, 0);
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [FX + lerp(30, 10, q), lerp(175, 160, q), lerp(135, 120, q)], [FX, 0, -34], .03); },
+      } };
+  },
+});
+
+// —— jornada de reflexión ——
+Object.assign(FAB, {
+  megafono: () => {   // megáfono rojo y blanco: boca hacia +x
+    const v = new Vox(); for (let x = 0; x <= 10; x++) { const r = 1.4 + x * .42; for (let y = -6; y <= 6; y++) for (let z = -6; z <= 6; z++) { const d = Math.hypot(y, z); if (d <= r && d > r - 1.2) v.set(x, y, z, x > 8 ? P.white : P.red); } }
+    v.box(-4, -1, -1, 1, 2, 2, P.ink); v.box(-2, -6, -1, 0, -1, 1, P.dslate); v.cyl(-4, 0, -1, 2, 1.5, P.silver);
+    const w = new THREE.Group(); w.add(v.build({ jit: .04, centrar: true })); return w; },
+  valla: () => {   // valla publicitaria: dos patas y un marco de 24 × 14 (el cartel es una pantalla aparte en z = +1.2)
+    const v = new Vox(); v.box(-9, 0, 0, -7, 12, 1, P.steel); v.box(7, 0, 0, 9, 12, 1, P.steel); v.box(-13, 12, 0, 13, 28, 1, P.dslate); v.box(-13, 11, 0, 13, 12, 2, P.slate); v.box(-12, 28, 1, -11, 30, 2, P.amber); v.box(11, 28, 1, 12, 30, 2, P.amber); v.luz(P.amber);
+    const w = new THREE.Group(); w.add(v.build({ jit: .04 })); return w; },
+  sobre_voto: () => {   // sobre de votación con la papeleta asomando
+    const v = new Vox(); v.box(-6, 0, -4, 6, 1, 4, P.sand); for (let x = -6; x < 6; x++) { const h = 4 - Math.abs(x + .5) * .66; v.box(x, 1, 4 - Math.max(1, Math.round(h)), x + 1, 2, 4, 0xd8c098); }
+    v.box(-4, 1, -3, 4, 2, 0, P.white); v.box(-3, 2, -3, 3, 2.5, -2, P.dslate);
+    const w = new THREE.Group(); w.add(v.build({ jit: .03, centrar: true })); return w; },
+});
+Object.assign(FABE, {
+  // —— 29-N 1: la plaza del último mitin, de noche: escenario con focos, altavoces, pantalla y público con banderitas ——
+  plaza_mitin: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x0b0b22, 0x262b44, 0x3a4466]); s.fog = new THREE.Fog(0x262b44, 150, 300);
+    s.add(new THREE.HemisphereLight(0x8090c0, 0x302838, .9)); const sp = new THREE.PointLight(0xffe6b0, 900, 160, 1.6); sp.position.set(0, 40, 10); s.add(sp);
+    const v = new Vox(); v.box(-90, -1, -60, 90, 0, 90, (x, y, z) => ((x >> 3) + (z >> 3)) & 1 ? P.slate : P.steel);
+    v.box(-34, 0, -30, 34, 6, -8, P.dslate); v.box(-34, 6, -30, 34, 7, -8, P.dbrown);   // escenario
+    for (const sx of [-34, 32]) { v.box(sx, 7, -30, sx + 2, 44, -28, P.ink); } v.box(-34, 42, -30, 34, 44, -28, P.ink);   // pórtico
+    for (const sx of [-30, 24]) v.box(sx, 7, -26, sx + 6, 24, -20, (x, y) => y % 3 ? P.ink : P.dslate);   // altavoces
+    for (let i = 0; i < 6; i++) { const z = -70 - (i % 3) * 14, x = -80 + i * 32; pisos(v, x, z, 26, 40 + (i % 3) * 8, [P.brown, P.tan, P.rose][i % 3]); }
+    s.add(v.build({ jit: .05 }));
+    const L = new Bloques(40, true), B = new Bloques(900); s.add(L.im, B.im);
+    const scr = pantalla(36, 18, 144, 72); scr.m.position.set(0, 27, -28.5); s.add(scr.m);
+    const atrilM = actor('megafono', .9); s.add(atrilM);
+    const gente = Array.from({ length: 110 }, (_, i) => [-40 + (i % 14) * 6 + hsh(i, 1, 5) * 3, 6 + Math.floor(i / 14) * 6 + hsh(i, 2, 5) * 2, [P.navy, P.crimson, P.dgreen, P.plum, P.umber, P.blue][i % 6]]);
+    const dib = (k, t) => { L.ini(); for (let i = 0; i < 8; i++) { const on = k < 1 - i / 8; L.pon(-28 + i * 8, 43, -27, 3, 2, 2, on ? P.yellow : 0x2a2a36); } L.fin(); sp.intensity = 900 * (1 - k) + 30; };
+    const publico = (t, k, ban) => { B.ini(); gente.forEach(([x, z, col], i) => { const sal = clamp(k * 1.5 - hsh(i, 3, 5) * .5, 0, 1); if (sal >= 1) return; const zz = z + sal * 70, xx = x + (x > 0 ? 1 : -1) * sal * 20;
+      const salto = k === 0 ? Math.max(0, Math.sin(t * 7 + i)) * .8 : 0; persona(B, xx, salto, zz, col); if (ban && k === 0 && i % 4 === 0) { const ond = Math.sin(t * 6 + i) * .8; B.pon(xx + 1 + ond, 9 + salto, zz, 2.4, 1.6, .2, [P.yellow, P.white, P.cyan, P.orange][i % 4]); B.pon(xx + .8, 7 + salto, zz, .2, 4, .2, P.silver); } }); B.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { dib(0, t); publico(t, 0, true); rotular(scr, ['29-N'], '#fee761', '#124e89', 34); atrilM.position.set(0, 13, -16); atrilM.rotation.set(0, Math.PI / 2, -.3);
+        mira(c, [Math.sin(t * .1) * 8, 34, 92], [0, 14, -10], .04); },
+      acc: {
+        // fiesta de mitin; a mitad, los focos se apagan uno a uno, la pantalla se funde y el público se va a casa
+        apagon(lt, dur, t) { const k = ss(clamp((lt - dur * .35) / (dur * .6), 0, 1)); dib(k, t); publico(t, k, true); atrilM.position.set(0, 13 - k * 6, -16); atrilM.rotation.set(0, Math.PI / 2, -.3 + k * 1.2);
+          rotular(scr, [''], '#fee761', k > .5 ? '#181425' : '#124e89', 34);
+          mira(c, [0, 30, lerp(80, 96, k)], [0, 16, -10], .0); },
+        // en la pantalla del escenario pasa la hoja del calendario: VIERNES 27 → SÁBADO 28 (rojo)
+        calendario(lt, dur, t) { dib(1, t); publico(t, 1, false); atrilM.position.set(0, 7.5, -16); atrilM.rotation.set(0, Math.PI / 2, .9); const f = lt > dur * .4;
+          rotular(scr, f ? ['SÁBADO', '28'] : ['VIERNES', '27'], f ? '#e43b44' : '#181425', '#ffffff', 26, { borde: '#181425' }); const q = ss(clamp(lt / dur, 0, 1));
+          mira(c, [0, lerp(34, 28, q), lerp(70, 50, q)], [0, 26, -28], -.02); },
+      } };
+  },
+  // —— 29-N 2: la calle de los carteles: bloques de pisos, vallas, reloj en una farola, gente con el móvil y una furgoneta con megáfono ——
+  calle_carteles: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x124e89, 0x5a6988, 0xf6757a]); s.fog = new THREE.Fog(0x5a6988, 140, 280);
+    luces(s, { cielo: 0xe0e8ff, suelo: 0x6a5a6a, amb: 1.2, sol: 0xffd0a0, int: 1.8, dir: [60, 50, 40], sombra: 110 });
+    const v = new Vox(); v.box(-120, -1, -40, 120, 0, 60, (x, y, z) => (z > -8 && z < 12) ? (z === 2 && (x >> 2) & 1 ? P.white : P.dslate) : (((x >> 2) + (z >> 2)) & 1 ? P.silver : P.steel));
+    for (let i = 0; i < 8; i++) pisos(v, -118 + i * 30, -40, 26, 30 + (i * 7) % 18, [P.tan, P.brown, P.sand, P.rose][i % 4]);
+    v.box(30, 0, 16, 32, 26, 18, P.ink); v.box(26, 26, 16, 36, 36, 18, P.ink); v.box(27, 27, 17, 35, 35, 18.4, P.white);   // farola con reloj
+    s.add(v.build({ jit: .05 }));
+    const vallas = [-60, -20, 60].map(x => { const m = actor('valla', 1); m.position.set(x, 0, -14); s.add(m); const p = pantalla(25, 15, 100, 60); p.m.position.set(x, 20, -12.8); s.add(p.m); return p; });
+    const B = new Bloques(300), H2 = new Bloques(20, true); s.add(B.im, H2.im);
+    const van = new Vox(); van.box(-8, 1, -4, 8, 9, 4, P.white); van.box(4, 5, -4, 8, 8, 4, P.cyan); for (const [x, z] of [[-5, -4], [4, -4], [-5, 3], [4, 3]]) van.box(x, 0, z, x + 2, 2, z + 1, P.ink);
+    const vg = new THREE.Group(); vg.add(van.build({ jit: .03 })); const mg = actor('megafono', .55); mg.position.set(0, 12, 0); vg.add(mg); s.add(vg);
+    const tel = pantalla(14, 26, 56, 104); s.add(tel.m);
+    const COL = ['#e43b44', '#124e89', '#3e8948', '#68386c', '#f77622', '#0099db'];
+    const carteles = (cubre) => vallas.forEach((p, i) => { const { g, cv, tex } = p; g.fillStyle = COL[i * 2]; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = COL[i * 2 + 1]; g.fillRect(0, 40, cv.width, 20);
+      g.fillStyle = '#ffffff'; g.font = 'bold 22px monospace'; g.textAlign = 'center'; g.fillText('¡VOTA!', 50, 28); g.font = 'bold 14px monospace'; g.fillText('29-N', 50, 55);
+      if (cubre > 0) { g.fillStyle = '#f2f2f2'; g.fillRect(0, 0, cv.width, cv.height * cubre); } tex.needsUpdate = true; });
+    const reloj = (h) => { H2.ini(); const a = h / 12 * 6.283, m = (h % 1) * 6.283; manecilla(H2, 31, 31, 18.6, a, 2.6, .8, P.ink); manecilla(H2, 31, 31, 18.8, m, 3.6, .5, P.red); H2.fin(); };
+    const paseo = (t, movil) => { B.ini(); for (let i = 0; i < 16; i++) { const x = ((hsh(i, 1, 7) * 220 + t * (i % 2 ? 4 : -4)) % 220 + 220) % 220 - 110, z = i % 2 ? -6 : 16; persona(B, x, 0, z + hsh(i, 2, 7) * 3, [P.navy, P.crimson, P.dgreen, P.plum, P.umber][i % 5], movil ? { movil: P.cyan } : {}); } B.fin(); };
+    const c = cam(46);
+    return { s, c, upd(t) { carteles(0); reloj(8.4); paseo(t, false); vg.position.set(-40, 0, 6); tel.m.visible = false;
+        mira(c, [Math.sin(t * .1) * 10, 26, 70], [0, 14, -12], .02); },
+      acc: {
+        // la furgoneta con megáfono recorre la calle de los carteles; la cámara la sigue
+        pregunta(lt, dur, t) { carteles(0); reloj(23.5 + lt * .02); paseo(t, false); tel.m.visible = false; const x = lerp(-100, 20, clamp(lt / dur, 0, 1)); vg.position.set(x, 0, 6); mg.rotation.y = Math.sin(t * 3) * .3;
+          mira(c, [x + 4, 30, 84], [x + 8, 10, 0], .08); },
+        // el reloj llega a las doce: la furgoneta se para y los carteles se tapan de blanco
+        medianoche(lt, dur, t) { const h = Math.min(24, 23.6 + lt * .14), k = ss(clamp((lt - dur * .45) / (dur * .4), 0, 1)); carteles(k); reloj(h); paseo(t * .3, false); tel.m.visible = false; vg.position.set(20, 0, 6);
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(40, 0, q), lerp(30, 26, q), lerp(66, 84, q)], [lerp(31, 0, q), lerp(26, 16, q), -12], .02); },
+        // un móvil gigante en la calle: los anuncios de la campaña salen tachados; la gente mira su móvil
+        redes(lt, dur, t) { carteles(1); reloj(24); paseo(t, true); vg.position.set(20, 0, 6); tel.m.visible = true; tel.m.position.set(0, 18, 20); tel.m.lookAt(c.position);
+          const { g, cv, tex } = tel, n = Math.min(4, Math.floor(lt / .6) + 1); g.fillStyle = '#181425'; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = '#5a6988'; g.fillRect(0, 0, cv.width, 12);
+          for (let i = 0; i < n; i++) { const y = 18 + i * 21; g.fillStyle = '#ffffff'; g.fillRect(4, y, 48, 16); g.fillStyle = COL[i]; g.fillRect(6, y + 2, 10, 12); g.fillStyle = '#8b9bb4'; g.fillRect(19, y + 4, 28, 3); g.fillRect(19, y + 9, 20, 3);
+            if (lt > .6 * i + .4) { g.strokeStyle = '#e43b44'; g.lineWidth = 3; g.beginPath(); g.moveTo(4, y); g.lineTo(52, y + 16); g.moveTo(52, y); g.lineTo(4, y + 16); g.stroke(); } } tex.needsUpdate = true;
+          mira(c, [0, 26, 74], [0, 16, 12], .02); },
+      } };
+  },
+  // —— 29-N 3: el fin de semana del voto: casa en corte (sábado tranquilo), colegio electoral con cola (domingo) y, al lado, «otro país» con campaña el mismo día ——
+  salon_voto: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x0099db, 0x7fd0ff, 0xffe6b0]); s.fog = new THREE.Fog(0xffe6b0, 170, 340);
+    luces(s, { cielo: 0xfff4e0, suelo: 0x6a6a5a, amb: 1.4, sol: 0xfff1d6, int: 2, dir: [-40, 80, 60], sombra: 130 });
+    const v = new Vox(); v.box(-140, -1, -60, 160, 0, 70, (x, y, z) => z > 22 && z < 40 ? P.dslate : (((x >> 3) + (z >> 3)) & 1 ? P.lime : P.green));
+    // casa en corte (x −110…−60): suelo de madera, paredes en tres lados, sofá, mesa, lámpara y ventana
+    v.box(-112, 0, -20, -60, 1, 14, P.brown); v.box(-112, 1, -22, -60, 30, -20, P.sand); v.box(-114, 1, -22, -112, 30, 14, P.sand); v.box(-60, 1, -22, -58, 30, 14, P.sand);
+    v.box(-96, 12, -22, -80, 24, -21, P.cyan); v.box(-104, 1, -16, -78, 6, -8, P.navy); v.box(-104, 6, -16, -78, 12, -13, P.navy); v.box(-92, 1, -2, -76, 6, 6, P.dbrown);
+    v.box(-68, 1, -14, -66, 22, -12, P.dslate); v.box(-70, 22, -16, -64, 25, -10, P.yellow); v.luz(P.yellow);
+    // colegio electoral (x −20…40): fachada con puerta y letrero
+    v.box(-20, 0, -40, 40, 34, -10, (x, y) => y % 5 === 0 ? P.silver : P.tan); v.box(4, 0, -10, 16, 16, -9, P.dbrown); v.box(-12, 22, -10, 32, 30, -9, P.white);
+    for (const x of [-16, 22, 30]) v.box(x, 8, -10, x + 6, 18, -9, P.cyan);
+    // otro país (x 80…150): edificio de ladrillo con puerta
+    v.box(80, 0, -40, 150, 30, -12, (x, y) => (y % 3 === 0 || (x + (y / 3 | 0) * 2) % 6 === 0) ? P.dbrown : P.brown); v.box(110, 0, -12, 120, 14, -11, P.navy);
+    s.add(v.build({ jit: .05 }));
+    const let1 = pantalla(42, 7, 168, 28); let1.m.position.set(10, 26, -8.8); s.add(let1.m); rotular(let1, ['COLEGIO ELECTORAL'], '#124e89', '#ffffff', 18);
+    const let2 = pantalla(36, 7, 144, 28); let2.m.position.set(115, 22, -11.8); s.add(let2.m); rotular(let2, ['POLLING STATION'], '#ffffff', '#124e89', 18);
+    const sob = actor('sobre_voto', .8), sob2 = actor('sobre_voto', .8), meg = actor('megafono', .6); s.add(sob, sob2, meg);
+    const urn = new Vox(); urn.box(-3, 0, -3, 4, 8, 4, 0x9fe6f0); urn.box(-3, 8, -3, 4, 9, 4, P.navy); urn.box(0, 8, -1, 1, 9, 2, P.ink); const ug = new THREE.Group(); ug.add(urn.build({ jit: .02 })); ug.position.set(10, 0, -4); s.add(ug);
+    const B = new Bloques(500); s.add(B.im); const c = cam(46);
+    const nada = () => { sob.visible = sob2.visible = meg.visible = false; B.ini(); B.fin(); };
+    return { s, c, upd(t) { nada(); mira(c, [10 + Math.sin(t * .1) * 6, 34, 96], [10, 12, -14], .02); },
+      acc: {
+        // sábado en casa: una persona en el sofá mira dos sobres, con calma, sin carteles ni ruido
+        pensar(lt, dur, t) { nada(); B.ini(); persona(B, -91, 6, -10, P.crimson, { s: 1.3 }); B.fin(); sob.visible = sob2.visible = true;
+          sob.position.set(-87, 7.2, 1); sob2.position.set(-81, 7.2, 2.5); sob.rotation.y = Math.sin(t * .6) * .2; sob2.rotation.y = -.3 + Math.sin(t * .5 + 1) * .2; const el = Math.floor(lt / 1.4) % 2; (el ? sob2 : sob).position.y = 7.2 + Math.abs(Math.sin(lt * 2.2)) * 1.5;
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [-86 + lerp(-10, 0, q), lerp(40, 32, q), lerp(72, 56, q)], [-86, 8, -6], .02); },
+        // domingo: una cola de votantes entra por la puerta, cada uno mete su sobre en la urna transparente
+        urnas(lt, dur, t) { nada(); B.ini(); for (let i = 0; i < 9; i++) { const u = lt * 1.6 - i * 1.1; let x, z; if (u < 0) { x = 40 + i * 2; z = 30 + i * 0; x = 30 + (-u) * 5; z = 14; } else { const f = clamp(u / 2, 0, 1); x = lerp(30, 14, f); z = lerp(14, -1, f); }
+            if (u > 3.2) continue; persona(B, Math.min(x, 70), 0, z, [P.navy, P.dgreen, P.plum, P.umber, P.crimson, P.blue][i % 6]); if (u > 2 && u < 2.8) B.pon(12, lerp(11, 8, (u - 2) / .8), -.5, 2.4, .3, 1.6, P.sand); } B.fin();
+          mira(c, [22, 32, 84], [12, 12, -4], .06); },
+        // en otro país se hace campaña hasta el mismo día: gente con pancartas y un megáfono junto al colegio
+        fuera(lt, dur, t) { nada(); meg.visible = true; meg.position.set(104, 10 + Math.sin(t * 4) * .3, 4); meg.rotation.set(0, Math.PI * .8, .2); B.ini();
+          for (let i = 0; i < 10; i++) { const x = 96 + i * 4 + Math.sin(t + i) * .6, z = 8 + (i % 3) * 3, sal = Math.max(0, Math.sin(t * 6 + i)) * .6; persona(B, x, sal, z, [P.navy, P.crimson, P.amber, P.dgreen][i % 4]);
+            if (i % 2) { B.pon(x, 10 + sal, z, .2, 4, .2, P.silver); B.pon(x, 12.5 + sal, z, 5, 3, .3, [P.red, P.blue, P.yellow, P.white][i % 4]); } } B.fin();
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(70, 115, q), 34, lerp(118, 110, q)], [115, 12, -8], .06); },
+      } };
+  },
+});
+
+// —— Cristiano 987: futbolista genérico (sin caras ni escudos) ——
+function jugadorV(cam, pan, med) { const g = new THREE.Group(), v = new Vox();
+  v.box(-2, 7, -1, 2, 13, 1, cam); v.box(-3, 8, -1, -2, 12, 1, cam); v.box(2, 8, -1, 3, 12, 1, cam); v.box(-2, 6, -1, 2, 8, 1, pan);
+  v.box(-1, 13, -1, 1, 14, 1, P.skin); v.box(-2, 14, -2, 2, 17, 2, P.skin); v.box(-2, 17, -2, 2, 18, 2, P.dbrown); v.box(-2, 15, -2, 2, 17, -1, P.dbrown);
+  v.box(-3, 7, -1, -2, 8, 1, P.skin); v.box(2, 7, -1, 3, 8, 1, P.skin);
+  g.add(v.build({ jit: .03 }));
+  for (const sx of [-1, 1]) { const p = new Vox(); p.box(-1, -6, -1, 1, 0, 1, (x, y) => y < -5 ? P.ink : y < -2 ? med : P.skin); const pg = p.build({ jit: .03 }); const h = new THREE.Group(); h.add(pg); h.position.set(sx * 1, 6, 0); if (sx > 0) h.name = 'pierna'; g.add(h); }
+  return g; }
+Object.assign(FAB, {
+  jugador_am: () => jugadorV(P.yellow, P.navy, P.yellow), jugador_bl: () => jugadorV(P.white, P.white, P.white), jugador_gr: () => jugadorV(P.silver, P.dslate, P.silver),
+  portero: () => jugadorV(P.lime, P.ink, P.lime),
+  marcador: () => {   // marcador de estadio sobre dos pilares (la cifra es una pantalla aparte en z = +1.6)
+    const v = new Vox(); v.box(-14, 0, 0, -12, 16, 2, P.steel); v.box(12, 0, 0, 14, 16, 2, P.steel); v.box(-18, 16, 0, 18, 34, 2, P.ink); v.box(-18, 34, 0, 18, 35, 2, P.amber); v.luz(P.amber);
+    const w = new THREE.Group(); w.add(v.build({ jit: .03 })); return w; },
+});
+// portería de 7,3 × 2,4 m a escala 1 m = 2 cubos, con red de cuadros (en z = zg, mirando a +z)
+function porteriaV(v, zg) { v.box(-8, 0, zg, -7, 6, zg + 1, P.white); v.box(7, 0, zg, 8, 6, zg + 1, P.white); v.box(-8, 6, zg, 8, 7, zg + 1, P.white);
+  for (let x = -7; x < 7; x++) for (let y = 0; y < 6; y++) if ((x + y) % 2 === 0) v.set(x, y, zg - 4, P.silver); for (let z = zg - 4; z < zg; z++) for (let y = 0; y < 6; y += 2) { v.set(-8, y, z, P.silver); v.set(7, y, z, P.silver); } }
+const balonB = (B, x, y, z, s = 1) => { B.pon(x, y, z, 1.1 * s, 1.1 * s, 1.1 * s, P.white); B.pon(x + .2 * s, y + .2 * s, z + .2 * s, .5 * s, .5 * s, .5 * s, P.ink); };
+Object.assign(FABE, {
+  // —— Cristiano 1: estadio de noche con gradas llenas, focos, portería y marcador ——
+  estadio_noche: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x07060e, 0x124e89, 0x262b44]); s.fog = new THREE.Fog(0x124e89, 160, 320);
+    luces(s, { cielo: 0xd0e0ff, suelo: 0x204030, amb: 1.2, sol: 0xffffff, int: 2.3, dir: [30, 90, 60], sombra: 90 });
+    const v = new Vox(); cesped(v, -60, 60, -30, 70, -20, {}); porteriaV(v, -20);
+    for (let f = 0; f < 8; f++) v.box(-70, f * 3, -42 - f * 3, 70, f * 3 + 3, -39 - f * 3, (x) => hsh(x, f, 1) > .45 ? [P.yellow, P.navy, P.white, P.yellow][x & 3] : P.dslate);   // grada de fondo
+    for (const sx of [-74, 66]) v.box(sx, 0, -70, sx + 8, 70, -62, P.steel); for (const sx of [-76, 64]) v.box(sx, 70, -72, sx + 12, 76, -62, P.white); v.luz(P.white);
+    s.add(v.build({ jit: .05 }));
+    const mk = actor('marcador', 1); mk.position.set(24, -12, -40); s.add(mk); const scr = pantalla(34, 16, 136, 64); scr.m.position.set(24, 13, -37.8); s.add(scr.m);
+    const cr = actor('jugador_am', 1), po = actor('portero', 1), ri = [actor('jugador_gr', 1), actor('jugador_gr', 1)], co = [actor('jugador_am', 1), actor('jugador_am', 1), actor('jugador_am', 1)]; s.add(cr, po, ...ri, ...co);
+    const B = new Bloques(300, true); s.add(B.im);
+    const cuenta = (txt, sub, col = '#fee761') => rotular(scr, sub ? [txt, sub] : [txt], [col, '#ffffff'], '#181425', sub ? 24 : 34);
+    const fija = () => { cr.position.set(-2, 0, 6); cr.rotation.set(0, Math.PI, 0); po.position.set(0, 0, -18); po.rotation.set(0, 0, 0); ri.forEach((m, i) => { m.position.set(-24 + i * 48, 0, 16); m.rotation.set(0, Math.PI, 0); }); co.forEach((m, i) => { m.position.set(-30 + i * 30, 0, 30); m.rotation.set(0, Math.PI, 0); });
+      [cr, ...co].forEach(m => m.getObjectByName('pierna').rotation.x = 0); };
+    const c = cam(46);
+    // tiro: balón desde el punto de penalti (z = 2, 11 m) a la escuadra; el portero se tira al otro lado
+    const tiro = (k, B2) => { const x = lerp(0, 5.5, k), y = lerp(.6, 4.8, k) + Math.sin(k * Math.PI) * 1.4, z = lerp(2, -21, k); balonB(B2, x, y, z); };
+    return { s, c, upd(t) { fija(); B.ini(); balonB(B, 0, .6, 2); B.fin(); cuenta('987', 'GOLES');
+        mira(c, [Math.sin(t * .1) * 6, 22, 60], [0, 6, -14], .0); },
+      acc: {
+        // el marcador cuenta 985, 986, 987… y se queda en «FALTAN 13» con la portería y el balón en la red
+        contador(lt, dur, t) { fija(); cr.position.set(-14, 0, 4); ri.forEach(m => m.position.x += 200); co.forEach(m => m.position.x += 200); const n = Math.min(987, 984 + Math.floor(lt / .45)); cuenta(String(n), n >= 987 ? 'FALTAN 13' : 'GOLES', n >= 987 ? '#fee761' : '#ffffff');
+          B.ini(); const k = (lt % .45) / .45; if (n < 987) tiro(k, B); else balonB(B, 5.5, 1, -22); B.fin(); po.rotation.z = 0;
+          mira(c, [lerp(0, 11, ss(clamp(lt / dur, 0, 1))), 20, 82], [12, 12, -30], .02); },
+        // carrerilla, golpeo y gol: el portero se lanza hacia el lado contrario
+        penalti(lt, dur, t) { fija(); ri.forEach(m => m.position.x += 200); co.forEach(m => m.position.x += 200); const tk = 1.1, k = clamp((lt - tk) / .5, 0, 1); cr.position.set(lerp(-5, -1, clamp(lt / tk, 0, 1)), Math.abs(Math.sin(lt * 9)) * (lt < tk ? .5 : 0), lerp(12, 4, clamp(lt / tk, 0, 1)));
+          cr.getObjectByName('pierna').rotation.x = lt < tk ? Math.sin(lt * 9) * .5 : lerp(.6, -1.3, clamp((lt - tk) / .25, 0, 1));
+          const dv = clamp((lt - tk - .1) / .5, 0, 1); po.position.set(lerp(0, -5, dv), Math.sin(dv * Math.PI) * 2, -18); po.rotation.set(0, 0, dv * 1.3);
+          B.ini(); if (lt < tk) balonB(B, 0, .6, 2); else tiro(k, B); B.fin(); cuenta(lt > tk + .5 ? '987' : '986', 'GOLES', lt > tk + .5 ? '#fee761' : '#ffffff');
+          mira(c, [-14, 20, 68], [2, 5, -16], .06); },
+        // final 2-1: los jugadores de amarillo saltan, cae confeti y suben fuegos artificiales
+        victoria(lt, dur, t) { fija(); cuenta('2-1', 'FINAL'); po.rotation.z = 0; [cr, ...co].forEach((m, i) => { m.position.y = Math.max(0, Math.sin(t * 6 + i * 1.3)) * 3; m.rotation.y = Math.PI + Math.sin(t * 2 + i) * .6; });
+          cr.position.set(0, cr.position.y, 10); co.forEach((m, i) => m.position.set(-8 + i * 8, m.position.y, 16));
+          B.ini(); for (let i = 0; i < 160; i++) { const y = 40 - ((t * 6 + hsh(i, 1, 3) * 40) % 40); B.pon(-30 + hsh(i, 2, 3) * 60 + Math.sin(t + i) * 1.5, y, -10 + hsh(i, 3, 3) * 40, .6, .6, .2, [P.yellow, P.navy, P.white][i % 3]); }
+          fuegos(B, t, -50, 50, 50, 75, -60, [P.yellow, P.cyan, P.white]); B.fin();
+          mira(c, [0, 26, 86], [6, 14, -10], .06); },
+      } };
+  },
+  // —— Cristiano 2: la sala de la cuenta: un tubo de cristal con la raya de los 1.000 y seis rampas de colores (clubes y selección) ——
+  taller_goles: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x262b44); s.fog = new THREE.Fog(0x262b44, 150, 300);
+    luces(s, { cielo: 0xfff0e0, suelo: 0x504860, amb: 1.4, sol: 0xffffff, int: 1.7, dir: [30, 90, 70], sombra: 100 });
+    const v = new Vox(); v.box(-80, -1, -60, 80, 0, 60, (x, y, z) => ((x >> 3) + (z >> 3)) & 1 ? P.dslate : P.slate); v.box(-80, 0, -62, 80, 70, -60, P.night);
+    for (let y = 0; y < 60; y++) for (let a = 0; a < 6.283; a += .09) if (y < 2 || Math.floor(a / .09) % 9 === 0) v.set(Math.cos(a) * 13, y, -20 + Math.sin(a) * 13, y < 2 ? P.steel : 0x9fe6f0);
+    for (let a = 0; a < 6.283; a += .06) v.set(Math.cos(a) * 13.4, 56, -20 + Math.sin(a) * 13.4, P.red); v.luz(P.red);
+    const RC = [[0x3e8948, P.white], [P.red, P.red], [P.white, P.white], [P.ink, P.white], [P.red, P.dgreen], [P.yellow, P.navy]];
+    RC.forEach(([c1, c2], i) => { const a = Math.PI * (.12 + i * .152), x0 = Math.cos(a) * 60, z0 = -20 - Math.sin(a) * 30 + 40; for (let k = 0; k < 28; k++) { const f = k / 28; v.box(lerp(x0, Math.cos(a) * 14, f), lerp(66, 58, f), lerp(z0, -20 + Math.sin(a) * 0, f), lerp(x0, Math.cos(a) * 14, f) + 3, lerp(66, 58, f) + 1, lerp(z0, -20, f) + 3, k % 4 < 2 ? c1 : c2); } });
+    v.box(32, 0, -32, 52, 14, -12, P.steel); v.box(34, 14, -30, 50, 15, -14, P.red);   // cubo de los amistosos
+    s.add(v.build({ jit: .04 }));
+    const cnt = pantalla(30, 9, 120, 36); cnt.m.position.set(-28, 40, -59); s.add(cnt.m);
+    const etq = pantalla(26, 7, 104, 28); etq.m.position.set(42, 32, -11.5); s.add(etq.m); rotular(etq, ['AMISTOSOS: NO'], '#ffffff', '#a22633', 14);
+    const etq2 = pantalla(26, 7, 104, 28); etq2.m.position.set(0, 64, -6); s.add(etq2.m); rotular(etq2, ['META: 1.000'], '#e43b44', '#ffffff', 16);
+    const B = new Bloques(1400), F = new Bloques(80); s.add(B.im, F.im);
+    const tubo = (n) => { const filas = n / 987 * 52 | 0; for (let y = 0; y < filas; y++) for (let k = 0; k < 18; k++) { const a = k / 18 * 6.283 + y * .4, r = 4 + (k % 3) * 3; B.pon(Math.cos(a) * r, 2.5 + y, -20 + Math.sin(a) * r, 1.6, 1, 1.6, k % 5 ? P.white : P.ink); } };
+    const cae = (t, rate) => { for (let i = 0; i < 6; i++) for (let k = 0; k < 3; k++) { const a = Math.PI * (.12 + i * .152), f = ((t * rate + k / 3 + i * .17) % 1), x0 = Math.cos(a) * 60, z0 = -20 - Math.sin(a) * 30 + 40;
+      balonB(B, lerp(x0, 0, f) + 1.5, lerp(68, 58, f) + 1, lerp(z0, -20, f) + 1.5, 1.4); } };
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); tubo(120); B.fin(); F.ini(); F.fin(); rotular(cnt, ['0'], '#fee761', '#181425', 26); mira(c, [Math.sin(t * .1) * 10, 50, 104], [0, 34, -20], .0); },
+      acc: {
+        // el tubo está casi vacío; la cámara sube por él hasta la raya roja de los 1.000
+        pregunta(lt, dur, t) { B.ini(); tubo(40); B.fin(); F.ini(); F.fin(); rotular(cnt, ['¿1.000?'], '#fee761', '#181425', 26); const q = ss(clamp(lt / dur, 0, 1));
+          mira(c, [lerp(-14, 10, q), lerp(24, 64, q), 92], [-8, lerp(16, 50, q), -20], .02); },
+        // los balones bajan por las seis rampas (colores de cada club y de la selección) y el tubo se llena hasta 987
+        suma(lt, dur, t) { const n = Math.round(987 * ss(clamp(lt / (dur * .9), 0, 1))); B.ini(); tubo(Math.max(40, n)); cae(t, .9); B.fin(); F.ini(); F.fin(); rotular(cnt, [String(n)], '#fee761', '#181425', 26);
+          mira(c, [Math.sin(lt * .15) * 16, 52, 124], [-6, 34, -20], .02); },
+        // un balón gris de amistoso llega por la rampa y rebota al cubo rojo: no entra en la cuenta
+        oficiales(lt, dur, t) { B.ini(); tubo(987); B.fin(); rotular(cnt, ['987'], '#fee761', '#181425', 26); F.ini(); for (let i = 0; i < 3; i++) { const f = clamp((lt - i * 1.1) / 1.4, 0, 1); if (f <= 0) continue;
+            const x = lerp(10, 42, f), y = 60 - f * 44 + Math.sin(f * Math.PI) * 18, z = lerp(-14, -22, f); F.pon(x, y, z, 1.6, 1.6, 1.6, P.steel); F.pon(x + .3, y + .3, z + .3, .7, .7, .7, P.dslate); } F.fin();
+          mira(c, [20, 46, 112], [18, 30, -20], .04); },
+      } };
+  },
+  // —— Cristiano 3: un estadio blanco de día: dos columnas de balones, la de toda la carrera (987) y la del Madrid (450) ——
+  madrid_blanco: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x0099db, 0x7fd0ff, 0xffffff]); s.fog = new THREE.Fog(0xffffff, 170, 340);
+    luces(s, { cielo: 0xffffff, suelo: 0x406040, amb: 1.5, sol: 0xfff8e0, int: 2.2, dir: [-40, 90, 50], sombra: 110 });
+    const v = new Vox(); cesped(v, -70, 70, -30, 60, -20, {});
+    for (let f = 0; f < 9; f++) v.box(-80, f * 3, -42 - f * 3, 80, f * 3 + 3, -39 - f * 3, (x) => hsh(x, f, 2) > .4 ? [P.white, P.white, P.navy, P.silver][x & 3] : P.steel);
+    v.box(-80, 27, -72, 80, 31, -66, P.white);
+    s.add(v.build({ jit: .05 }));
+    const jg = actor('jugador_bl', 1.4); s.add(jg); const B = new Bloques(1200); s.add(B.im);
+    const e1 = pantalla(16, 5, 80, 25), e2 = pantalla(16, 5, 80, 25); s.add(e1.m, e2.m); rotular(e1, ['CARRERA'], '#ffffff', '#3a4466', 14); rotular(e2, ['MADRID'], '#124e89', '#ffffff', 14, { borde: '#124e89' });
+    const col = (x, n, cl, k) => { const filas = Math.round(n / 25 * k); for (let y = 0; y < filas; y++) for (let i = 0; i < 25; i++) if (i % 5 < 5) B.pon(x + (i % 5) * 1.6 - 3.2, .6 + y * 1.25, (i / 5 | 0) * 1.6 - 3.2, 1.3, 1.1, 1.3, cl(y, i)); return filas * 1.25; };
+    const c = cam(46);
+    return { s, c, upd(t) { B.ini(); B.fin(); jg.position.set(0, 0, 14); jg.rotation.set(0, 0, 0); e1.m.visible = e2.m.visible = false; mira(c, [Math.sin(t * .1) * 8, 24, 80], [0, 14, 0], .02); },
+      acc: {
+        // las dos columnas crecen a la vez: la gris llega a 987 y la blanca se para en 450, casi la mitad
+        madrid(lt, dur, t) { const k = ss(clamp(lt / (dur * .8), 0, 1)); B.ini(); const h1 = col(-12, 987, (y, i) => (y + i) % 7 ? P.silver : P.steel, k), h2 = col(12, 450, (y, i) => (y + i) % 7 ? P.white : P.navy, k); B.fin();
+          e1.m.visible = e2.m.visible = true; e1.m.position.set(-12, h1 + 4, 5); e2.m.position.set(12, h2 + 4, 5); jg.position.set(22, Math.max(0, Math.sin(t * 5)) * (k >= 1 ? 2 : 0), 12); jg.rotation.set(0, -.5, 0);
+          mira(c, [0, 36, 118], [0, 24, 0], .08); },
+      } };
+  },
+});

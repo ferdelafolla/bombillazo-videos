@@ -405,3 +405,6 @@ Object.assign(NOMBRE, { barajas: 'BARAJAS', taller: 'EL TALLER', crucero: 'EN VU
 // 25/11/2026: la caída mundial de Microsoft, el permiso por nacimiento de 20 semanas y Mario Kart World 1.9.0
 Object.assign(BASE, { oficinas: hoy, pasarelas: hoy, sala_roja: hoy, cuarto_bebe: hoy, semanario: hoy, diputacion: hoy, pista_arena: hoy, remezcla: hoy, sala_replay: hoy });
 Object.assign(NOMBRE, { oficinas: 'LA OFICINA', pasarelas: 'LAS PASARELAS', sala_roja: 'CÓDIGO ROJO', cuarto_bebe: 'EL CUARTO', semanario: 'LAS SEMANAS', diputacion: 'LA DIPUTACIÓN', pista_arena: 'LA PISTA', remezcla: 'LA REMEZCLA', sala_replay: 'LA REPETICIÓN' });
+// 26/11/2026: Dimorphos (Hera), jornada de reflexión del 29-N y el gol 987 de Cristiano
+Object.assign(BASE, { didymos: hoy, defensa: hoy, hera_sonda: hoy, plaza_mitin: hoy, calle_carteles: hoy, salon_voto: hoy, estadio_noche: hoy, taller_goles: hoy, madrid_blanco: hoy });
+Object.assign(NOMBRE, { didymos: 'EL CHOQUE', defensa: 'LA DEFENSA', hera_sonda: 'LA VISITA', plaza_mitin: 'EL MITIN', calle_carteles: 'LA CALLE', salon_voto: 'EL VOTO', estadio_noche: 'EL PENALTI', taller_goles: 'LA CUENTA', madrid_blanco: 'EL MADRID' });
