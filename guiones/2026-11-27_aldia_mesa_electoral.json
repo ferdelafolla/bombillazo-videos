@@ -1,0 +1,137 @@
+{
+ "id": "2026-11-27_aldia_mesa_electoral",
+ "titulo": "¿Te ha tocado mesa electoral el 29-N? Esto es lo que toca 🗳️",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «onda cero directo» (5.000+), 27/11/2026: cierre de la campaña de las elecciones generales del 29-N",
+ "fuentes": [
+  "Diari Més (16/11/2026): cada mesa la forman un presidente y dos vocales elegidos por sorteo público del ayuntamiento entre el censo, con dos suplentes por puesto; de 18 a 70 años; el presidente necesita bachillerato o FP de grado superior; dieta de unos 70 euros; la mesa se constituye a las 8:00 y se vota de 9:00 a 20:00; el día siguiente, cinco horas menos de jornada; faltar sin causa justificada tiene pena de prisión o multa",
+  "Demócrata (17/10/2026 y 02/11/2026): presidentes y vocales cobran 70 euros; permiso retribuido el domingo y reducción de cinco horas el lunes 30; constitución a las 8:00 y cierre a las 20:00; la participación es obligatoria salvo causa justificada"
+ ],
+ "remate": "¿QUÉ HACE CADA UNO?",
+ "rpg": {
+  "gancho_lugar": "ayto_sorteo",
+  "fin": [
+   "¡SÍGUENOS!",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "ayto_sorteo",
+    "era": "snes",
+    "nombre": "EL SORTEO",
+    "nota": "3 VECINOS"
+   },
+   {
+    "lugar": "aula_voto",
+    "era": "snes",
+    "nombre": "LA MESA",
+    "nota": "8:00"
+   },
+   {
+    "lugar": "lunes_libre",
+    "era": "snes",
+    "nombre": "EL LUNES",
+    "nota": "70 EUROS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "ayto_sorteo",
+   "escenas": [
+    {
+     "texto": "El domingo, cada mesa electoral la llevan tres vecinos.",
+     "tipo": "titulo",
+     "destacar": [
+      "vecinos."
+     ],
+     "accion": "mesa",
+     "texto_grande": "¡3 VECINOS AL MANDO!"
+    },
+    {
+     "texto": "Un presidente y dos vocales, elegidos por sorteo en el ayuntamiento.",
+     "tipo": "icono",
+     "destacar": [
+      "sorteo"
+     ],
+     "accion": "sorteo"
+    },
+    {
+     "texto": "¿Y si te ha tocado a ti, qué tienes que hacer?",
+     "tipo": "icono",
+     "destacar": [
+      "tocado"
+     ],
+     "accion": "carta"
+    }
+   ]
+  },
+  {
+   "id": "mesa",
+   "lugar": "aula_voto",
+   "escenas": [
+    {
+     "texto": "Pero hay que madrugar: la mesa se forma a las ocho de la mañana.",
+     "tipo": "icono",
+     "destacar": [
+      "ocho"
+     ],
+     "accion": "madrugar",
+     "rotulo": "8:00"
+    },
+    {
+     "texto": "Se vota de nueve a ocho de la tarde, y después se cuentan los votos.",
+     "tipo": "icono",
+     "destacar": [
+      "cuentan"
+     ],
+     "accion": "recuento"
+    },
+    {
+     "texto": "Es obligatorio: faltar sin una causa justificada puede acabar en multa.",
+     "tipo": "icono",
+     "destacar": [
+      "obligatorio:"
+     ],
+     "accion": "obligatorio"
+    }
+   ]
+  },
+  {
+   "id": "lunes",
+   "lugar": "lunes_libre",
+   "escenas": [
+    {
+     "texto": "A cambio, cobras unos setenta euros y el lunes trabajas cinco horas menos.",
+     "tipo": "icono",
+     "destacar": [
+      "setenta"
+     ],
+     "accion": "lunes",
+     "rotulo": [
+      "70 EUROS",
+      "5 H MENOS"
+     ]
+    },
+    {
+     "texto": "Curiosidad: para presidir una mesa hay que tener, al menos, el bachillerato.",
+     "tipo": "icono",
+     "destacar": [
+      "bachillerato."
+     ],
+     "accion": "titulo"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

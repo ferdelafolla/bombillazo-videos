@@ -1,0 +1,139 @@
+{
+ "id": "2026-11-27_curiosidades_bolas_gordo",
+ "titulo": "Por qué las 100.000 bolas del Gordo son todas iguales 🎱",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «la ser» (200+), 27/11/2026: noticias del Gordo de la Lotería de Navidad (sorteo del 22/12/2026)",
+ "fuentes": [
+  "The Objective (14/11/2026): el bombo grande tiene 100.000 bolas (00000-99999) y el pequeño 1.807; todas de madera de boj con las cifras grabadas con láser, 3 g y 18 mm; bombo grande de latón y bronce, unos 2,64 m y 850 kg",
+  "Catalunya Press (06/11/2026): Lotería de Navidad 2026 con 205 series de 100.000 números, 2.870 millones en premios, Gordo de 4 millones por serie, sorteo el 22/12 en el Teatro Real con bolas nuevas",
+  "Onda Vasca (09/07/2026): 205 series de 100.000 números, 400.000 euros al décimo del Gordo"
+ ],
+ "remate": "¿Y SI CAE UNA BOLA?",
+ "rpg": {
+  "gancho_lugar": "teatro_gordo",
+  "fin": [
+   "¡SÍGUENOS!",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "teatro_gordo",
+    "era": "snes",
+    "nombre": "EL BOMBO",
+    "nota": "100.000"
+   },
+   {
+    "lugar": "taller_boj",
+    "era": "snes",
+    "nombre": "LAS BOLAS",
+    "nota": "3 GRAMOS"
+   },
+   {
+    "lugar": "bombo_giro",
+    "era": "snes",
+    "nombre": "EL AZAR",
+    "nota": "850 KILOS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "teatro_gordo",
+   "escenas": [
+    {
+     "texto": "Tu décimo tiene una entre cien mil opciones.",
+     "tipo": "titulo",
+     "destacar": [
+      "cien"
+     ],
+     "accion": "gira",
+     "texto_grande": "¡1 ENTRE 100.000!"
+    },
+    {
+     "texto": "En el bombo del Gordo hay cien mil bolas, una por cada número.",
+     "tipo": "icono",
+     "destacar": [
+      "bolas,"
+     ],
+     "accion": "llenar"
+    },
+    {
+     "texto": "¿Cómo se consigue que todas tengan la misma suerte?",
+     "tipo": "icono",
+     "destacar": [
+      "suerte?"
+     ],
+     "accion": "pregunta"
+    }
+   ]
+  },
+  {
+   "id": "bolas",
+   "lugar": "taller_boj",
+   "escenas": [
+    {
+     "texto": "Pero no vale cualquier bola: todas son de madera de boj, grabadas con láser.",
+     "tipo": "icono",
+     "destacar": [
+      "láser."
+     ],
+     "accion": "laser",
+     "rotulo": "MADERA DE BOJ"
+    },
+    {
+     "texto": "Y todas pesan tres gramos y miden dieciocho milímetros.",
+     "tipo": "icono",
+     "destacar": [
+      "tres"
+     ],
+     "accion": "bascula",
+     "rotulo": [
+      "3 GRAMOS",
+      "18 MM"
+     ]
+    },
+    {
+     "texto": "Así ninguna es más pesada ni más grande: ninguna sale con ventaja.",
+     "tipo": "icono",
+     "destacar": [
+      "ventaja."
+     ],
+     "accion": "iguales"
+    }
+   ]
+  },
+  {
+   "id": "azar",
+   "lugar": "bombo_giro",
+   "escenas": [
+    {
+     "texto": "Y el bombo da vueltas para mezclarlas antes de que caiga cada bola.",
+     "tipo": "icono",
+     "destacar": [
+      "vueltas"
+     ],
+     "accion": "mezcla"
+    },
+    {
+     "texto": "Curiosidad: el bombo grande pesa unos ochocientos cincuenta kilos.",
+     "tipo": "icono",
+     "destacar": [
+      "ochocientos"
+     ],
+     "accion": "peso",
+     "rotulo": "850 KILOS"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}

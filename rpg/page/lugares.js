@@ -408,3 +408,5 @@ Object.assign(NOMBRE, { oficinas: 'LA OFICINA', pasarelas: 'LAS PASARELAS', sala
 // 26/11/2026: Dimorphos (Hera), jornada de reflexión del 29-N y el gol 987 de Cristiano
 Object.assign(BASE, { didymos: hoy, defensa: hoy, hera_sonda: hoy, plaza_mitin: hoy, calle_carteles: hoy, salon_voto: hoy, estadio_noche: hoy, taller_goles: hoy, madrid_blanco: hoy });
 Object.assign(NOMBRE, { didymos: 'EL CHOQUE', defensa: 'LA DEFENSA', hera_sonda: 'LA VISITA', plaza_mitin: 'EL MITIN', calle_carteles: 'LA CALLE', salon_voto: 'EL VOTO', estadio_noche: 'EL PENALTI', taller_goles: 'LA CUENTA', madrid_blanco: 'EL MADRID' });
+Object.assign(BASE, { teatro_gordo: hoy, taller_boj: hoy, bombo_giro: hoy, ayto_sorteo: hoy, aula_voto: hoy, lunes_libre: hoy, escenario_rock: hoy, productora: hoy, polo_sur: hoy });
+Object.assign(NOMBRE, { teatro_gordo: 'EL BOMBO', taller_boj: 'LAS BOLAS', bombo_giro: 'EL AZAR', ayto_sorteo: 'EL SORTEO', aula_voto: 'LA MESA', lunes_libre: 'EL LUNES', escenario_rock: 'EL GUION', productora: 'LA PRODUCTORA', polo_sur: 'EL POLO SUR' });

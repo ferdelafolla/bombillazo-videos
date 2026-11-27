@@ -1,0 +1,136 @@
+{
+ "id": "2026-11-27_hoy_elf_secuela",
+ "titulo": "El guitarrista de U2 escribió «Elf 2»… y nunca se rodó 🎄",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends US «andy richter» (200+), 27/11/2026: Andy Richter publica «Elf Unwrapped» y cuenta los secretos de «Elf»",
+ "fuentes": [
+  "Variety (09/11/2026): Andy Richter cuenta en «Obsessed: The Podcast» que The Edge, de U2, escribió un guion de «Elf 2»; llegó a la productora Shauna Robertson y la idea «se fue apagando y nunca pasó»",
+  "The Daily Beast (05/11/2026): Richter explica que no hay secuela porque Ferrell y Favreau no cobraron participación en beneficios y ahora serían mucho más caros, y porque pasó demasiado tiempo; Scot Armstrong escribió otro guion con elfos malvados del Polo Sur que secuestraban a Papá Noel",
+  "NME (11/2026): el guion de The Edge para una secuela de «Elf» quedó archivado"
+ ],
+ "remate": "¿Y LA PRIMERA?",
+ "rpg": {
+  "gancho_lugar": "escenario_rock",
+  "fin": [
+   "¡SÍGUENOS!",
+   "CADA DÍA EN EL CANAL"
+  ],
+  "partidas": [
+   {
+    "lugar": "escenario_rock",
+    "era": "snes",
+    "nombre": "EL GUION",
+    "nota": "THE EDGE"
+   },
+   {
+    "lugar": "productora",
+    "era": "snes",
+    "nombre": "LA PRODUCTORA",
+    "nota": "APAGADA"
+   },
+   {
+    "lugar": "polo_sur",
+    "era": "snes",
+    "nombre": "EL POLO SUR",
+    "nota": "ELFOS MALOS"
+   }
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "escenario_rock",
+   "escenas": [
+    {
+     "texto": "El guitarrista de U2 escribió una segunda parte de Elf.",
+     "tipo": "titulo",
+     "destacar": [
+      "Elf."
+     ],
+     "accion": "riff",
+     "texto_grande": "¡HAY GUION DE ELF 2!",
+     "voz": "El guitarrista de U dos escribió una segunda parte de Elf."
+    },
+    {
+     "texto": "Elf es la comedia navideña de dos mil tres, y cada diciembre vuelve a la tele.",
+     "tipo": "icono",
+     "destacar": [
+      "navideña"
+     ],
+     "accion": "teles"
+    },
+    {
+     "texto": "¿Entonces por qué nunca se ha rodado?",
+     "tipo": "icono",
+     "destacar": [
+      "rodado?"
+     ],
+     "accion": "pregunta"
+    }
+   ]
+  },
+  {
+   "id": "productora",
+   "lugar": "productora",
+   "escenas": [
+    {
+     "texto": "Lo ha contado este mes Andy Richter, uno de sus actores, en un pódcast.",
+     "tipo": "icono",
+     "destacar": [
+      "Richter,"
+     ],
+     "accion": "podcast",
+     "voz": "Lo ha contado este mes Andi Ríchter, uno de sus actores, en un pódcast."
+    },
+    {
+     "texto": "Pero el guion llegó a la productora y la idea se fue apagando.",
+     "tipo": "icono",
+     "destacar": [
+      "apagando."
+     ],
+     "accion": "apagando"
+    },
+    {
+     "texto": "La razón: sus estrellas no cobraron parte de los beneficios, y hoy costarían muchísimo más.",
+     "tipo": "icono",
+     "destacar": [
+      "muchísimo"
+     ],
+     "accion": "dinero"
+    },
+    {
+     "texto": "Además, ha pasado demasiado tiempo: mejor dejarla como está.",
+     "tipo": "icono",
+     "destacar": [
+      "tiempo:"
+     ],
+     "accion": "tiempo"
+    }
+   ]
+  },
+  {
+   "id": "polo",
+   "lugar": "polo_sur",
+   "escenas": [
+    {
+     "texto": "Curiosidad: hubo otro guion, con elfos malvados del Polo Sur que secuestraban a Papá Noel.",
+     "tipo": "icono",
+     "destacar": [
+      "Polo"
+     ],
+     "accion": "secuestro",
+     "rotulo": "POLO SUR"
+    },
+    {
+     "texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.",
+     "tipo": "suscribete",
+     "destacar": [
+      "Suscríbete"
+     ]
+    }
+   ]
+  }
+ ]
+}
