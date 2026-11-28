@@ -3812,6 +3812,7 @@ Object.assign(FABE, {
       } };
   },
 });
+const DAVIS_RES = ['ESP 2 - 1 GBR', 'A LA FINAL'];   // resultado de la semifinal (se fija al cerrarse)
 // —— Copa Davis: tenistas genéricos, la ponchera de 1900 y el trofeo con sus bases ——
 // tenista (alto ~19): hijo 'brazo' (pivote en el hombro derecho, con raqueta) que se balancea
 function tenistaV(cam, pan, pelo = P.dbrown) { const w = new THREE.Group(), v = new Vox();
@@ -3855,7 +3856,7 @@ Object.assign(FABE, {
     const j1 = actor('tenista_r', .55), j2 = actor('tenista_a', .55); s.add(j1, j2); const b1 = j1.getObjectByName('brazo'), b2 = j2.getObjectByName('brazo'); j2.rotation.y = Math.PI;
     const B = new Bloques(260, true); s.add(B.im);
     const c = cam(46);
-    let res = ['ESP', 'GBR', '0', '0'];
+    const res = DAVIS_RES;
     const marcador = (l1, l2, hi) => { const { g, cv, tex } = mar; const k = l1 + l2 + hi; if (mar._k === k) return; mar._k = k; g.fillStyle = '#181425'; g.fillRect(0, 0, 180, 78);
       g.font = 'bold 22px monospace'; g.textAlign = 'center'; g.fillStyle = hi ? '#fee761' : '#ffffff'; g.fillText(l1, 90, 32); g.fillStyle = '#2ce8f5'; g.fillText(l2, 90, 64); tex.needsUpdate = true; };
     // peloteo: la bola va de un fondo a otro (periodo 1,3 s) y los jugadores la siguen
@@ -3864,15 +3865,15 @@ Object.assign(FABE, {
       const xn = ida ? xa : xb, xf = ida ? xb : xa; j1.position.set(lerp(j1.position.x || 0, (ida ? xa : xb) + 2, .2), 0, 27); j2.position.set(lerp(j2.position.x || 0, (ida ? xb : xa) - 2, .2), 0, -27);
       b1.rotation.z = ida && u < .2 ? -1.2 + u * 8 : .3; b2.rotation.z = !ida && u < .2 ? -1.2 + u * 8 : .3;
       if (!fin) B.pon(bx, Math.max(.6, by), bz, .9, .9, .9, P.yellow); return [bx, by, bz]; };
-    return { s, c, res: (r) => { res = r; }, upd(t) { B.ini(); juego(t); B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); mira(c, [0, 40, 78], [0, 2, -4], .1); },
+    return { s, c, upd(t) { B.ini(); juego(t); B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); mira(c, [0, 62, 104], [0, 0, -2], .1); },
       acc: {
         // último punto: la bola pasa, el jugador de rojo levanta los brazos y cae confeti
         punto(lt, dur, t) { B.ini(); const f = lt > 1.2; juego(f ? 1.2 * 1.3 + .4 : lt * 1.3, f); if (f) { b1.rotation.z = Math.PI * .95; j1.position.y = Math.abs(Math.sin((lt - 1.2) * 6)) * 1.5;
             for (let i = 0; i < 120; i++) { const ph = ((lt - 1.2) * .5 + hsh(i, 1, 1)) % 1; B.pon(-30 + hsh(i, 2, 1) * 60, 50 - ph * 50, -30 + hsh(i, 3, 1) * 60, .7, .7, .7, [P.red, P.yellow, P.white, P.cyan][i % 4]); } }
-          B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 6, q), lerp(34, 30, q), lerp(80, 70, q)], [0, 4, 4], .1); },
-        peloteo(lt, dur, t) { B.ini(); juego(t); B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); mira(c, [Math.sin(t * .2) * 8, 40, 78], [0, 2, -4], .1); },
+          B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-8, 8, q), lerp(60, 52, q), lerp(108, 96, q)], [0, 0, 0], .1); },
+        peloteo(lt, dur, t) { B.ini(); juego(t); B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); mira(c, [Math.sin(t * .2) * 8, 62, 104], [0, 0, -2], .1); },
         // la cámara sube al marcador con el resultado
-        marcador(lt, dur, t) { B.ini(); juego(t, true); B.fin(); marcador(res[0], res[1], true); const q = ss(clamp(lt / 1.4, 0, 1)); mira(c, [0, lerp(40, 46, q), lerp(78, 20, q)], [0, lerp(4, 48, q), lerp(-4, -60, q)], lerp(.1, .06, q)); },
+        marcador(lt, dur, t) { B.ini(); juego(t, true); B.fin(); marcador(res[0], res[1], true); const q = ss(clamp(lt / 1.4, 0, 1)); mira(c, [0, lerp(62, 48, q), lerp(104, 20, q)], [0, lerp(0, 48, q), lerp(-2, -60, q)], lerp(.1, .06, q)); },
       } };
   },
   // —— Davis 2: Boston, 1900: un jardín con pista de hierba y la ponchera de plata en una mesa ——
@@ -3886,7 +3887,7 @@ Object.assign(FABE, {
     for (const [x, z] of [[-50, -40], [50, -30], [-56, 10], [54, 20]]) { v.box(x, 0, z, x + 2, 12, z + 2, P.dbrown); v.ball(x + 1, 18, z + 1, 7, P.dgreen); }
     v.box(20, 0, 30, 36, 8, 40, P.white); v.box(19, 8, 29, 37, 9, 41, P.white);   // mesa con mantel
     s.add(v.build({ jit: .05 }));
-    const po = actor('ponchera', .9); po.position.set(28, 15.5, 35); s.add(po);
+    const po = actor('ponchera', .45); po.position.set(28, 12.2, 35); s.add(po);
     const j1 = actor('tenista_a', .55), j2 = actor('tenista_a', .55); j2.rotation.y = Math.PI; s.add(j1, j2); const b1 = j1.getObjectByName('brazo'), b2 = j2.getObjectByName('brazo');
     const B = new Bloques(160), L = new Bloques(40, true); s.add(B.im, L.im);
     const c = cam(46);
@@ -3894,13 +3895,13 @@ Object.assign(FABE, {
       j1.position.set((ida ? xa : xb) + 2, 0, 27); j2.position.set((ida ? xb : xa) - 2, 0, -27); b1.rotation.z = ida && u < .2 ? -1 + u * 6 : .3; b2.rotation.z = !ida && u < .2 ? -1 + u * 6 : .3;
       L.pon(lerp(xa, xb, u), 5 + Math.sin(u * Math.PI) * 10, lerp(ida ? 24 : -24, ida ? -24 : 24, u), .9, .9, .9, P.white); };
     // ponche que cae de la jarra al cuenco y el cucharón
-    const ponche = (t, k) => { B.pon(28, 19 + k * 2.5, 35, 9, .6, 9, P.pink); const ang = t * 2; B.pon(34, 27 + Math.sin(ang) * 1, 33, 4, 6, 4, P.silver); for (let i = 0; i < 8; i++) { const ph = (t * 3 + i / 8) % 1; B.pon(32 - ph * 3, 26 - ph * 6, 34, .7, .9, .7, P.pink); } };
-    return { s, c, upd(t) { B.ini(); B.fin(); L.ini(); juego(t); L.fin(); mira(c, [10, 34, 92], [8, 8, 10], .08); },
+    const ponche = (t, k) => { B.pon(28, 11.6 + k * 2.6, 35, 6, .5, 6, P.pink); B.pon(33, 21 + Math.sin(t * 2) * .4, 34, 3, 4, 3, P.silver); B.pon(31.2, 22, 34, 1, 1, 1, P.silver); for (let i = 0; i < 8; i++) { const ph = (t * 3 + i / 8) % 1; B.pon(31 - ph * 2.5, 21.5 - ph * 7, 34.5, .6, .8, .6, P.pink); } };
+    return { s, c, upd(t) { B.ini(); B.fin(); L.ini(); juego(t); L.fin(); mira(c, [6, 50, 106], [6, 4, 6], .1); },
       acc: {
         // de cerca: una jarra llena de ponche la ponchera de plata
-        ponchera(lt, dur, t) { B.ini(); ponche(t, clamp(lt / dur, 0, 1)); B.fin(); L.ini(); juego(t); L.fin(); po.rotation.y = t * .2; const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(36, 30, q), lerp(30, 26, q), lerp(78, 62, q)], [28, 18, 35], .06); },
+        ponchera(lt, dur, t) { B.ini(); ponche(t, clamp(lt / dur, 0, 1)); B.fin(); L.ini(); juego(t); L.fin(); po.rotation.y = t * .2; const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(38, 32, q), lerp(28, 26, q), lerp(84, 72, q)], [28, 13, 35], .1); },
         // la cámara se aleja: el primer partido, en hierba, con la ponchera junto a la pista
-        boston(lt, dur, t) { B.ini(); B.fin(); L.ini(); juego(t); L.fin(); const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(30, 4, q), lerp(28, 40, q), lerp(70, 96, q)], [lerp(26, 4, q), lerp(16, 6, q), lerp(30, 0, q)], .08); },
+        boston(lt, dur, t) { B.ini(); B.fin(); L.ini(); juego(t); L.fin(); const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(32, 6, q), lerp(26, 50, q), lerp(72, 106, q)], [lerp(28, 6, q), lerp(13, 4, q), lerp(35, 6, q)], .1); },
       } };
   },
   // —— Davis 3: el trofeo de hoy bajo los focos, con seis placas que se encienden (los títulos de España) ——
@@ -3908,19 +3909,19 @@ Object.assign(FABE, {
     const s = new THREE.Scene(); s.background = new THREE.Color(0x120a1e); s.fog = new THREE.Fog(0x120a1e, 140, 280);
     luces(s, { cielo: 0xe8ecff, suelo: 0x262b44, amb: 1.2, sol: 0xffffff, int: 2.3, dir: [-20, 90, 60], sombra: 60 });
     const v = new Vox(); v.box(-60, -1, -50, 60, 0, 50, (x, y, z) => ((x >> 3) + (z >> 3)) & 1 ? P.plum : 0x4a2a5a); v.cyl(0, 0, 0, 8, 16, P.ink); v.cyl(0, 0, 8, 9, 17, P.amber); v.luz(P.amber); s.add(v.build({ jit: .04 }));
-    const tr = actor('ensaladera', 1.25); s.add(tr); tr.position.set(0, 25, 0);
+    const tr = actor('ensaladera', .9); s.add(tr); tr.position.set(0, 20, 0);
     const foco = conoLuz(0xfff1c0, 60, 18); foco.position.set(0, 70, 0); s.add(foco);
     const placas = []; for (let i = 0; i < 6; i++) { const p = pantalla(8, 4, 64, 32); const a = (i - 2.5) * .36; p.m.position.set(Math.sin(a) * 34, 6, Math.cos(a) * 34 - 8); p.m.rotation.y = a; s.add(p.m); placas.push(p); }
     const ANOS = ['2000', '2004', '2008', '2009', '2011', '2019'];
     const B = new Bloques(160, true); s.add(B.im);
     const c = cam(46);
     const enciende = (n, t) => placas.forEach((p, i) => rotular(p, [ANOS[i]], i < n ? '#181425' : '#5a6988', i < n ? '#feae34' : '#262b44', 20));
-    return { s, c, upd(t) { tr.rotation.y = t * .4; enciende(0, t); B.ini(); B.fin(); mira(c, [0, 34, 92], [0, 20, 0], .08); },
+    return { s, c, upd(t) { tr.rotation.y = t * .4; enciende(0, t); B.ini(); B.fin(); mira(c, [0, 42, 120], [0, 16, 0], .1); },
       acc: {
         // las seis placas de los títulos de España se encienden una a una
         seis(lt, dur, t) { tr.rotation.y = t * .5; const n = Math.min(6, Math.floor(lt / (dur * .6) * 6) + 1); enciende(n, t); B.ini(); for (let i = 0; i < 40; i++) { const ph = (t * .4 + hsh(i, 1, 2)) % 1; B.pon(Math.cos(i * 2.4) * (8 + ph * 18), 30 + ph * 24, Math.sin(i * 2.4) * (8 + ph * 18), .6, .6, .6, i % 2 ? P.yellow : P.white); } B.fin();
-          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-10, 10, q), lerp(30, 34, q), lerp(86, 92, q)], [0, 16, 0], .08); },
-        trofeo_fin(lt, dur, t) { tr.rotation.y = t * .5; enciende(6, t); B.ini(); B.fin(); mira(c, [16, 40, 104], [0, 18, 0], .1); },
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-12, 12, q), 42, lerp(116, 124, q)], [0, 14, 0], .1); },
+        trofeo_fin(lt, dur, t) { tr.rotation.y = t * .5; enciende(6, t); B.ini(); B.fin(); mira(c, [20, 48, 130], [0, 16, 0], .12); },
       } };
   },
 });

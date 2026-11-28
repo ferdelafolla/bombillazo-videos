@@ -1,0 +1,46 @@
+{
+ "id": "2026-11-28_hoy_copa_davis",
+ "titulo": "España, a la final de la Copa Davis: ¿por qué se llama Ensaladera? 🎾",
+ "serie": "HOY",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «lorenzo musetti» (100+), 28/11/2026: Final 8 de la Copa Davis en Bolonia",
+ "fuentes": [],
+ "remate": "¿GANARÁ LA SÉPTIMA?",
+ "rpg": {
+  "gancho_lugar": "pista_bolonia",
+  "fin": ["¡SÍGUENOS!", "CADA DÍA EN EL CANAL"],
+  "partidas": [
+   {"lugar": "pista_bolonia", "era": "snes", "nombre": "BOLONIA", "nota": "SEMIFINAL"},
+   {"lugar": "boston_1900", "era": "snes", "nombre": "BOSTON", "nota": "1900"},
+   {"lugar": "trofeo_davis", "era": "snes", "nombre": "EL TROFEO", "nota": "6 TÍTULOS"}
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "pista_bolonia",
+   "escenas": [
+    {"texto": "España jugará mañana la final de la Copa Davis.", "tipo": "titulo", "destacar": ["final"], "accion": "punto", "texto_grande": "¡ESPAÑA, A LA FINAL!"},
+    {"texto": "Ha ganado a Gran Bretaña en la semifinal de Bolonia, dos a uno.", "tipo": "icono", "destacar": ["dos"], "accion": "marcador"},
+    {"texto": "Y el premio no es una copa cualquiera: ¿por qué la llaman la Ensaladera?", "tipo": "icono", "destacar": ["Ensaladera?"], "accion": "peloteo"}
+   ]
+  },
+  {
+   "id": "boston",
+   "lugar": "boston_1900",
+   "escenas": [
+    {"texto": "Pero en realidad no es una ensaladera: es una ponchera de plata.", "tipo": "icono", "destacar": ["ponchera"], "accion": "ponchera", "rotulo": "UNA PONCHERA"},
+    {"texto": "La pagó Dwight Davis, un estudiante de Harvard, para el primer torneo, en mil novecientos.", "tipo": "icono", "destacar": ["novecientos."], "accion": "boston", "rotulo": "1900"}
+   ]
+  },
+  {
+   "id": "trofeo",
+   "lugar": "trofeo_davis",
+   "escenas": [
+    {"texto": "Curiosidad: España la ha ganado seis veces, la primera en el año dos mil.", "tipo": "icono", "destacar": ["seis"], "accion": "seis", "rotulo": "6 TÍTULOS"},
+    {"texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.", "tipo": "suscribete", "destacar": ["Suscríbete"], "accion": "trofeo_fin"}
+   ]
+  }
+ ]
+}
