@@ -410,3 +410,10 @@ Object.assign(BASE, { didymos: hoy, defensa: hoy, hera_sonda: hoy, plaza_mitin: 
 Object.assign(NOMBRE, { didymos: 'EL CHOQUE', defensa: 'LA DEFENSA', hera_sonda: 'LA VISITA', plaza_mitin: 'EL MITIN', calle_carteles: 'LA CALLE', salon_voto: 'EL VOTO', estadio_noche: 'EL PENALTI', taller_goles: 'LA CUENTA', madrid_blanco: 'EL MADRID' });
 Object.assign(BASE, { teatro_gordo: hoy, taller_boj: hoy, bombo_giro: hoy, ayto_sorteo: hoy, aula_voto: hoy, lunes_libre: hoy, escenario_rock: hoy, productora: hoy, polo_sur: hoy });
 Object.assign(NOMBRE, { teatro_gordo: 'EL BOMBO', taller_boj: 'LAS BOLAS', bombo_giro: 'EL AZAR', ayto_sorteo: 'EL SORTEO', aula_voto: 'LA MESA', lunes_libre: 'EL LUNES', escenario_rock: 'EL GUION', productora: 'LA PRODUCTORA', polo_sur: 'EL POLO SUR' });
+// 28/11/2026: el megavatio-hora, los resultados del 29-N y la Copa Davis
+Object.assign(BASE, { contador: hoy, cocina_vatios: hoy, nave_microondas: hoy, taller_watt: hoy });
+Object.assign(NOMBRE, { contador: 'EL CONTADOR', cocina_vatios: 'LA COCINA', nave_microondas: 'LA NAVE', taller_watt: 'EL TALLER' });
+Object.assign(BASE, { colegio_noche: hoy, mapa_horas: hoy, mesa_recuento: hoy });
+Object.assign(NOMBRE, { colegio_noche: 'EL COLEGIO', mapa_horas: 'LOS RELOJES', mesa_recuento: 'EL RECUENTO' });
+Object.assign(BASE, { pista_bolonia: hoy, boston_1900: hoy, trofeo_davis: hoy });
+Object.assign(NOMBRE, { pista_bolonia: 'BOLONIA', boston_1900: 'BOSTON, 1900', trofeo_davis: 'EL TROFEO' });

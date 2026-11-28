@@ -1,0 +1,59 @@
+{
+ "id": "2026-11-28_curiosidades_megavatio",
+ "titulo": "¿Qué es un megavatio-hora? Mil microondas a la vez ⚡",
+ "serie": "CURIOSIDADES",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «megavatio-hora» (500+), 28/11/2026: el precio de la luz del sábado 28/11 sigue por encima de los 200 €/MWh",
+ "fuentes": [
+  "Noticias Trabajo (27/11/2026, datos OMIE): precio medio mayorista del sábado 28/11 de 211,39 €/MWh; hora más barata de 12:00 a 13:00 con 173,07 €/MWh; 14 horas por encima de 200 €/MWh",
+  "ElNacional.cat (27/11/2026): misma tabla hora a hora; más barata 12-13 h (173,07 €/MWh), más cara 18-19 h (254,34 €/MWh)",
+  "ECOticias (27/11/2026, Red Eléctrica): PVPC medio de 0,2138 €/kWh el sábado 28/11",
+  "Sistema Internacional de Unidades: 1 MWh = 1.000 kWh; el vatio debe su nombre a James Watt"
+ ],
+ "remate": "¿CUÁNTO GASTA TU CASA?",
+ "rpg": {
+  "gancho_lugar": "contador",
+  "fin": ["¡SÍGUENOS!", "CADA DÍA EN EL CANAL"],
+  "partidas": [
+   {"lugar": "contador", "era": "snes", "nombre": "EL PRECIO", "nota": "211 €"},
+   {"lugar": "cocina_vatios", "era": "snes", "nombre": "EL VATIO", "nota": "1 KWH"},
+   {"lugar": "nave_microondas", "era": "snes", "nombre": "EL MEGAVATIO", "nota": "1.000"}
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "contador",
+   "escenas": [
+    {"texto": "Hoy la luz cuesta doscientos once euros el megavatio-hora.", "tipo": "titulo", "destacar": ["doscientos"], "accion": "precio", "texto_grande": "211 € EL MWH"},
+    {"texto": "Pero, ¿cuánta electricidad es un megavatio-hora?", "tipo": "icono", "destacar": ["megavatio-hora?"], "accion": "pregunta"}
+   ]
+  },
+  {
+   "id": "vatio",
+   "lugar": "cocina_vatios",
+   "escenas": [
+    {"texto": "El vatio mide la potencia: lo rápido que un aparato gasta energía.", "tipo": "icono", "destacar": ["potencia:"], "accion": "potencia"},
+    {"texto": "Un microondas de mil vatios, encendido una hora, gasta un kilovatio-hora.", "tipo": "icono", "destacar": ["kilovatio-hora."], "accion": "una_hora", "rotulo": "1 KWH"}
+   ]
+  },
+  {
+   "id": "mil",
+   "lugar": "nave_microondas",
+   "escenas": [
+    {"texto": "Y un megavatio-hora son mil kilovatios-hora: mil microondas durante una hora.", "tipo": "icono", "destacar": ["mil"], "accion": "mil", "rotulo": "1 MWH = 1.000 KWH"},
+    {"texto": "Por eso, hoy cada kilovatio-hora cuesta unos veintiún céntimos en el mercado.", "tipo": "icono", "destacar": ["veintiún"], "accion": "centimos", "rotulo": "0,21 € EL KWH"},
+    {"texto": "Y en la hora más barata, de doce a una, baja a diecisiete.", "tipo": "icono", "destacar": ["diecisiete."], "accion": "barata"}
+   ]
+  },
+  {
+   "id": "watt",
+   "lugar": "taller_watt",
+   "escenas": [
+    {"texto": "Curiosidad: el vatio se llama así por James Watt, que mejoró la máquina de vapor.", "tipo": "icono", "destacar": ["Watt,"], "accion": "vapor", "rotulo": "JAMES WATT"},
+    {"texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.", "tipo": "suscribete", "destacar": ["Suscríbete"], "accion": "vapor_fin"}
+   ]
+  }
+ ]
+}

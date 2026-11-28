@@ -1,0 +1,51 @@
+{
+ "id": "2026-11-28_aldia_hora_resultados",
+ "titulo": "29-N: por qué no hay resultados hasta las nueve 🗳️",
+ "serie": "AL DÍA",
+ "lang": "es",
+ "voz": "piper es_ES-sharvard-medium (ElevenLabs no disponible: el conector necesita reconectarse)",
+ "tendencia": "Google Trends ES «adelaide review» (100+), 28/11/2026: sondeos publicados como noticias extranjeras en la víspera de las elecciones generales del 29-N",
+ "fuentes": [
+  "Moncloa.com (26/11/2026): «Los primeros resultados provisionales llegarán a partir de las 21:00 horas», tras el cierre de los colegios en Canarias; web resultados.29neleccionesgenerales.com y app «Elecciones Generales 29N»",
+  "Mapa Electoral (27/11/2026): los colegios cierran a las 20:00 (en Canarias, 20:00 hora canaria = 21:00 peninsular); recuento en cada mesa desde las 20:00; el escrutinio general es el viernes 4 de diciembre (arts. 75 y 103 LOREG), con el voto de los residentes en el extranjero",
+  "Demócrata (27/11/2026): el recuento en las mesas es manual y público; los primeros resultados de la noche son provisionales y pueden engañar"
+ ],
+ "remate": "¿A QUÉ HORA LO SABREMOS?",
+ "rpg": {
+  "gancho_lugar": "colegio_noche",
+  "fin": ["¡SÍGUENOS!", "CADA DÍA EN EL CANAL"],
+  "partidas": [
+   {"lugar": "colegio_noche", "era": "snes", "nombre": "EL CIERRE", "nota": "20:00"},
+   {"lugar": "mapa_horas", "era": "snes", "nombre": "CANARIAS", "nota": "21:00"},
+   {"lugar": "mesa_recuento", "era": "snes", "nombre": "EL RECUENTO", "nota": "VIERNES 4"}
+  ]
+ },
+ "capitulos": [
+  {
+   "id": "gancho",
+   "lugar": "colegio_noche",
+   "escenas": [
+    {"texto": "Mañana habrá una hora entera sin resultados.", "tipo": "titulo", "destacar": ["hora"], "accion": "cierre", "texto_grande": "¡1 HORA SIN DATOS!"},
+    {"texto": "Las urnas cierran a las ocho, pero los primeros datos no llegan hasta las nueve.", "tipo": "icono", "destacar": ["nueve."], "accion": "espera"},
+    {"texto": "¿Por qué hay que esperar?", "tipo": "icono", "destacar": ["esperar?"], "accion": "pregunta"}
+   ]
+  },
+  {
+   "id": "canarias",
+   "lugar": "mapa_horas",
+   "escenas": [
+    {"texto": "Porque en Canarias es una hora menos, y sus colegios siguen abiertos.", "tipo": "icono", "destacar": ["Canarias"], "accion": "husos"},
+    {"texto": "Los primeros datos llegan justo cuando cierran los colegios canarios, a las nueve.", "tipo": "icono", "destacar": ["nueve."], "accion": "nueve", "rotulo": "21:00"}
+   ]
+  },
+  {
+   "id": "recuento",
+   "lugar": "mesa_recuento",
+   "escenas": [
+    {"texto": "Mientras, en cada mesa, las papeletas se cuentan a mano, una a una.", "tipo": "icono", "destacar": ["mano,"], "accion": "a_mano"},
+    {"texto": "Curiosidad: lo de esa noche es provisional; el recuento oficial es el viernes cuatro.", "tipo": "icono", "destacar": ["viernes"], "accion": "oficial", "rotulo": "VIERNES 4"},
+    {"texto": "Suscríbete a Chispazo, y en el canal tienes muchas más curiosidades como esta.", "tipo": "suscribete", "destacar": ["Suscríbete"], "accion": "fin_recuento"}
+   ]
+  }
+ ]
+}

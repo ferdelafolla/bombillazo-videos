@@ -3538,3 +3538,389 @@ Object.assign(FABE, {
       } };
   },
 });
+
+// ———————————————————— 28/11/2026: el megavatio-hora, los resultados del 29-N y la Copa Davis ————————————————————
+// microondas genérico (16 × 9 × 10, frente en +z): hijo 'luz' (interior encendido, se muestra/oculta) y 'plato' que gira
+function microV() { const w = new THREE.Group(), v = new Vox();
+  v.box(0, 0, 0, 16, 9, 10, P.silver); v.box(0, 0, 0, 16, 1, 10, P.steel); v.box(1, 1, 10, 11, 8, 11, P.slate); v.box(2, 2, 10, 10, 7, 11, P.ink);
+  v.box(12, 6, 10, 15, 8, 11, P.ink); v.set(12, 6, 10, P.lime); v.set(13, 6, 10, P.lime); v.set(14, 6, 10, P.lime);
+  for (let y = 2; y < 5; y++) for (let x = 12; x < 15; x += 2) v.set(x, y, 10, P.dslate); v.box(10, 3, 11, 11, 6, 12, P.steel); v.luz(P.lime);
+  w.add(v.build({ jit: .04 }));
+  const luz = new THREE.Mesh(new THREE.BoxGeometry(8, 5, .2), new THREE.MeshBasicMaterial({ color: 0xffc860, transparent: true, opacity: .8 })); luz.position.set(6, 4.5, 11.15); luz.name = 'luz'; luz.visible = false; w.add(luz);
+  const pv = new Vox(); pv.cyl(0, 0, 0, 1, 2.6, P.white); pv.box(-1, 1, -1, 1, 2, 1, P.orange); const pl = pv.build({ jit: .03 }); const piv = new THREE.Group(); piv.add(pl); piv.position.set(6, 2.2, 5); piv.name = 'plato'; w.add(piv);
+  return w; }
+Object.assign(FAB, {
+  microondas: () => microV(),
+  // contador de la luz de disco (10 × 14 × 3) con el disco 'disco' que gira delante de la ventana
+  contador: () => { const w = new THREE.Group(), v = new Vox();
+    v.box(0, 0, 0, 10, 14, 3, P.silver); v.box(0, 0, 0, 10, 1, 3, P.steel); v.box(1, 7, 3, 9, 13, 4, P.ink); v.box(2, 2, 3, 8, 5, 4, P.night);
+    for (let x = 2; x < 8; x += 2) v.set(x, 3, 3, P.white); v.box(3, -3, 1, 7, 0, 2, P.ink); w.add(v.build({ jit: .04 }));
+    const d = new Vox(); d.cyl(0, 0, 0, 1, 3.4, P.steel); d.set(3, 0, 0, P.red); d.set(-3, 0, 0, P.red); const g = d.build({ jit: .02 }); g.position.set(-.5, -.5, -.5); const piv = new THREE.Group(); piv.add(g); piv.position.set(5, 9.5, 3.8); piv.name = 'disco'; w.add(piv);
+    return w; },
+  // máquina de vapor de balancín (tipo Watt): cilindro a la izquierda (x = -18), balancín 'balancin' sobre el pilar (0, 29), volante 'volante' en (16, 14)
+  maquina_vapor: () => { const w = new THREE.Group(), v = new Vox();
+    v.box(-26, 0, -7, 28, 3, 8, P.dslate); v.box(-25, 3, -6, 27, 4, 7, P.slate);
+    v.cyl(-18, 0, 4, 20, 4.5, (x, y) => y % 5 === 0 ? P.amber : P.dbrown); v.cyl(-18, 0, 20, 21, 5.2, P.amber);
+    v.box(-2, 4, -3, 2, 28, 3, P.brown); v.box(-3, 4, -4, 3, 7, 4, P.dbrown); v.box(-3, 27, -3, 3, 29, 3, P.dbrown);
+    v.box(13, 4, -5, 15, 15, -3, P.brown); v.box(13, 4, 3, 15, 15, 5, P.brown);   // soportes del eje del volante
+    v.box(-34, 0, -18, -24, 46, -10, (x, y) => y % 3 === 0 ? P.dbrown : P.brown); v.box(-35, 44, -19, -23, 47, -9, P.umber);   // chimenea de ladrillo
+    v.box(-32, 3, -10, -20, 13, -1, P.crimson);   // caldera
+    w.add(v.build({ jit: .06 }));
+    const b = new Vox(); b.box(-20, -1, -1, 21, 2, 2, P.umber); b.box(-21, -2, -1, -18, 3, 2, P.amber); b.box(18, -2, -1, 21, 3, 2, P.amber); const bg = b.build({ jit: .04 }); bg.position.set(0, -.5, -.5);
+    const piv = new THREE.Group(); piv.add(bg); piv.position.set(0, 29.5, 0); piv.name = 'balancin'; w.add(piv);
+    const f = new Vox(); for (let x = -11; x <= 11; x++) for (let y = -11; y <= 11; y++) { const r = Math.hypot(x, y); if (r > 9.3 && r < 11.2) f.set(x, y, 0, P.ink); else if (r < 9.4 && (Math.abs(x) < 1 || Math.abs(y) < 1 || Math.abs(x - y) < .8 || Math.abs(x + y) < .8)) f.set(x, y, 0, P.slate); }
+    f.box(-1, -1, -1, 2, 2, 2, P.amber); f.set(6, 0, 1, P.red); const fg = f.build({ jit: .04 }); fg.position.set(-.5, -.5, -.5); const pv = new THREE.Group(); pv.add(fg); pv.position.set(16, 14, 6); pv.name = 'volante'; w.add(pv);
+    return w; },
+});
+// moneda: disco plano de cobre (céntimo) o dorado
+const monedaB = (B, x, y, z, col = P.tan, s = 1) => { B.pon(x, y, z, 2.2 * s, .45 * s, 2.2 * s, col); B.pon(x, y, z, 1.5 * s, .5 * s, 2.8 * s, col); B.pon(x, y, z, 2.8 * s, .5 * s, 1.5 * s, col); };
+// signo de interrogación de bloques (5 × 7) en el plano x-y
+const INTERR = ['01110', '10001', '00001', '00010', '00100', '00000', '00100'];
+function interrB(B, x, y, z, s, col) { INTERR.forEach((f, j) => [...f].forEach((q, i) => { if (q === '1') B.pon(x + (i - 2) * s, y + (6 - j) * s, z, s, s, s, col); })); }
+Object.assign(FABE, {
+  // —— MWh 1: la fachada de una casa con el contador de la luz; el cable trae la energía y salen monedas ——
+  contador: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x0b1a3a, 0x124e89, 0x68386c]); s.fog = new THREE.Fog(0x262b44, 160, 320);
+    luces(s, { cielo: 0xc8d8ff, suelo: 0x3a4466, amb: 1.2, sol: 0xffe0b0, int: 2.0, dir: [40, 70, 80], sombra: 80 });
+    const v = new Vox(); v.box(-70, -1, -40, 70, 0, 70, (x, y, z) => z > 6 ? (((x >> 2) + (z >> 2)) & 1 ? P.dslate : P.slate) : ((x + z) & 1 ? P.silver : P.steel));
+    v.box(-30, 0, -22, 24, 44, -12, (x, y) => y % 6 === 0 ? P.tan : P.sand); v.box(-32, 44, -24, 26, 47, -10, P.dbrown);
+    for (const [x0, y0] of [[-24, 26], [-10, 26], [6, 26], [-24, 10], [-10, 10]]) { v.box(x0, y0, -12, x0 + 8, y0 + 10, -11, P.white); v.box(x0 + 1, y0 + 1, -12, x0 + 7, y0 + 9, -10, P.amber); v.box(x0 + 3, y0 + 1, -11, x0 + 4, y0 + 9, -10, P.white); }
+    v.box(-2, 0, -12, 6, 16, -11, P.dbrown); v.box(-3, 16, -12, 7, 17, -10, P.white); v.set(4, 7, -10, P.amber);
+    v.box(34, 0, -8, 36, 52, -6, P.dbrown); v.box(30, 50, -8, 40, 51, -6, P.dbrown);   // poste de la luz
+    v.luz(P.amber); s.add(v.build({ jit: .05 }));
+    const ct = actor('contador', 1.2); ct.position.set(9, 6, -11); s.add(ct); const disco = ct.getObjectByName('disco');
+    const B = new Bloques(260), F = new Bloques(80, true); s.add(B.im, F.im);
+    const ruta = [[38, 51, -7], [24, 42, -10], [17, 30, -9.5], [15, 22, -8.5]];
+    const cable = new Bloques(60); s.add(cable.im); cable.ini(); for (let i = 0; i < 3; i++) { const a = ruta[i], b = ruta[i + 1]; for (let k = 0; k < 14; k++) { const u = k / 14; cable.pon(lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u), .6, .6, .6, P.ink); } } cable.fin();
+    const c = cam(46);
+    const base = (t, vel, nf) => { disco.rotation.y = t * vel; F.ini(); flujo(F, ruta, nf, t, 14, P.yellow, 1); F.fin(); };
+    return { s, c, upd(t) { base(t, 2, 6); B.ini(); B.fin(); mira(c, [6, 40, 92], [10, 12, -6], .08); },
+      acc: {
+        // el disco gira deprisa, la energía baja por el cable y del contador saltan monedas que caen a la acera
+        precio(lt, dur, t) { base(t, 9, 14); B.ini(); for (let i = 0; i < 26; i++) { const t0 = i * .13, u = lt - t0; if (u < 0) continue; const T = 1.1, f = Math.min(u, T);
+            const x = 15 + Math.cos(i * 2.3) * f * 9, z = -7 + f * 6 + Math.sin(i * 1.7) * 2, y = Math.max(.3 + (i % 5) * .45 * (u > T ? 1 : 0), 18 + f * 14 - f * f * 26);
+            monedaB(B, x, u > T ? .3 + (i % 4) * .5 : y, z, P.amber, .9); } B.fin();
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(2, 8, q), lerp(42, 36, q), lerp(98, 84, q)], [10, 12, -6], .08); },
+        // la cámara se acerca al contador; encima sube un interrogante de bloques
+        pregunta(lt, dur, t) { base(t, 5, 10); B.ini(); for (let i = 0; i < 26; i++) monedaB(B, 15 + Math.cos(i * 2.3) * 9.9, .3 + (i % 4) * .5, -.4 + Math.sin(i * 1.7) * 2, P.amber, .9);
+          const k = ss(clamp(lt / .8, 0, 1)); interrB(B, 15, lerp(10, 26, k) + Math.sin(t * 3) * .6, -6, 1.3, P.yellow); B.fin();
+          mira(c, [12, 34, 66], [14, 16, -8], .08); },
+      } };
+  },
+  // —— MWh 2: la cocina: una bombilla de 10 W y un microondas de 1.000 W; medidores y reloj de pared ——
+  cocina_vatios: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x3a4466); s.fog = new THREE.Fog(0x3a4466, 160, 320);
+    luces(s, { cielo: 0xfff4e0, suelo: 0x5a6988, amb: 1.3, sol: 0xfff1d6, int: 2.0, dir: [-20, 70, 70], sombra: 70 });
+    const v = new Vox(); v.box(-60, -1, -30, 60, 0, 50, (x, y, z) => ((x >> 2) + (z >> 2)) & 1 ? P.sand : P.white);
+    v.box(-60, 0, -32, 60, 60, -28, (x, y) => (x % 4 === 0 || y % 4 === 0) ? P.silver : P.white);
+    v.box(-40, 0, -28, 40, 13, -10, P.navy); v.box(-41, 13, -29, 41, 15, -8, P.brown); for (let x = -36; x < 40; x += 13) v.box(x, 4, -10, x + 1, 9, -9, P.silver);
+    v.box(-3, 30, -28, 3, 34, -27, P.white); v.box(-2, 31, -27, -1, 33, -26, P.ink); v.box(1, 31, -27, 2, 33, -26, P.ink);   // enchufe
+    // lámpara de mesa
+    v.box(-20, 15, -18, -12, 16, -10, P.dslate); v.box(-17, 16, -15, -15, 25, -13, P.steel);
+    s.add(v.build({ jit: .04 }));
+    const bulbo = bola(0x5a6988, 2.6); bulbo.position.set(-15.5, 27.5, -13.5); s.add(bulbo);
+    const halo = bola(0xfee761, 4.5); halo.material.transparent = true; halo.material.opacity = .25; halo.position.copy(bulbo.position); s.add(halo);
+    const mo = actor('microondas', 1.15); mo.position.set(1, 15, -24); s.add(mo); const luz = mo.getObjectByName('luz'), plato = mo.getObjectByName('plato');
+    const reloj = pantalla(9, 9, 48, 48); reloj.m.position.set(10, 33.5, -27.9); s.add(reloj.m);
+    const e1 = pantalla(9, 3.6, 72, 28), e2 = pantalla(12, 3.6, 96, 28); e1.m.position.set(-15.5, 41.5, -27.9); e2.m.position.set(10, 41.5, -27.9); s.add(e1.m, e2.m);
+    rotular(e1, ['10 W'], '#fee761', '#181425', 20); rotular(e2, ['1.000 W'], '#fee761', '#181425', 20);
+    const B = new Bloques(200, true), G = new Bloques(80); s.add(B.im, G.im);
+    const c = cam(46);
+    const r1 = [[-1.5, 30, -27], [-1.5, 22, -27], [-9, 17, -24], [-15.5, 17, -14]], r2 = [[1.5, 30, -27], [1.5, 24, -27], [6, 24, -25]];
+    const medidor = (x, k, col) => { for (let i = 0; i < 10; i++) G.pon(x, 32 + i * 1, -27.4, 2.4, .8, .6, i < Math.round(k * 10) ? col : P.dslate); };
+    const estado = (t, kb, km, lamp, micro) => { bulbo.material.color.setHex(lamp ? 0xfee761 : 0x5a6988); halo.visible = lamp; luz.visible = micro; plato.rotation.y = micro ? t * 2 : 0;
+      B.ini(); if (lamp) flujo(B, r1, 2, t, 4, P.yellow, .9); if (micro) flujo(B, r2, 12, t, 26, P.yellow, .9); B.fin(); G.ini(); medidor(-20.5, kb, P.lime); medidor(21.5, km, P.red); G.fin(); };
+    return { s, c, upd(t) { estado(t, 0, 0, false, false); relojP(reloj, 12); mira(c, [0, 40, 100], [0, 22, -20], .08); },
+      acc: {
+        // primero se enciende la bombilla (poca energía, despacio); luego el microondas (mucha, deprisa)
+        potencia(lt, dur, t) { const a = clamp(lt / .5, 0, 1), b = clamp((lt - dur * .45) / .6, 0, 1); estado(t, a * .1, b, a > 0, b > 0); relojP(reloj, 12);
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 2, q), 40, 100], [lerp(-4, 2, q), 22, -20], .08); },
+        // el microondas funciona y el reloj de pared da una vuelta entera: una hora
+        una_hora(lt, dur, t) { estado(t, .1, 1, true, true); const k = clamp(lt / (dur * .85), 0, 1); relojP(reloj, 12 + k);
+          mira(c, [8, 36, 80], [8, 24, -22], .08); },
+      } };
+  },
+  // —— MWh 3: una nave con mil microondas (20 × 50) que se encienden; monedas de céntimo y el sol del mediodía ——
+  nave_microondas: () => {
+    const s = new THREE.Scene(); const noche = 0x181425, dia = 0x8fd3ff; s.background = new THREE.Color(noche); s.fog = new THREE.Fog(noche, 260, 560);
+    luces(s, { cielo: 0xd0e0ff, suelo: 0x3a4466, amb: 1.25, sol: 0xfff1d6, int: 1.9, dir: [-60, 120, 80], sombra: 200, mira: [0, 0, -140] });
+    const v = new Vox(); v.box(-90, -1, -330, 90, 0, 40, (x, y, z) => ((x >> 3) + (z >> 3)) & 1 ? P.dslate : P.slate); s.add(v.build({ jit: .04, sombra: false }));
+    const pos = []; for (let r = 0; r < 50; r++) for (let q = 0; q < 20; q++) pos.push([(q - 9.5) * 7, -r * 6]); pos.sort((a, b) => Math.hypot(a[0], a[1]) - Math.hypot(b[0], b[1]));
+    const CU = new Bloques(1000), VE = new Bloques(1000, true), M = new Bloques(80), PZ = new Bloques(40, true); s.add(CU.im, VE.im, M.im, PZ.im);
+    CU.ini(); pos.forEach(([x, z]) => CU.pon(x, 1.4, z, 4.8, 2.8, 3.2, P.silver)); CU.fin();
+    const sol = bola(0xfff1c0, 9); s.add(sol); sol.visible = false;
+    const cartel = pantalla(10, 1.9, 252, 48); cartel.m.position.set(-1, 8.5, -6); s.add(cartel.m); cartel.m.visible = false;
+    const c = cam(46);
+    const encender = (n, t) => { VE.ini(); pos.forEach(([x, z], i) => VE.pon(x - .7, 1.5, z + 1.62, 2.8, 1.8, .1, i < n ? (((i * 7 + Math.floor(t * 3)) % 11) ? 0xffc860 : 0xffe9a0) : P.ink)); VE.fin(); };
+    const pila = (n, lt, fuera = 0, lf = 0) => { M.ini(); for (let i = 0; i < n; i++) { const ti = i * .07, u = clamp((lt - ti) / .35, 0, 1); monedaB(M, 6.5, lerp(14, .3 + i * .5, u * u), 2.5, P.tan, .8); }
+      for (let i = 0; i < fuera; i++) { const u = clamp((lf - .6 - i * .15) / .9, 0, 1); if (u < 1) monedaB(M, 6.5 + u * (8 + i * 3), .3 + (n + i) * .5 + u * 16 - u * u * 6, 2.5 - u * 6, P.tan, .8); } M.fin(); };
+    const cielo2 = (k) => { const col = colLerp(noche, dia, k); s.background = col; s.fog.color = col; };
+    return { s, c, upd(t) { cielo2(0); encender(1, t); M.ini(); M.fin(); PZ.ini(); PZ.fin(); sol.visible = false; cartel.m.visible = false; mira(c, [0, 8, 26], [0, 2, 0], -.03); },
+      acc: {
+        // de un microondas a mil: se van encendiendo en ondas y la cámara sube hasta ver la nave entera
+        mil(lt, dur, t) { const k = clamp(lt / (dur * .8), 0, 1); encender(Math.round(lerp(1, 1000, k * k)), t); const q = ss(clamp(lt / (dur * .9), 0, 1));
+          mira(c, [0, lerp(8, 230, q), lerp(26, 130, q)], [0, 0, lerp(0, -150, q)], lerp(-.03, -.1, q)); },
+        // de vuelta al primer microondas: caen veintiún céntimos y se apilan al lado
+        centimos(lt, dur, t) { encender(1000, t); pila(21, lt); mira(c, [12, 22, 34], [3, 3, 0], .07); },
+        // amanece y sale el sol del mediodía: cuatro monedas salen volando y quedan diecisiete
+        barata(lt, dur, t) { const k = ss(clamp(lt / 1.2, 0, 1)); cielo2(k); sol.visible = true; sol.position.set(-60, lerp(-10, 70, k), -260); encender(1000, t); pila(17, 9, 4, lt);
+          cartel.m.visible = true; rotular(cartel, ['12:00 - 13:00'], '#feae34', '#181425', 30); mira(c, [12, 22, 36], [2, 4, -2], .07); },
+      } };
+  },
+  // —— MWh 4: el taller de James Watt: la máquina de vapor de balancín funcionando ——
+  taller_watt: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x3e2731); s.fog = new THREE.Fog(0x3e2731, 160, 320);
+    luces(s, { cielo: 0xffe8c8, suelo: 0x3e2731, amb: 1.25, sol: 0xffd9a0, int: 2.2, dir: [50, 80, 60], sombra: 80 });
+    const v = new Vox(); v.box(-70, -1, -30, 70, 0, 50, (x, y, z) => (x & 3) ? P.brown : P.dbrown);
+    v.box(-70, 0, -32, 70, 70, -28, (x, y) => ((y % 3 === 0) || ((x + (Math.floor(y / 3) & 1) * 3) % 6 === 0)) ? P.umber : P.dbrown);
+    v.box(30, 26, -28, 50, 50, -27, P.yellow); v.box(39, 26, -28, 41, 50, -26, P.umber); v.box(30, 37, -28, 50, 39, -26, P.umber);   // ventana con luz de día
+    v.box(-60, 0, 10, -44, 12, 22, P.dbrown); v.box(-61, 12, 9, -43, 13, 23, P.brown);   // banco de trabajo
+    v.luz(P.yellow); s.add(v.build({ jit: .05 }));
+    const m = actor('maquina_vapor'); s.add(m); const bal = m.getObjectByName('balancin'), vol = m.getObjectByName('volante');
+    const B = new Bloques(160), H = new Bloques(90, true); s.add(B.im, H.im);
+    const c = cam(46);
+    const anima = (t, w) => { const f = t * w, sy = Math.sin(f) * 6; vol.rotation.z = f; bal.rotation.z = Math.asin(sy / 19);
+      const yl = 29.5 - sy, yr = 29.5 + sy, cx = 16 + Math.cos(f) * 6, cy = 14 + Math.sin(f) * 6;
+      B.ini(); B.pon(-18, (21 + yl) / 2, .5, 1.2, yl - 21, 1.2, P.silver); B.pon(-18, 21 + Math.max(0, yl - 26) * .3, .5, 7, 1.4, 7, P.slate);
+      const dx = cx - 19, dy = cy - yr; B.pon(19 + dx / 2, yr + dy / 2, 4, 1.4, Math.hypot(dx, dy), 1.4, P.silver); B.pon(cx, cy, 7.2, 1.6, 1.6, 1.6, P.amber); B.fin();
+      H.ini(); for (let i = 0; i < 30; i++) { const ph = ((t * .45 + i / 30) % 1); H.pon(-29 + Math.sin(i * 2.1 + t) * ph * 4, 47 + ph * 26, -14 + Math.cos(i * 1.3) * ph * 3, 1.5 + ph * 4.5, 1.5 + ph * 4.5, 1.5 + ph * 4.5, ph > .7 ? P.silver : P.white); }
+      for (let i = 0; i < 14; i++) { const ph = ((t * 1.2 + i / 14) % 1); H.pon(-18 + Math.cos(i * 1.9) * (2 + ph * 6), 21 + ph * 6, Math.sin(i * 1.9) * (2 + ph * 6), .8 + ph * 2, .8 + ph * 2, .8 + ph * 2, P.white); } H.fin(); };
+    return { s, c, upd(t) { anima(t, 2.2); mira(c, [Math.sin(t * .15) * 30, 46, 116], [0, 22, 0], .08); },
+      acc: {
+        // la máquina arranca: el volante gira, el balancín sube y baja y sale el vapor; la cámara da media vuelta
+        vapor(lt, dur, t) { anima(t, lerp(1, 2.6, clamp(lt / 2, 0, 1))); const q = ss(clamp(lt / dur, 0, 1)); const a = lerp(.05, .45, q); mira(c, [Math.sin(a) * 112, lerp(42, 48, q), Math.cos(a) * 112], [0, 22, 0], .08); },
+        vapor_fin(lt, dur, t) { anima(t, 2.6); mira(c, [46, 50, 124], [-2, 22, 0], .1); },
+      } };
+  },
+});
+// —— 29-N: reloj de calle, pantallón de resultados y saca de correos ——
+Object.assign(FAB, {
+  // reloj de calle: poste verde con caja negra arriba (la esfera es una pantalla aparte, centrada en y = 25, z = 2.1)
+  reloj_calle: () => { const v = new Vox(); v.box(-2, 0, -2, 3, 2, 3, P.dgreen); v.box(-1, 2, -1, 2, 19, 2, P.dgreen); v.box(-4, 19, -2, 5, 31, 2, P.ink); v.box(-5, 31, -2, 6, 32, 2, P.dgreen); v.set(0, 32, 0, P.amber); v.luz(P.amber);
+    const g = new THREE.Group(); g.add(v.build({ jit: .04 })); return g; },
+  // pantallón de resultados: patas y marco (la imagen es una pantalla aparte de 24 × 14 centrada en y = 19, z = 1.6)
+  pantallon: () => { const v = new Vox(); for (const sx of [-10, 9]) v.box(sx, 0, -1, sx + 2, 12, 1, P.slate); v.box(-14, 11, -1, 14, 27, 1, P.ink); v.box(-14, 26, -1, 14, 27, 1, P.steel); v.box(-3, 27, -1, 3, 28, 1, P.red); v.luz(P.red);
+    const g = new THREE.Group(); g.add(v.build({ jit: .03 })); return g; },
+  // saca de correos (voto desde el extranjero) con cuerda y etiqueta
+  saca: () => { const v = new Vox(); v.ball(0, 5, 0, 5, (x, y, z) => hsh(x, y, z) > .7 ? P.sand : P.tan, 1.1); v.box(-1, 10, -1, 2, 13, 2, P.tan); v.box(-2, 10, -2, 3, 11, 3, P.dbrown); v.box(2, 6, 4, 5, 9, 5, P.white); v.set(3, 8, 5, P.red);
+    const g = new THREE.Group(); g.add(v.build({ jit: .05, centrar: true })); return g; },
+});
+// lon/lat → mapa de España (4 unidades por grado)
+const ex = lon => (lon + 8) * 4, ez = lat => (40 - lat) * 4;
+const ESP = [[-9.3, 43.2], [-8, 43.7], [-5, 43.5], [-1.8, 43.4], [0.7, 42.8], [3.2, 42.4], [3.2, 41.9], [0.9, 41], [0, 39.9], [-0.3, 39.4], [0.2, 38.7], [-0.7, 37.6], [-2.1, 36.7], [-4.4, 36.7], [-5.6, 36], [-6.4, 36.8], [-7.4, 37.2], [-8.9, 37], [-8.8, 38.7], [-9.5, 38.8], [-8.9, 40.2], [-8.9, 42]];
+const POR = [[-8.9, 37], [-7.4, 37.2], [-7.5, 38], [-7, 38.9], [-7, 39.7], [-6.9, 41], [-6.2, 41.6], [-8.1, 42], [-8.9, 42], [-8.9, 40.2], [-9.5, 38.8], [-8.8, 38.7]];
+const ISLAS = [[-16.6, 28.3, 2.6], [-15.6, 27.95, 2.2], [-13.6, 29.05, 1.8], [-14.0, 28.4, 2.2], [-17.85, 28.65, 1.6], [-17.2, 28.1, 1.3], [-18.0, 27.75, 1.2], [3.0, 39.6, 2.4], [4.1, 39.95, 1.2], [1.4, 38.95, 1.1]];
+Object.assign(FABE, {
+  // —— 29-N 1: el colegio electoral de noche, el reloj de la calle y el pantallón de resultados ——
+  colegio_noche: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x07060e, 0x181425, 0x262b44]); s.fog = new THREE.Fog(0x181425, 170, 340); estrellas(s, 120, 220, 40);
+    luces(s, { cielo: 0x9fb4e8, suelo: 0x262b44, amb: 1.15, sol: 0xc8d4ff, int: 1.6, dir: [30, 80, 90], sombra: 90 });
+    const v = new Vox(); v.box(-80, -1, -40, 80, 0, 70, (x, y, z) => z > 8 ? (((x >> 2) + (z >> 2)) & 1 ? P.night : P.dslate) : ((x + z) & 1 ? P.steel : P.slate));
+    v.box(-44, 0, -30, 20, 34, -14, (x, y) => (y % 4 === 0 || (x + (y >> 2) * 2) % 8 === 0) ? P.dbrown : P.brown); v.box(-46, 34, -32, 22, 36, -12, P.slate);
+    for (let x = -40; x < 18; x += 10) for (const y0 of [6, 20]) if (!(y0 === 6 && x > -20 && x < 0)) { v.box(x, y0, -14, x + 7, y0 + 9, -13, P.white); v.box(x + 1, y0 + 1, -14, x + 6, y0 + 8, -12, P.amber); }
+    v.box(-16, 0, -14, -4, 15, -13, P.white); v.box(-18, 15, -15, -2, 17, -11, P.slate);   // marco de la puerta
+    v.box(-15, 0, -15, -5, 14, -13, P.amber);   // interior iluminado
+    v.luz(P.amber); s.add(v.build({ jit: .05 }));
+    const cartel = pantalla(18, 3, 144, 24); cartel.m.position.set(-12, 28, -11.9); s.add(cartel.m); rotular(cartel, ['COLEGIO ELECTORAL'], '#ffffff', '#124e89', 16);
+    const rc = actor('reloj_calle'); rc.position.set(30, 0, 0); s.add(rc); const esf = pantalla(8, 8, 48, 48); esf.m.position.set(30.5, 25, 2.15); s.add(esf.m);
+    const pt = actor('pantallon'); pt.position.set(56, 0, -6); s.add(pt); const pp = pantalla(26, 14, 156, 84); pp.m.position.set(56, 19, -4.4); s.add(pp.m);
+    const B = new Bloques(120), Q = new Bloques(40, true); s.add(B.im, Q.im);
+    const c = cam(46);
+    const panel = (k) => { const { g, cv, tex } = pp; const key = Math.round(k * 20); if (pp._k === key) return; pp._k = key; g.fillStyle = '#181425'; g.fillRect(0, 0, cv.width, cv.height);
+      g.fillStyle = '#ffffff'; g.font = 'bold 15px monospace'; g.textAlign = 'center'; g.fillText('ESCRUTADO', cv.width / 2, 22); g.fillStyle = '#feae34'; g.font = 'bold 30px monospace'; g.fillText(k > 0 ? (k * 4).toFixed(1).replace('.', ',') + ' %' : '0,0 %', cv.width / 2, 56);
+      g.fillStyle = '#3a4466'; g.fillRect(14, 66, cv.width - 28, 8); g.fillStyle = '#63c74d'; g.fillRect(14, 66, (cv.width - 28) * k * .04, 8); tex.needsUpdate = true; };
+    const puerta = (k) => { B.pon(-10, 7, lerp(-12.4, -12.4, k), 10 * k + .01, 14, .8, P.navy); };
+    const gente = (lt, n) => { for (let i = 0; i < n; i++) { const u = clamp((lt - i * .35) / 2.4, 0, 1); persona(B, -10 + (i - 1) * 3 + u * (i % 2 ? 26 : -30), 0, -10 + u * 22 + i * 2, ROPA[i % 12], { s: 2.2, pelo: PELO[i % 5] }); } };
+    return { s, c, upd(t) { relojP(esf, 20); panel(0); B.ini(); puerta(1); B.fin(); Q.ini(); Q.fin(); mira(c, [-6, 40, 128], [-4, 12, -10], .1); },
+      acc: {
+        // las ocho en el reloj: los últimos votantes salen y la puerta se cierra
+        cierre(lt, dur, t) { relojP(esf, 19.99 + clamp(lt / 1.2, 0, 1) * .01); panel(0); B.ini(); puerta(ss(clamp((lt - 1.2) / 1, 0, 1))); gente(lt, 4); B.fin(); Q.ini(); Q.fin();
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-10, -2, q), 40, lerp(132, 122, q)], [lerp(-8, 0, q), 12, -10], .1); },
+        // el reloj corre de las ocho a las nueve; el pantallón sigue a cero
+        espera(lt, dur, t) { const k = clamp(lt / (dur * .9), 0, 1); relojP(esf, 20 + k * .99); panel(0); B.ini(); puerta(1); B.fin(); Q.ini(); Q.fin();
+          const q = ss(clamp(lt / 1.5, 0, 1)); mira(c, [lerp(-2, 46, q), lerp(40, 32, q), lerp(122, 96, q)], [lerp(0, 46, q), lerp(12, 16, q), -6], .08); },
+        // un interrogante sale sobre el pantallón
+        pregunta(lt, dur, t) { relojP(esf, 20.99); panel(0); B.ini(); puerta(1); B.fin(); Q.ini(); interrB(Q, 56, lerp(28, 32, ss(clamp(lt / .7, 0, 1))) + Math.sin(t * 3) * .5, -4, 1.2, P.yellow); Q.fin(); mira(c, [48, 32, 96], [48, 16, -6], .08); },
+      } };
+  },
+  // —— 29-N 2: el mapa de España con dos relojes: la península a las ocho y Canarias a las siete ——
+  mapa_horas: () => {
+    const s = new THREE.Scene(); s.background = cielo([0x0b1a3a, 0x124e89, 0x193c3e]); s.fog = new THREE.Fog(0x124e89, 200, 400);
+    luces(s, { cielo: 0xe0ecff, suelo: 0x124e89, amb: 1.3, sol: 0xfff1d6, int: 2.0, dir: [-40, 90, 60], sombra: 120, mira: [0, 0, 20] });
+    const v = new Vox(); v.box(-70, -2, -50, 70, -1, 80, (x, y, z) => hsh(x >> 1, 0, z >> 1) > .85 ? P.blue : P.navy);
+    for (let x = -64; x < 64; x++) for (let z = -40; z < 70; z++) { const lon = x / 4 - 8, lat = 40 - z / 4;
+      if (enPol(lon, lat, ESP)) v.box(x, -1, z, x + 1, enPol(lon, lat, POR) ? 1 : 2, z + 1, enPol(lon, lat, POR) ? P.steel : (hsh(x >> 2, 1, z >> 2) > .5 ? P.lime : P.green));
+      else if (ISLAS.some(([lo, la, r]) => Math.hypot(x - ex(lo), z - ez(la)) < r)) v.box(x, -1, z, x + 1, 2, z + 1, hsh(x, 2, z) > .5 ? P.lime : P.green); }
+    s.add(v.build({ jit: .05 }));
+    const r1 = pantalla(8, 8, 48, 48), r2 = pantalla(8, 8, 48, 48); s.add(r1.m, r2.m);
+    const p1 = [ex(-3.7), 14, ez(40.4)], p2 = [ex(-15.8), 14, ez(28.2)]; r1.m.position.set(...p1); r2.m.position.set(...p2);
+    const et1 = pantalla(10, 2.6, 100, 26), et2 = pantalla(10, 2.6, 100, 26); et1.m.position.set(p1[0], 8.6, p1[2]); et2.m.position.set(p2[0], 8.6, p2[2]); s.add(et1.m, et2.m);
+    rotular(et1, ['PENÍNSULA'], '#ffffff', '#181425', 15); rotular(et2, ['CANARIAS'], '#ffffff', '#181425', 15);
+    const pt = actor('pantallon', .9); pt.position.set(ex(-3.7), 0, ez(43.6) - 14); s.add(pt); const pp = pantalla(23.4, 12.6, 156, 84); pp.m.position.set(ex(-3.7), 17.1, ez(43.6) - 12.5); s.add(pp.m);
+    const POL = [[ex(-3.7) - 6, ez(40.4) + 4], [ex(-5.6), ez(37.4)], [ex(-0.4), ez(39.5)], [ex(-8.4), ez(43.3)], [ex(2.2), ez(41.4)], [ex(-15.4), ez(28.1)], [ex(-16.3), ez(28.5)], [ex(-13.9), ez(28.5)]];
+    const B = new Bloques(260), F = new Bloques(120, true); s.add(B.im, F.im);
+    const c = cam(46);
+    const reloj = (h) => { r1.m.lookAt(c.position); r2.m.lookAt(c.position); et1.m.lookAt(c.position.x, 8.6, c.position.z); et2.m.lookAt(c.position.x, 8.6, c.position.z); relojP(r1, h); relojP(r2, h - 1); };
+    const panel = (k) => { const { g, cv, tex } = pp; const key = Math.round(k * 30); if (pp._k === key) return; pp._k = key; g.fillStyle = '#181425'; g.fillRect(0, 0, cv.width, cv.height);
+      g.fillStyle = '#ffffff'; g.font = 'bold 15px monospace'; g.textAlign = 'center'; g.fillText(k > 0 ? 'RESULTADOS' : 'ESPERANDO…', cv.width / 2, 22);
+      [P.blue, P.red, P.lime, P.plum, P.amber].forEach((col, i) => { const h = k * (20 + hsh(i, 4, 9) * 30); g.fillStyle = hx(col); g.fillRect(18 + i * 26, 76 - h, 18, h); }); tex.needsUpdate = true; };
+    // colegios: casitas con la luz encendida (abierto) o apagada; en Canarias, gente entrando
+    const colegios = (abiertoP, abiertoC, t) => { POL.forEach(([x, z], i) => { const can = i >= 5, ab = can ? abiertoC : abiertoP; B.pon(x, 3.5, z, 4, 3, 3, P.sand); B.pon(x, 5.4, z, 4.6, .8, 3.6, P.crimson); B.pon(x, 3, z + 1.55, 1.2, 2, .2, ab ? P.amber : P.ink);
+        if (can && ab) for (let j = 0; j < 2; j++) { const u = ((t * .5 + j * .5 + i * .3) % 1); persona(B, x + 2.5 - u * 2.5, 2, z + 4.5 - u * 2.5, ROPA[(i + j) % 12], { s: .55 }); } }); };
+    return { s, c, upd(t) { reloj(20); panel(0); B.ini(); colegios(false, true, t); B.fin(); F.ini(); F.fin(); mira(c, [ex(-3.7), 64, ez(40.4) + 72], [ex(-3.7), 4, ez(40.4)], .13); },
+      acc: {
+        // la península (20:00, colegios cerrados) y la cámara viaja a Canarias (19:00, gente votando)
+        husos(lt, dur, t) { reloj(20); panel(0); B.ini(); colegios(false, true, t); B.fin(); F.ini(); F.fin(); const q = ss(clamp((lt - .8) / (dur * .6), 0, 1));
+          mira(c, [lerp(ex(-3.7), ex(-15.8), q), 64, lerp(ez(40.4) + 72, ez(28.2) + 72, q)], [lerp(ex(-3.7), ex(-15.8), q), 4, lerp(ez(40.4), ez(28.2), q)], .13); },
+        // las nueve: cierran en Canarias y los datos vuelan de todas partes al pantallón, que se llena de barras
+        nueve(lt, dur, t) { const k = clamp(lt / 1, 0, 1); reloj(20 + k * .999); const on = lt > 1.1; B.ini(); colegios(false, !on, t); B.fin();
+          F.ini(); if (on) POL.forEach(([x, z], i) => flujo(F, [[x, 7, z], [lerp(x, ex(-3.7), .5), 24, lerp(z, ez(43.6) - 12, .5)], [ex(-3.7), 18, ez(43.6) - 12]], 4, t + i * .2, 40, P.yellow, 1.1)); F.fin();
+          panel(on ? clamp((lt - 1.4) / 2, 0, 1) : 0); const q = ss(clamp(lt / 1.6, 0, 1));
+          mira(c, [lerp(ex(-15.8), ex(-7), q), lerp(64, 150, q), lerp(ez(28.2) + 72, ez(34) + 50, q)], [lerp(ex(-15.8), ex(-7), q), 4, lerp(ez(28.2), ez(39.5), q)], lerp(.13, .1, q)); },
+      } };
+  },
+  // —— 29-N 3: la mesa electoral cuenta las papeletas a mano; luego llegan las sacas del voto exterior y el viernes 4 ——
+  mesa_recuento: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x262b44); s.fog = new THREE.Fog(0x262b44, 150, 300);
+    luces(s, { cielo: 0xfff4e0, suelo: 0x3a4466, amb: 1.35, sol: 0xfff1d6, int: 2.0, dir: [-30, 80, 70], sombra: 80 });
+    const v = new Vox(); v.box(-70, -1, -40, 70, 0, 50, (x, y, z) => (z & 3) ? P.tan : P.brown);
+    v.box(-70, 0, -42, 70, 55, -38, (x, y) => y < 14 ? P.lime : (y === 14 ? P.dgreen : P.sand)); for (let x = -54; x < 60; x += 22) { v.box(x, 22, -38, x + 12, 40, -37, P.white); v.box(x + 1, 23, -38, x + 11, 39, -36, 0x0b1a3a); }
+    v.box(-26, 10, -12, 26, 12, 4, P.silver); for (const [x, z] of [[-24, -10], [23, -10], [-24, 1], [23, 1]]) v.box(x, 0, z, x + 1, 10, z + 1, P.steel);   // mesa
+    v.box(-3, 12, -8, 4, 21, -2, 0xdfeaff); v.box(-4, 21, -9, 5, 22, -1, P.steel); v.box(-1, 21, -6, 2, 22, -4, P.ink);   // urna
+    s.add(v.build({ jit: .04 }));
+    const cal = pantalla(10, 10, 60, 60); cal.m.position.set(25, 30, -37.8); s.add(cal.m);
+    const sacas = []; for (let i = 0; i < 4; i++) { const m = actor('saca', .9); s.add(m); sacas.push(m); }
+    const B = new Bloques(420), G = new Bloques(60); s.add(B.im, G.im);
+    const c = cam(46);
+    const COLS = [P.blue, P.red, P.lime, P.plum, P.amber];
+    const calendario = (dia) => { const { g, cv, tex } = cal; if (cal._k === dia) return; cal._k = dia; g.fillStyle = '#ffffff'; g.fillRect(0, 0, 60, 60); g.fillStyle = '#e43b44'; g.fillRect(0, 0, 60, 16);
+      g.fillStyle = '#ffffff'; g.font = 'bold 12px monospace'; g.textAlign = 'center'; g.fillText(dia === 4 ? 'VIERNES' : 'DOMINGO', 30, 12); g.fillStyle = '#181425'; g.font = 'bold 30px monospace'; g.fillText(String(dia), 30, 46); g.font = 'bold 9px monospace'; g.fillText(dia === 4 ? 'DICIEMBRE' : 'NOVIEMBRE', 30, 57); tex.needsUpdate = true; };
+    const mesa = (n, t, mano) => { persona(B, -16, 0, -17, P.navy, { s: 3.5, pelo: P.ink }); persona(B, 0, 0, -18, P.crimson, { s: 3.5, pelo: P.amber }); persona(B, 16, 0, -17, P.teal, { s: 3.5, pelo: P.dbrown });
+      for (let i = 0; i < n; i++) { const p = i % 5, h = Math.floor(i / 5); B.pon(-16 + p * 8, 12.3 + h * .32, 0, 4.2, .28, 3, P.white); B.pon(-16 + p * 8 - 1.2, 12.33 + h * .32, 0, 1.2, .3, 1, COLS[p]); }
+      if (mano) { const u = (t * 2.2) % 1, p = Math.floor(t * 2.2) % 5; B.pon(lerp(.5, -16 + p * 8, u), 22 + Math.sin(u * Math.PI) * 6, lerp(-5, 0, u), 3.4, .3, 2.4, P.white); B.pon(lerp(.5, -16 + p * 8, u) - 1, 22.1 + Math.sin(u * Math.PI) * 6, lerp(-5, 0, u), 1, .3, .9, COLS[p]); } };
+    const ocultaSacas = () => sacas.forEach(m => m.visible = false);
+    return { s, c, upd(t) { calendario(29); ocultaSacas(); B.ini(); mesa(60, t, false); B.fin(); G.ini(); G.fin(); mira(c, [0, 40, 92], [0, 16, -6], .07); },
+      acc: {
+        // los tres de la mesa sacan las papeletas una a una y las montañas crecen
+        a_mano(lt, dur, t) { calendario(29); ocultaSacas(); B.ini(); mesa(Math.round(lerp(10, 120, clamp(lt / dur, 0, 1))), t, true); B.fin(); G.ini(); G.fin();
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-14, 6, q), lerp(42, 36, q), lerp(84, 74, q)], [0, 15, -4], .07); },
+        // llegan las sacas del voto exterior y el calendario salta al viernes 4
+        oficial(lt, dur, t) { calendario(lt > dur * .72 ? 4 : 29); B.ini(); mesa(120, t, false); B.fin(); G.ini(); G.fin();
+          sacas.forEach((m, i) => { m.visible = true; const u = ss(clamp((lt - i * .35) / 1.1, 0, 1)); m.position.set(lerp(80, 50 - i * 8, u), 5 + Math.abs(Math.sin(u * Math.PI * 3)) * (1 - u) * 4, -24 + (i % 2) * 5); m.rotation.y = i; });
+          mira(c, [26, 46, 96], [22, 14, -12], .08); },
+        fin_recuento(lt, dur, t) { calendario(4); B.ini(); mesa(120, t, false); B.fin(); sacas.forEach((m, i) => { m.visible = true; m.position.set(50 - i * 8, 5, -24 + (i % 2) * 5); m.rotation.y = i; }); mira(c, [16, 48, 110], [14, 14, -12], .1); },
+      } };
+  },
+});
+// —— Copa Davis: tenistas genéricos, la ponchera de 1900 y el trofeo con sus bases ——
+// tenista (alto ~19): hijo 'brazo' (pivote en el hombro derecho, con raqueta) que se balancea
+function tenistaV(cam, pan, pelo = P.dbrown) { const w = new THREE.Group(), v = new Vox();
+  v.box(-3, 0, -1, -1, 2, 2, P.white); v.box(1, 0, -1, 3, 2, 2, P.white); v.box(-3, 2, -1, -1, 7, 1, P.skin); v.box(1, 2, -1, 3, 7, 1, P.skin);
+  v.box(-3, 7, -1, 3, 10, 1, pan); v.box(-3, 10, -1, 3, 15, 1, cam); v.box(-4, 11, -1, -3, 15, 1, cam); v.box(-4, 8, -1, -3, 11, 1, P.skin);
+  v.box(-2, 15, -1, 2, 19, 2, P.skin); v.box(-2, 18, -1, 2, 20, 2, pelo); v.box(-2, 15, -1, 2, 18, -1, pelo); v.set(-1, 17, 1, P.ink); v.set(1, 17, 1, P.ink);
+  w.add(v.build({ jit: .04 }));
+  const a = new Vox(); a.box(0, -4, 0, 1, 0, 1, cam); a.box(0, -7, 0, 1, -4, 1, P.skin); a.box(0, -9, 0, 1, -7, 1, P.ink); for (let y = -15; y <= -9; y++) for (let x = -2; x <= 2; x++) if (Math.abs(x) === 2 || y === -15 || y === -9 || ((x + y) & 1)) a.set(x, y, 0, Math.abs(x) === 2 || y === -15 || y === -9 ? P.red : P.white);
+  const ag = a.build({ jit: .03 }); const piv = new THREE.Group(); piv.add(ag); piv.position.set(3.5, 14.5, 0); piv.name = 'brazo'; w.add(piv); return w; }
+Object.assign(FAB, {
+  tenista_r: () => tenistaV(P.red, P.yellow, P.ink),
+  tenista_a: () => tenistaV(P.navy, P.white, P.amber),
+  // ponchera de plata de 1900 (cuenco ancho con pie y asas)
+  ponchera: () => { const v = new Vox(); v.cyl(0, 0, 0, 1, 5, P.silver); v.cyl(0, 0, 1, 4, 2, P.steel); v.cyl(0, 0, 4, 5, 4, P.silver);
+    for (let y = 5; y < 13; y++) { const r = 5 + (y - 5) * .75; for (let x = -Math.ceil(r); x <= r; x++) for (let z = -Math.ceil(r); z <= r; z++) { const d = Math.hypot(x, z); if (d <= r && d > r - 1.3) v.set(x, y, z, (y === 8 && (Math.atan2(z, x) * 4 | 0) % 2) ? P.white : P.silver); else if (d <= r - 1.3 && y === 5) v.set(x, y, z, P.steel); } }
+    for (const sx of [-1, 1]) { v.box(sx * 11 - (sx > 0 ? 0 : 1), 9, 0, sx * 11 + (sx > 0 ? 2 : -1) , 10, 1, P.silver); v.box(sx > 0 ? 12 : -13, 10, 0, sx > 0 ? 13 : -12, 12, 1, P.silver); }
+    const g = new THREE.Group(); g.add(v.build({ jit: .05, centrar: true })); return g; },
+  // el trofeo de hoy: la ponchera sobre la bandeja de 1920 y las bases de madera con placas
+  ensaladera: () => { const v = new Vox(); v.cyl(0, 0, 0, 6, 14, P.dbrown); v.cyl(0, 0, 6, 12, 11, P.brown); for (let a = 0; a < 24; a++) { const an = a / 24 * Math.PI * 2; v.set(Math.round(Math.cos(an) * 11.5), 3, Math.round(Math.sin(an) * 11.5), P.amber); v.set(Math.round(Math.cos(an) * 10.5), 9, Math.round(Math.sin(an) * 10.5), P.amber); }
+    v.cyl(0, 0, 12, 13, 13, P.silver); v.cyl(0, 0, 13, 15, 4, P.steel);
+    for (let y = 15; y < 25; y++) { const r = 5 + (y - 15) * .7; for (let x = -Math.ceil(r); x <= r; x++) for (let z = -Math.ceil(r); z <= r; z++) { const d = Math.hypot(x, z); if (d <= r && d > r - 1.3) v.set(x, y, z, y === 19 ? P.white : P.silver); } }
+    v.luz(P.amber); const g = new THREE.Group(); g.add(v.build({ jit: .05, centrar: true })); return g; },
+});
+Object.assign(FABE, {
+  // —— Davis 1: la pista azul cubierta de Bolonia, gradas llenas y el marcador colgado ——
+  pista_bolonia: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x0b0b16); s.fog = new THREE.Fog(0x0b0b16, 170, 340);
+    luces(s, { cielo: 0xf4f8ff, suelo: 0x262b44, amb: 1.35, sol: 0xffffff, int: 2.0, dir: [-20, 100, 40], sombra: 90 });
+    const v = new Vox(); v.box(-40, -1, -50, 40, 0, 50, P.navy); v.box(-12, 0, -25, 12, .1, 25, P.blue);
+    v.box(-12, 0, -25, 12, 0, 25, P.blue);
+    for (let z = -25; z <= 24; z++) { v.set(-12, 0, z, P.white); v.set(11, 0, z, P.white); v.set(-9, 0, z, P.white); v.set(8, 0, z, P.white); }
+    for (let x = -12; x <= 11; x++) { v.set(x, 0, -25, P.white); v.set(x, 0, 24, P.white); }
+    for (let x = -9; x <= 8; x++) { v.set(x, 0, -13, P.white); v.set(x, 0, 12, P.white); } for (let z = -13; z <= 12; z++) v.set(0, 0, z, P.white);
+    for (let x = -13; x <= 12; x++) { v.set(x, 3, 0, P.white); for (let y = 1; y < 3; y++) if ((x + y) & 1) v.set(x, y, 0, P.ink); } v.box(-14, 0, 0, -13, 4, 1, P.steel); v.box(13, 0, 0, 14, 4, 1, P.steel);
+    // gradas a los lados y al fondo
+    for (let k = 0; k < 8; k++) { v.box(-40 - k * 3, k * 3, -50, -37 - k * 3, k * 3 + 3, 50, P.dslate); v.box(37 + k * 3, k * 3, -50, 40 + k * 3, k * 3 + 3, 50, P.dslate); v.box(-62, k * 3, -53 - k * 3, 62, k * 3 + 3, -50 - k * 3, P.dslate); }
+    s.add(v.build({ jit: .04 }));
+    const pub = new Bloques(900); s.add(pub.im); pub.ini(); for (let k = 0; k < 8; k++) for (let i = 0; i < 34; i++) { const z = -48 + i * 3; const c1 = ROPA[(i * 7 + k * 3) % 12]; pub.pon(-38.5 - k * 3, k * 3 + 4, z, 1.6, 2, 1.6, c1); pub.pon(38.5 + k * 3, k * 3 + 4, z, 1.6, 2, 1.6, ROPA[(i * 5 + k) % 12]); }
+    for (let k = 0; k < 8; k++) for (let i = 0; i < 40; i++) pub.pon(-60 + i * 3, k * 3 + 4, -51.5 - k * 3, 1.6, 2, 1.6, ROPA[(i * 3 + k * 5) % 12]); pub.fin();
+    const mar = pantalla(30, 13, 180, 78); mar.m.position.set(0, 52, -60); s.add(mar.m); const mv = new Vox(); mv.box(-16, 44, -62, 17, 60, -61, P.ink); s.add(mv.build({ jit: .02 }));
+    const j1 = actor('tenista_r', .55), j2 = actor('tenista_a', .55); s.add(j1, j2); const b1 = j1.getObjectByName('brazo'), b2 = j2.getObjectByName('brazo'); j2.rotation.y = Math.PI;
+    const B = new Bloques(260, true); s.add(B.im);
+    const c = cam(46);
+    let res = ['ESP', 'GBR', '0', '0'];
+    const marcador = (l1, l2, hi) => { const { g, cv, tex } = mar; const k = l1 + l2 + hi; if (mar._k === k) return; mar._k = k; g.fillStyle = '#181425'; g.fillRect(0, 0, 180, 78);
+      g.font = 'bold 22px monospace'; g.textAlign = 'center'; g.fillStyle = hi ? '#fee761' : '#ffffff'; g.fillText(l1, 90, 32); g.fillStyle = '#2ce8f5'; g.fillText(l2, 90, 64); tex.needsUpdate = true; };
+    // peloteo: la bola va de un fondo a otro (periodo 1,3 s) y los jugadores la siguen
+    const juego = (t, fin) => { const P0 = 1.3, n = Math.floor(t / P0), u = (t % P0) / P0, ida = n % 2 === 0, xa = Math.sin(n * 2.7) * 7, xb = Math.sin((n + 1) * 2.7) * 7;
+      const za = ida ? 24 : -24, zb = ida ? -24 : 24, bx = lerp(xa, xb, u), bz = lerp(za, zb, u), by = 5 + Math.sin(u * Math.PI) * 9 - (u > .8 ? (u - .8) * 20 : 0);
+      const xn = ida ? xa : xb, xf = ida ? xb : xa; j1.position.set(lerp(j1.position.x || 0, (ida ? xa : xb) + 2, .2), 0, 27); j2.position.set(lerp(j2.position.x || 0, (ida ? xb : xa) - 2, .2), 0, -27);
+      b1.rotation.z = ida && u < .2 ? -1.2 + u * 8 : .3; b2.rotation.z = !ida && u < .2 ? -1.2 + u * 8 : .3;
+      if (!fin) B.pon(bx, Math.max(.6, by), bz, .9, .9, .9, P.yellow); return [bx, by, bz]; };
+    return { s, c, res: (r) => { res = r; }, upd(t) { B.ini(); juego(t); B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); mira(c, [0, 40, 78], [0, 2, -4], .1); },
+      acc: {
+        // último punto: la bola pasa, el jugador de rojo levanta los brazos y cae confeti
+        punto(lt, dur, t) { B.ini(); const f = lt > 1.2; juego(f ? 1.2 * 1.3 + .4 : lt * 1.3, f); if (f) { b1.rotation.z = Math.PI * .95; j1.position.y = Math.abs(Math.sin((lt - 1.2) * 6)) * 1.5;
+            for (let i = 0; i < 120; i++) { const ph = ((lt - 1.2) * .5 + hsh(i, 1, 1)) % 1; B.pon(-30 + hsh(i, 2, 1) * 60, 50 - ph * 50, -30 + hsh(i, 3, 1) * 60, .7, .7, .7, [P.red, P.yellow, P.white, P.cyan][i % 4]); } }
+          B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-6, 6, q), lerp(34, 30, q), lerp(80, 70, q)], [0, 4, 4], .1); },
+        peloteo(lt, dur, t) { B.ini(); juego(t); B.fin(); marcador('ESP  -  GBR', 'SEMIFINAL', false); mira(c, [Math.sin(t * .2) * 8, 40, 78], [0, 2, -4], .1); },
+        // la cámara sube al marcador con el resultado
+        marcador(lt, dur, t) { B.ini(); juego(t, true); B.fin(); marcador(res[0], res[1], true); const q = ss(clamp(lt / 1.4, 0, 1)); mira(c, [0, lerp(40, 46, q), lerp(78, 20, q)], [0, lerp(4, 48, q), lerp(-4, -60, q)], lerp(.1, .06, q)); },
+      } };
+  },
+  // —— Davis 2: Boston, 1900: un jardín con pista de hierba y la ponchera de plata en una mesa ——
+  boston_1900: () => {
+    const s = new THREE.Scene(); s.background = cielo([0xd8c39a, 0xead4aa, 0xf3e6c8]); s.fog = new THREE.Fog(0xead4aa, 150, 300);
+    luces(s, { cielo: 0xfff4dc, suelo: 0x6b5e40, amb: 1.4, sol: 0xfff1d0, int: 2.0, dir: [40, 80, 50], sombra: 80 });
+    const v = new Vox(); v.box(-80, -1, -60, 80, 0, 60, (x, y, z) => ((z >> 2) & 1) ? 0x7fa860 : 0x6f9a52);
+    for (let z = -25; z <= 24; z++) { v.set(-12, 0, z, P.white); v.set(11, 0, z, P.white); } for (let x = -12; x <= 11; x++) { v.set(x, 0, -25, P.white); v.set(x, 0, 24, P.white); v.set(x, 0, 12, P.white); v.set(x, 0, -13, P.white); }
+    for (let x = -13; x <= 12; x++) { v.set(x, 3, 0, P.white); for (let y = 1; y < 3; y++) if ((x + y) & 1) v.set(x, y, 0, P.dslate); }
+    v.box(-40, 0, -70, 40, 30, -60, P.white); v.box(-42, 30, -72, 42, 34, -58, P.dbrown); for (let x = -36; x < 40; x += 10) v.box(x, 8, -60, x + 5, 20, -59, P.dslate);   // casa del club
+    for (const [x, z] of [[-50, -40], [50, -30], [-56, 10], [54, 20]]) { v.box(x, 0, z, x + 2, 12, z + 2, P.dbrown); v.ball(x + 1, 18, z + 1, 7, P.dgreen); }
+    v.box(20, 0, 30, 36, 8, 40, P.white); v.box(19, 8, 29, 37, 9, 41, P.white);   // mesa con mantel
+    s.add(v.build({ jit: .05 }));
+    const po = actor('ponchera', .9); po.position.set(28, 15.5, 35); s.add(po);
+    const j1 = actor('tenista_a', .55), j2 = actor('tenista_a', .55); j2.rotation.y = Math.PI; s.add(j1, j2); const b1 = j1.getObjectByName('brazo'), b2 = j2.getObjectByName('brazo');
+    const B = new Bloques(160), L = new Bloques(40, true); s.add(B.im, L.im);
+    const c = cam(46);
+    const juego = (t) => { const P0 = 1.6, n = Math.floor(t / P0), u = (t % P0) / P0, ida = n % 2 === 0, xa = Math.sin(n * 2.1) * 6, xb = Math.sin((n + 1) * 2.1) * 6;
+      j1.position.set((ida ? xa : xb) + 2, 0, 27); j2.position.set((ida ? xb : xa) - 2, 0, -27); b1.rotation.z = ida && u < .2 ? -1 + u * 6 : .3; b2.rotation.z = !ida && u < .2 ? -1 + u * 6 : .3;
+      L.pon(lerp(xa, xb, u), 5 + Math.sin(u * Math.PI) * 10, lerp(ida ? 24 : -24, ida ? -24 : 24, u), .9, .9, .9, P.white); };
+    // ponche que cae de la jarra al cuenco y el cucharón
+    const ponche = (t, k) => { B.pon(28, 19 + k * 2.5, 35, 9, .6, 9, P.pink); const ang = t * 2; B.pon(34, 27 + Math.sin(ang) * 1, 33, 4, 6, 4, P.silver); for (let i = 0; i < 8; i++) { const ph = (t * 3 + i / 8) % 1; B.pon(32 - ph * 3, 26 - ph * 6, 34, .7, .9, .7, P.pink); } };
+    return { s, c, upd(t) { B.ini(); B.fin(); L.ini(); juego(t); L.fin(); mira(c, [10, 34, 92], [8, 8, 10], .08); },
+      acc: {
+        // de cerca: una jarra llena de ponche la ponchera de plata
+        ponchera(lt, dur, t) { B.ini(); ponche(t, clamp(lt / dur, 0, 1)); B.fin(); L.ini(); juego(t); L.fin(); po.rotation.y = t * .2; const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(36, 30, q), lerp(30, 26, q), lerp(78, 62, q)], [28, 18, 35], .06); },
+        // la cámara se aleja: el primer partido, en hierba, con la ponchera junto a la pista
+        boston(lt, dur, t) { B.ini(); B.fin(); L.ini(); juego(t); L.fin(); const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(30, 4, q), lerp(28, 40, q), lerp(70, 96, q)], [lerp(26, 4, q), lerp(16, 6, q), lerp(30, 0, q)], .08); },
+      } };
+  },
+  // —— Davis 3: el trofeo de hoy bajo los focos, con seis placas que se encienden (los títulos de España) ——
+  trofeo_davis: () => {
+    const s = new THREE.Scene(); s.background = new THREE.Color(0x120a1e); s.fog = new THREE.Fog(0x120a1e, 140, 280);
+    luces(s, { cielo: 0xe8ecff, suelo: 0x262b44, amb: 1.2, sol: 0xffffff, int: 2.3, dir: [-20, 90, 60], sombra: 60 });
+    const v = new Vox(); v.box(-60, -1, -50, 60, 0, 50, (x, y, z) => ((x >> 3) + (z >> 3)) & 1 ? P.plum : 0x4a2a5a); v.cyl(0, 0, 0, 8, 16, P.ink); v.cyl(0, 0, 8, 9, 17, P.amber); v.luz(P.amber); s.add(v.build({ jit: .04 }));
+    const tr = actor('ensaladera', 1.25); s.add(tr); tr.position.set(0, 25, 0);
+    const foco = conoLuz(0xfff1c0, 60, 18); foco.position.set(0, 70, 0); s.add(foco);
+    const placas = []; for (let i = 0; i < 6; i++) { const p = pantalla(8, 4, 64, 32); const a = (i - 2.5) * .36; p.m.position.set(Math.sin(a) * 34, 6, Math.cos(a) * 34 - 8); p.m.rotation.y = a; s.add(p.m); placas.push(p); }
+    const ANOS = ['2000', '2004', '2008', '2009', '2011', '2019'];
+    const B = new Bloques(160, true); s.add(B.im);
+    const c = cam(46);
+    const enciende = (n, t) => placas.forEach((p, i) => rotular(p, [ANOS[i]], i < n ? '#181425' : '#5a6988', i < n ? '#feae34' : '#262b44', 20));
+    return { s, c, upd(t) { tr.rotation.y = t * .4; enciende(0, t); B.ini(); B.fin(); mira(c, [0, 34, 92], [0, 20, 0], .08); },
+      acc: {
+        // las seis placas de los títulos de España se encienden una a una
+        seis(lt, dur, t) { tr.rotation.y = t * .5; const n = Math.min(6, Math.floor(lt / (dur * .6) * 6) + 1); enciende(n, t); B.ini(); for (let i = 0; i < 40; i++) { const ph = (t * .4 + hsh(i, 1, 2)) % 1; B.pon(Math.cos(i * 2.4) * (8 + ph * 18), 30 + ph * 24, Math.sin(i * 2.4) * (8 + ph * 18), .6, .6, .6, i % 2 ? P.yellow : P.white); } B.fin();
+          const q = ss(clamp(lt / dur, 0, 1)); mira(c, [lerp(-10, 10, q), lerp(30, 34, q), lerp(86, 92, q)], [0, 16, 0], .08); },
+        trofeo_fin(lt, dur, t) { tr.rotation.y = t * .5; enciende(6, t); B.ini(); B.fin(); mira(c, [16, 40, 104], [0, 18, 0], .1); },
+      } };
+  },
+});
